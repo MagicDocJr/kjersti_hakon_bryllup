@@ -7,7 +7,7 @@
     <!-- placeholder until the real site has the couple's photos and details -->
     <meta name="robots" content="noindex" />
     <meta name="description" content="Kjersti og Håkon gifter seg helgen 25.–27. juni 2027 på Malungen gjestegård. Sett av datoen – invitasjon og svarskjema kommer." />
-    <meta name="theme-color" content="#f3efe6" />
+    <meta name="theme-color" content="#0b1030" />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Kjersti og Håkon gifter seg" />
@@ -21,20 +21,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500&family=Pinyon+Script&display=swap" />
+    <link rel="modulepreload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.186.1/three.module.min.js" crossorigin />
     <style>
-        /* Save-the-date placeholder: one calm card on paper, an arched
-           cornflower window, the names, and a countdown to the ceremony. */
+        /* Save the date. A midsummer night: the countdown is made of light,
+           everything around it stays quiet. */
         :root {
-            --paper: #f3efe6;
-            --paper-deep: #e9e2d3;
-            --ink: #1c2347;
-            --ink-soft: #545a78;
-            --cornflower: #3651c9;
-            --line: rgba(28, 35, 71, 0.16);
+            --night: #0b1030;
+            --night-2: #131b46;
+            --ivory: #f3efe6;
+            --ivory-soft: rgba(243, 239, 230, 0.68);
+            --cornflower: #8ea5ff;
+            --line: rgba(243, 239, 230, 0.16);
             --f-display: 'Bodoni Moda', 'Didot', Georgia, serif;
             --f-text: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
             --f-script: 'Pinyon Script', 'Snell Roundhand', cursive;
-            color-scheme: light;
+            color-scheme: dark;
         }
         *, *::before, *::after { box-sizing: border-box; }
         html { -webkit-text-size-adjust: 100%; }
@@ -43,11 +44,14 @@
             min-height: 100svh;
             display: grid;
             place-items: center;
-            padding: max(32px, env(safe-area-inset-top, 0px)) 20px max(32px, env(safe-area-inset-bottom, 0px));
+            padding: max(28px, env(safe-area-inset-top, 0px)) 20px max(28px, env(safe-area-inset-bottom, 0px));
+            /* the sky never goes fully dark in late June: a low glow on the horizon */
             background:
-                radial-gradient(120% 70% at 50% 0%, #f8f5ee 0%, rgba(248, 245, 238, 0) 60%),
-                var(--paper);
-            color: var(--ink);
+                radial-gradient(90% 38% at 50% 108%, rgba(242, 185, 143, 0.22), rgba(242, 185, 143, 0) 70%),
+                radial-gradient(70% 50% at 50% 0%, rgba(80, 104, 214, 0.18), rgba(80, 104, 214, 0) 70%),
+                linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
+            background-attachment: fixed;
+            color: var(--ivory);
             font-family: var(--f-text);
             font-size: 16px;
             line-height: 1.6;
@@ -58,122 +62,115 @@
         a { color: inherit; }
         :focus-visible { outline: 2px solid var(--cornflower); outline-offset: 3px; }
 
-        main { width: min(880px, 100%); display: grid; justify-items: center; }
-        main > .count, main > .soon, main > .count-label { max-width: 640px; }
+        main { width: min(1000px, 100%); display: grid; justify-items: center; }
 
-        .kicker {
-            font-family: var(--f-display);
-            font-style: italic;
-            font-size: clamp(17px, 2.2vw, 20px);
-            color: var(--ink-soft);
-        }
-
-        .window {
-            margin-top: 22px;
-            width: clamp(140px, 30vw, 180px);
-            aspect-ratio: 3 / 4;
-            border-radius: 999px 999px 4px 4px;
-            overflow: hidden;
-            background: var(--paper-deep);
-            box-shadow: 0 30px 60px -38px rgba(28, 35, 71, 0.55);
-        }
-        .window img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .kicker { font-family: var(--f-display); font-style: italic; font-size: clamp(16px, 2vw, 19px); color: var(--ivory-soft); }
 
         h1 {
-            margin-top: 26px;
+            margin-top: 14px;
             font-family: var(--f-display);
             font-variation-settings: "opsz" 30;
             font-weight: 450;
-            font-size: clamp(52px, 9vw, 104px);
+            font-size: clamp(48px, 7.2vw, 88px);
             line-height: 0.95;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.025em;
             display: flex;
             justify-content: center;
             align-items: baseline;
-            gap: 0.14em;
+            gap: 0.16em;
         }
-        h1 .amp { font-family: var(--f-script); font-variation-settings: normal; color: var(--cornflower); font-size: 0.8em; letter-spacing: 0; padding-inline: 0.06em; }
-        .sub { margin-top: 10px; font-family: var(--f-display); font-style: italic; font-size: clamp(20px, 3vw, 26px); }
+        h1 .amp { font-family: var(--f-script); font-variation-settings: normal; color: var(--cornflower); font-size: 0.82em; letter-spacing: 0; }
 
-        .when { margin-top: 26px; font-family: var(--f-display); font-variation-settings: "opsz" 24; font-weight: 500; font-size: clamp(22px, 3.4vw, 30px); letter-spacing: 0.01em; }
-        .where { margin-top: 4px; color: var(--ink-soft); }
+        .when { margin-top: 18px; font-family: var(--f-display); font-variation-settings: "opsz" 24; font-weight: 500; font-size: clamp(19px, 2.4vw, 24px); }
+        .where { margin-top: 2px; color: var(--ivory-soft); }
 
-        .count {
-            margin-top: 34px;
+        /* the particle stage */
+        .stage {
+            position: relative;
+            margin-top: clamp(8px, 2vh, 20px);
             width: 100%;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            border-block: 1px solid var(--line);
+            height: clamp(280px, 46vh, 500px);
+            touch-action: pan-y;
+            cursor: crosshair;
         }
-        .count div { padding: 18px 4px 16px; }
-        .count div + div { border-left: 1px solid var(--line); }
-        .count dd {
-            font-family: var(--f-display);
-            font-variation-settings: "opsz" 30;
-            font-size: clamp(34px, 7vw, 54px);
-            line-height: 1;
-            font-variant-numeric: lining-nums tabular-nums;
+        .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+        .labels { position: absolute; inset: 0; pointer-events: none; }
+        .lab {
+            position: absolute;
+            transform: translateX(-50%);
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            color: var(--ivory-soft);
+            white-space: nowrap;
         }
-        .count dt { margin-top: 8px; font-size: 13px; color: var(--ink-soft); order: 2; }
-        .count div { display: flex; flex-direction: column; }
-        .count-label { margin-top: 12px; font-size: 14px; color: var(--ink-soft); }
+        .lab-days { font-family: var(--f-display); font-style: italic; font-size: clamp(16px, 2vw, 20px); letter-spacing: 0; color: var(--ivory); }
 
-        .soon { margin-top: 30px; max-width: 34ch; font-size: 17px; text-wrap: balance; }
+        /* plain countdown if WebGL is not available */
+        .fallback { display: none; position: absolute; inset: 0; align-content: center; grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 620px; margin: auto; }
+        .no-gl .fallback { display: grid; }
+        .no-gl canvas, .no-gl .labels { display: none; }
+        .fallback div { display: flex; flex-direction: column-reverse; padding: 10px 4px; }
+        .fallback div + div { border-left: 1px solid var(--line); }
+        .fallback dd { font-family: var(--f-display); font-size: clamp(36px, 8vw, 64px); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
+        .fallback dt { margin-top: 8px; font-size: 13px; color: var(--ivory-soft); }
 
-        .cal { margin-top: 22px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .until { font-size: 14px; color: var(--ivory-soft); }
+        .soon { margin-top: 22px; max-width: 36ch; font-size: 17px; text-wrap: balance; }
+
+        .cal { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
         .btn {
             display: inline-block;
             padding: 12px 22px;
             border-radius: 999px;
-            border: 1px solid var(--ink);
+            border: 1px solid rgba(243, 239, 230, 0.55);
             font-weight: 500;
             font-size: 15px;
             text-decoration: none;
-            transition: background .2s, color .2s;
+            transition: background .2s, color .2s, border-color .2s;
         }
-        .btn-solid { background: var(--ink); color: var(--paper); }
-        .btn-solid:hover { background: var(--cornflower); border-color: var(--cornflower); }
-        .btn:not(.btn-solid):hover { background: var(--ink); color: var(--paper); }
+        .btn-solid { background: var(--ivory); color: var(--night); border-color: var(--ivory); }
+        .btn-solid:hover { background: #fff; }
+        .btn:not(.btn-solid):hover { background: rgba(243, 239, 230, 0.1); border-color: var(--ivory); }
 
-        footer { margin-top: 44px; font-size: 13px; color: var(--ink-soft); letter-spacing: 0.04em; }
+        footer { margin-top: 34px; font-size: 13px; color: var(--ivory-soft); letter-spacing: 0.04em; }
+
+        .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
         @media (prefers-reduced-motion: no-preference) {
-            main > * { animation: rise .9s cubic-bezier(.2, .7, .2, 1) both; }
-            main > :nth-child(2) { animation-delay: .08s; }
-            main > :nth-child(3) { animation-delay: .16s; }
-            main > :nth-child(n+4) { animation-delay: .26s; }
+            .kicker, h1, .when, .where { animation: rise 1s cubic-bezier(.2, .7, .2, 1) both; }
+            h1 { animation-delay: .08s; }
+            .when, .where { animation-delay: .16s; }
+            .soon, .cal, footer { animation: rise 1s cubic-bezier(.2, .7, .2, 1) both 1.2s; }
             @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
         }
 
-        /* phones: stack the names with the ampersand between them */
         @media (max-width: 600px) {
-            h1 { flex-direction: column; align-items: center; gap: 0; font-size: clamp(58px, 18vw, 84px); }
-            h1 .amp { font-size: 0.6em; line-height: 0.95; }
-        }
-
-        @media (max-width: 420px) {
-            .count div { padding-inline: 2px; }
-            .count dt { font-size: 12px; }
+            h1 { flex-direction: column; align-items: center; gap: 0; font-size: clamp(52px, 16vw, 76px); }
+            h1 .amp { font-size: 0.6em; line-height: 1; }
+            .stage { height: clamp(240px, 38vh, 340px); }
+            .lab { font-size: 12px; }
         }
     </style>
 </head>
 <body>
 <main>
     <p class="kicker">Sett av datoen</p>
-    <div class="window"><img src="/assets/kornblomst.webp" alt="Kornblomster i en sommereng" width="900" height="900" /></div>
-    <h1><span class="n">Kjersti</span> <span class="amp" aria-label="og">&amp;</span> <span class="n">Håkon</span></h1>
-    <p class="sub">gifter seg</p>
-
+    <h1><span>Kjersti</span> <span class="amp" aria-label="og">&amp;</span> <span>Håkon</span></h1>
     <p class="when">25.–27. juni 2027</p>
     <p class="where">Malungen gjestegård, Vallset</p>
 
-    <dl class="count" id="count" aria-hidden="true">
-        <div><dt>dager</dt><dd id="c-d">–</dd></div>
-        <div><dt>timer</dt><dd id="c-h">–</dd></div>
-        <div><dt>minutter</dt><dd id="c-m">–</dd></div>
-        <div><dt>sekunder</dt><dd id="c-s">–</dd></div>
-    </dl>
-    <p class="count-label" id="count-label">til vielsen lørdag 26. juni kl. 13.00</p>
+    <div class="stage" id="stage" aria-hidden="true">
+        <canvas></canvas>
+        <div class="labels"></div>
+        <dl class="fallback">
+            <div><dt>dager</dt><dd id="c-d">–</dd></div>
+            <div><dt>timer</dt><dd id="c-h">–</dd></div>
+            <div><dt>minutter</dt><dd id="c-m">–</dd></div>
+            <div><dt>sekunder</dt><dd id="c-s">–</dd></div>
+        </dl>
+    </div>
+    <p class="until">til vielsen lørdag 26. juni kl. 13.00</p>
+    <p class="sr" id="sr-count" aria-live="off"></p>
 
     <p class="soon">Invitasjon, program og svarskjema kommer her snart. Sett av hele helgen, vi gleder oss til å feire med dere!</p>
 
@@ -186,34 +183,34 @@
 </main>
 
 <script>
-    // Countdown to the ceremony, Saturday 26 June 2027 13:00 Oslo time.
-    const WEDDING = new Date('2027-06-26T13:00:00+02:00').getTime();
-    const el = { d: document.getElementById('c-d'), h: document.getElementById('c-h'), m: document.getElementById('c-m'), s: document.getElementById('c-s') };
-    const label = document.getElementById('count-label');
-    const two = (n) => String(n).padStart(2, '0');
-    let timer = 0;
-    function tick() {
-        let ms = WEDDING - Date.now();
-        if (ms <= 0) {
-            document.getElementById('count').hidden = true;
-            label.textContent = 'I dag gifter vi oss!';
-            clearInterval(timer);
-            return;
+    // Plain countdown: drives the no-WebGL fallback and the screen-reader text.
+    (function () {
+        const WEDDING = new Date('2027-06-26T13:00:00+02:00').getTime();
+        const el = ['c-d', 'c-h', 'c-m', 'c-s'].map((id) => document.getElementById(id));
+        const sr = document.getElementById('sr-count');
+        const two = (n) => String(n).padStart(2, '0');
+        function tick() {
+            let ms = Math.max(0, WEDDING - Date.now());
+            const d = Math.floor(ms / 86400000); ms -= d * 86400000;
+            const h = Math.floor(ms / 3600000); ms -= h * 3600000;
+            const m = Math.floor(ms / 60000); ms -= m * 60000;
+            const s = Math.floor(ms / 1000);
+            el[0].textContent = d; el[1].textContent = two(h); el[2].textContent = two(m); el[3].textContent = two(s);
+            sr.textContent = `${d} dager, ${h} timer og ${m} minutter igjen.`;
         }
-        const d = Math.floor(ms / 86400000); ms -= d * 86400000;
-        const h = Math.floor(ms / 3600000); ms -= h * 3600000;
-        const m = Math.floor(ms / 60000); ms -= m * 60000;
-        const s = Math.floor(ms / 1000);
-        el.d.textContent = d;
-        el.h.textContent = two(h);
-        el.m.textContent = two(m);
-        el.s.textContent = two(s);
-        // one plain sentence for screen readers, refreshed per minute
-        const text = `${d} dager, ${h} timer og ${m} minutter til vielsen lørdag 26. juni klokken 13.`;
-        if (label.getAttribute('aria-label') !== text) label.setAttribute('aria-label', text);
+        tick();
+        setInterval(tick, 1000);
+    })();
+</script>
+<script type="module">
+    const stage = document.getElementById('stage');
+    const gl = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; } })();
+    if (!gl) stage.classList.add('no-gl');
+    else {
+        import('/assets/countdown.js')
+            .then(({ startCountdown }) => startCountdown(stage, { reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches }))
+            .catch((err) => { console.error(err); stage.classList.add('no-gl'); });
     }
-    tick();
-    timer = setInterval(tick, 1000);
 </script>
 </body>
 </html>

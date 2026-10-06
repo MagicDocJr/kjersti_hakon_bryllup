@@ -13,7 +13,7 @@ Begge har samme fanerad øverst: **Forside · Program · Praktisk · Svar · Gav
 
 ## Hva som ligger ute nå
 
-Forsiden på kjerstioghakon.no er en midlertidig «sett av datoen»-side (`index.html` + `assets/`) med nedtelling til vielsen og kalenderfil, til paret har sendt bilder og detaljer. Designene ligger fortsatt på `/klassisk/` og `/kreativ/` (lenket fra `/utkast/`), men lenkes ikke fra forsiden og er merket noindex.
+Forsiden på kjerstioghakon.no er en midlertidig «sett av datoen»-side (`index.html` + `assets/`) med en partikkel-nedtelling i three.js (`assets/countdown.js`) og kalenderfil, til paret har sendt bilder og detaljer. Designene ligger fortsatt på `/klassisk/` og `/kreativ/` (lenket fra `/utkast/`), men lenkes ikke fra forsiden og er merket noindex.
 
 For å lansere: erstatt `index.html` med valgt versjon (eller la den sende videre dit).
 
