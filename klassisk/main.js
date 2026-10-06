@@ -138,12 +138,38 @@ function validate(data) {
     return firstBad;
 }
 
-// Hook for the real backend. In the Ragnhild & Vetle site this was a
-// Supabase insert into `responses` plus an EmailJS confirmation; drop the
-// same calls in here when the project is created.
+// Replies go to `kh_responses` in the shared Supabase project. The anon key
+// is public by design: it can only INSERT into that table (no reads), see
+// supabase/kh_responses.sql.
+const SUPABASE_URL = 'https://bevrttmvumfodpkauiio.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldnJ0dG12dW1mb2Rwa2F1aWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTE4NjksImV4cCI6MjA2NjE4Nzg2OX0.DEZl36UgcM_KOlnbVlxfIdW_ZRdmkAMbbdHfF3KLCyk';
+
 async function sendRsvp(data) {
-    await new Promise((r) => setTimeout(r, 600));
-    return data;
+    const household_id = crypto.randomUUID();
+    const rows = data.guests.map((g) => {
+        const attending = g.attending === 'yes';
+        return {
+            household_id,
+            first_name: g.first_name,
+            last_name: g.last_name,
+            email: data.email,
+            attending,
+            stay: attending ? g.stay === 'yes' : null,
+            allergies: attending && g.allergies ? g.allergies : null,
+            message: data.message || null,
+        };
+    });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/kh_responses`, {
+        method: 'POST',
+        headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal',
+        },
+        body: JSON.stringify(rows),
+    });
+    if (!res.ok) throw new Error(`RSVP failed ${res.status}: ${await res.text()}`);
 }
 
 function esc(s) {
@@ -162,7 +188,7 @@ function renderSummary(data) {
     const pay = staying
         ? `<p>Overnatting for ${staying} ${staying === 1 ? 'person' : 'personer'} blir <strong>${(staying * PRICE_PER_PERSON).toLocaleString('nb-NO')} kr</strong>. Merk overføringen med navn.</p>`
         : '';
-    summaryEl.innerHTML = `<ul>${items}</ul>${pay}<p>Bekreftelsen sendes til ${esc(data.email)}.</p>`;
+    summaryEl.innerHTML = `<ul>${items}</ul>${pay}<p>Vi bruker ${esc(data.email)} hvis vi trenger å nå deg.</p>`;
 }
 
 form.addEventListener('input', (e) => {

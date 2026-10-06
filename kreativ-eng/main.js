@@ -400,11 +400,38 @@ function validate(data) {
     return first;
 }
 
-// Hook for the real backend (Supabase insert + EmailJS, as on the
-// Ragnhild & Vetle site). Replace the body when the project exists.
+// Replies go to `kh_responses` in the shared Supabase project. The anon key
+// is public by design: it can only INSERT into that table (no reads), see
+// supabase/kh_responses.sql.
+const SUPABASE_URL = 'https://bevrttmvumfodpkauiio.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldnJ0dG12dW1mb2Rwa2F1aWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTE4NjksImV4cCI6MjA2NjE4Nzg2OX0.DEZl36UgcM_KOlnbVlxfIdW_ZRdmkAMbbdHfF3KLCyk';
+
 async function sendRsvp(data) {
-    await new Promise((r) => setTimeout(r, 700));
-    return data;
+    const household_id = crypto.randomUUID();
+    const rows = data.guests.map((g) => {
+        const attending = g.attending === 'yes';
+        return {
+            household_id,
+            first_name: g.first_name,
+            last_name: g.last_name,
+            email: data.email,
+            attending,
+            stay: attending ? g.stay === 'yes' : null,
+            allergies: attending && g.allergies ? g.allergies : null,
+            message: data.message || null,
+        };
+    });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/kh_responses`, {
+        method: 'POST',
+        headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal',
+        },
+        body: JSON.stringify(rows),
+    });
+    if (!res.ok) throw new Error(`RSVP failed ${res.status}: ${await res.text()}`);
 }
 
 const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -434,7 +461,7 @@ form.addEventListener('submit', async (e) => {
             const n = esc(`${g.first_name} ${g.last_name}`);
             if (g.attending !== 'yes') return `<li>${n} kommer ikke</li>`;
             return `<li>${n} kommer${g.stay === 'yes' ? ' og overnatter' : ''}${g.allergies ? ` (${esc(g.allergies)})` : ''}</li>`;
-        }).join('')}</ul>${staying ? `<p>Overnatting: ${(staying * PRICE_PER_PERSON).toLocaleString('nb-NO')} kr. Merk overføringen med navn.</p>` : ''}<p>Bekreftelsen sendes til ${esc(data.email)}.</p>`;
+        }).join('')}</ul>${staying ? `<p>Overnatting: ${(staying * PRICE_PER_PERSON).toLocaleString('nb-NO')} kr. Merk overføringen med navn.</p>` : ''}<p>Vi bruker ${esc(data.email)} hvis vi trenger å nå deg.</p>`;
         form.hidden = true;
         tally.hidden = true;
         doneEl.hidden = false;

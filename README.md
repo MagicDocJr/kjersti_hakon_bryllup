@@ -27,7 +27,7 @@ Plassholdere vises som røde, stiplede felt på siden (`.fyll`):
 - **Toastmastere**: e-post og telefon. Navnene (Thea von Hirsch, Håkon Kjernæs) er lest av en lavoppløst skisse og må sjekkes.
 - **Ønskeliste-lenke**: peker nå til `https://onskeskyen.no/`. Bytt URL i `index.html` og lag ny QR (`img/qr-onskeliste.svg`).
 - **Svarfrist**: satt til 1. mars 2027.
-- **Svarskjema-backend**: `sendRsvp()` i `main.js` later bare som den sender. Koble på Supabase + EmailJS slik som i `Rag_vetl_bryllup/src/registrering/registrering.js`.
+- **Bekreftelse på e-post**: svar lagres, men det sendes ingen e-post ennå. Kan kobles på med EmailJS slik som i `Rag_vetl_bryllup`.
 - **Bilder av paret**: `couple-1/2/3` er stand-in-bilder fra Unsplash. Bytt med parets egne (4:5 stående, ca. 1200 px bredde, webp).
 - Tekstene «Endelig / sier vi ja» (klassisk) og kveldsprogrammet fredag 21.00 er forslag.
 
@@ -43,6 +43,15 @@ Plassholdere vises som røde, stiplede felt på siden (`.fyll`):
 
 - Programhimmelen: `sunPosition()` i `main.js` regner solhøyde og asimut for Malungen (60,77° N, 11,45° Ø). Scrollposisjonen mellom to programpunkter gjøres om til et klokkeslett, så natta mellom fredag og lørdag går gjennom skumring og soloppgang. En smal linje under menyen viser klokkeslett og solhøyde.
 - `prefers-reduced-motion` slår av overgangene.
+
+## Svar (Supabase)
+
+Svarene lagres i tabellen `kh_responses` i samme Supabase-prosjekt som Ragnhild & Vetle (`bevrttmvumfodpkauiio`). Oppsettet ligger i `supabase/kh_responses.sql`.
+
+- Én rad per gjest. Gjester sendt i samme skjema deler `household_id`.
+- Den offentlige nøkkelen i `main.js` kan bare legge til rader, ikke lese, endre eller slette, verken her eller i R&V sin `responses`. Testet mot live-databasen 2026-10-06.
+- Les svarene i Supabase-dashbordet (Table Editor → `kh_responses`) eller med service_role-nøkkelen fra et lokalt skript. Den nøkkelen skal aldri inn i repoet.
+- Alle med tilgang til prosjektets organisasjon i Supabase ser begge bryllupenes gjestelister.
 
 ## Publisering
 
