@@ -63,48 +63,7 @@ function osloParts(date) {
 // data-at values are Oslo local time in June (CEST, UTC+2)
 const parseLocal = (s) => new Date(`${s}:00+02:00`);
 
-/* ======================================================================
-   Hero meadow
-   ====================================================================== */
 const hero = document.querySelector('.hero');
-const canvas = document.getElementById('meadow');
-const heroCopy = document.getElementById('hero-copy');
-const hint = document.getElementById('hero-hint');
-let meadow = null;
-
-function useFallback() {
-    const img = document.getElementById('meadow-fallback');
-    img.srcset = img.dataset.srcset;
-    img.src = img.dataset.src;
-    hero.classList.add('no-webgl');
-}
-
-function webglOk() {
-    try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; }
-}
-
-if (webglOk()) {
-    const lowPower = matchMedia('(max-width: 760px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
-    import('./meadow.js').then(({ createMeadow }) => {
-        meadow = createMeadow(canvas, { lowPower, reducedMotion: reduceMotion });
-        if (location.search.includes('still')) { meadow.renderOnce(); return; } // for screenshots
-        const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !document.hidden) meadow.start(); else meadow.stop(); });
-        io.observe(hero);
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) meadow.stop();
-            else if (hero.getBoundingClientRect().bottom > 0) meadow.start();
-        });
-        if (reduceMotion) meadow.renderOnce();
-    }).catch((err) => { console.error(err); useFallback(); });
-} else {
-    useFallback();
-}
-
-let hintTimer = setTimeout(() => hint.classList.add('is-gone'), 9000);
-hero.addEventListener('pointermove', () => {
-    clearTimeout(hintTimer);
-    hintTimer = setTimeout(() => hint.classList.add('is-gone'), 3500);
-}, { passive: true, once: true });
 
 /* ======================================================================
    Scroll: top bar, programme sky
@@ -211,18 +170,6 @@ function drawTrees() {
 }
 
 let ticking = false;
-function onScroll() {
-    const y = scrollY;
-    const h = hero.offsetHeight;
-    if (!h) return; // hero lives on the Forside tab
-    const p = Math.min(1, y / h);
-    if (meadow) meadow.setScroll(p);
-    if (!reduceMotion) {
-        heroCopy.style.transform = `translate3d(0, ${(-y * 0.25).toFixed(1)}px, 0)`;
-        heroCopy.style.opacity = String(Math.max(0, 1 - p * 1.6));
-    }
-}
-
 function frame() {
     const target = targetTime();
     const k = reduceMotion ? 1 : 0.14;
@@ -234,11 +181,10 @@ function frame() {
 }
 function kick() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
 
-addEventListener('scroll', () => { onScroll(); kick(); }, { passive: true });
+addEventListener('scroll', kick, { passive: true });
 addEventListener('resize', () => { drawTrees(); measure(); kick(); });
 drawTrees();
 measure();
-onScroll();
 paintSky(targetTime());
 // fonts and lazy images shift layout; re-measure once things settle
 document.fonts?.ready.then(() => { measure(); kick(); });
@@ -276,11 +222,11 @@ function showTab(tab, { scrollTo = null, focus = true } = {}) {
             if (a.getAttribute('href') === `#${tab}`) a.setAttribute('aria-current', 'page');
             else a.removeAttribute('aria-current');
         });
-        if (tab === 'program') { drawTrees(); measure(); paintSky(targetTime()); }
+        // the programme is visible on its own tab and on the long front page
+        if (tab === 'program' || tab === 'forside') { drawTrees(); measure(); paintSky(targetTime()); }
     }
     if (scrollTo) scrollTo.scrollIntoView();
     else window.scrollTo(0, 0);
-    onScroll();
     if (focus) document.getElementById(`tab-${tab}`).focus({ preventScroll: true });
 }
 
@@ -290,7 +236,7 @@ function route({ focus = true } = {}) {
     if (ALIASES[h]) return showTab(ALIASES[h], { focus });
     if (h === 'innhold') return showTab(currentTab || 'forside');
     // an anchor inside a panel, e.g. #invitasjon from the hero arrow
-    const el = h && document.getElementById(h);
+    const el = h ? document.getElementById(h) : null;
     const panel = el?.closest('.tab-panel');
     if (panel) return showTab(panel.id.replace('tab-', ''), { scrollTo: el, focus: false });
     return showTab('forside', { focus });
@@ -368,7 +314,21 @@ function guestHTML(n) {
                 <label class="choice"><input type="radio" name="${id}-stay" value="no" /><span>Nei, ordner meg selv</span></label>
             </div>
         </fieldset>
-        <div class="field" data-when="yes"><label for="${id}-allergies">Allergier eller matpreferanser</label><textarea id="${id}-allergies" name="allergies" rows="2" placeholder="F.eks. glutenfri, vegetar"></textarea></div>
+        <fieldset class="field" data-when="yes">
+            <legend>Allergier og matpreferanser</legend>
+            <div class="choices" data-group="diet">
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Gluten" /><span>Gluten</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Laktose" /><span>Laktose</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Nøtter" /><span>Nøtter</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Skalldyr" /><span>Skalldyr</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Fisk" /><span>Fisk</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Egg" /><span>Egg</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Vegetar" /><span>Vegetar</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Vegan" /><span>Vegan</span></label>
+            </div>
+            <label class="sub-label" for="${id}-allergies">Annet vi bør vite om <span class="opt">(valgfritt)</span></label>
+            <textarea id="${id}-allergies" name="allergies" rows="2" placeholder="F.eks. alvorlig nøtteallergi, gravid, barnemat"></textarea>
+        </fieldset>
     </div>`;
 }
 
@@ -402,7 +362,10 @@ function readForm() {
             last_name: g.querySelector('[name="last_name"]').value.trim(),
             attending: g.querySelector('[data-group="attending"] input:checked')?.value ?? null,
             stay: g.querySelector('[data-group="stay"] input:checked')?.value ?? null,
-            allergies: g.querySelector('[name="allergies"]').value.trim(),
+            allergies: [
+                    ...[...g.querySelectorAll('[data-group="diet"] input:checked')].map((c) => c.value),
+                    g.querySelector('[name="allergies"]').value.trim(),
+                ].filter(Boolean).join(', '),
         })),
     };
 }

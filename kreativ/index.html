@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Kjersti og Håkon, levende eng</title>
+    <title>Kjersti og Håkon, midtsommer 2027</title>
     <!-- remove noindex when the real photos and details are in -->
     <meta name="robots" content="noindex" />
     <meta name="description" content="Kjersti og Håkon gifter seg helgen 25.–27. juni 2027 på Malungen gjestegård i Vallset. Program, overnatting, kleskode og svarskjema." />
@@ -20,8 +20,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap" />
-    <link rel="modulepreload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.186.1/three.module.min.js" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=Pinyon+Script&display=swap" />
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -50,26 +49,20 @@
 <!-- ============ FORSIDE ============ -->
 <div class="tab-panel" id="tab-forside" tabindex="-1">
 <header class="hero" id="top">
-    <canvas class="meadow" id="meadow" aria-hidden="true"></canvas>
-    <img class="meadow-fallback" id="meadow-fallback" data-src="img/field-sm.webp" data-srcset="img/field-sm.webp 1200w, img/field.webp 2400w" sizes="100vw" alt="" aria-hidden="true" />
-
-    <div class="hero-copy" id="hero-copy">
+    <div class="hero-copy">
         <p class="hero-kicker">Midtsommer på Malungen</p>
         <h1 class="hero-names">
             <span class="n1">Kjersti</span>
             <span class="amp" aria-label="og">&amp;</span>
             <span class="n2">Håkon</span>
         </h1>
-        <p class="hero-when">gifter seg helgen <time datetime="2027-06-25">25.–27. juni 2027</time></p>
+        <p class="hero-when">gifter seg på Malungen gjestegård, <time datetime="2027-06-25">25.–27. juni 2027</time></p>
+        <a class="hero-cta" href="#svar">Svar innen 1. mars</a>
     </div>
-
-    <p class="hero-hint" id="hero-hint">
-        <span class="hint-mouse">Beveg musepekeren gjennom enga</span>
-        <span class="hint-touch">Dra fingeren gjennom enga</span>
-    </p>
-    <a class="hero-down" href="#invitasjon" aria-label="Bla ned til invitasjonen">
-        <svg viewBox="0 0 24 40" width="18" height="30" aria-hidden="true"><path d="M12 2v34M4 28l8 8 8-8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-    </a>
+    <picture class="hero-photo">
+        <source media="(max-width: 640px)" srcset="img/hero-square.webp" />
+        <img src="img/hero-sm.webp" srcset="img/hero-sm.webp 1200w, img/hero.webp 2200w" sizes="100vw" alt="Sommereng full av kornblomster" width="2200" height="990" fetchpriority="high" />
+    </picture>
 </header>
 
 <section class="invite" id="invitasjon" aria-labelledby="invite-title">
@@ -307,7 +300,6 @@
 <footer class="footer">
     <p class="footer-names">Kjersti &amp; Håkon</p>
     <p>25.–27. juni 2027, Malungen gjestegård</p>
-    <p class="credits">Foto av gjestegården: Bene Riobó, CC BY-SA 4.0. Prestekrage: Fitschen og Schmeil, 1913, offentlig eie. Blomstereng: Gerda Arendt, CC0. Enga øverst er tegnet live i nettleseren.</p>
 </footer>
 
 <script src="main.js" type="module"></script>

@@ -5,11 +5,11 @@ To versjoner av samme side for bryllupet 25.–27. juni 2027 på Malungen gjeste
 | Mappe | Hva |
 |---|---|
 | `klassisk/` | Brudeparets skisse, strammet opp: himmelblå hero med blomstereng, lyseblå/hvite bånd, program med strektegninger, bildestripe, gave og QR. |
-| `kreativ/` | Friere tolkning: en levende WebGL-eng med kornblomster og prestekrager øverst, og et program der himmelen følger sola over Malungen time for time (regnet ut for 25.–27. juni 2027). `?still` tegner enga én gang uten animasjon. |
+| `kreativ/` | Renere tolkning: store navn og et kornblomstfoto øverst, og et program der himmelen følger sola over Malungen time for time (regnet ut for 25.–27. juni 2027). |
 
 Begge er ren HTML/CSS/JS uten byggesteg, som Ragnhild & Vetle-siden.
 
-Begge har samme fanerad øverst: **Forside · Program · Praktisk · Svar · Gave**. Hver fane er sin egen visning, styrt av adressen (`#program`, `#svar` osv.), så lenker kan deles direkte og tilbakeknappen virker. Svar-fanen er uthevet, og forsiden har «Svar nå»-knapp og en kort oversikt over når, hvor og svarfrist.
+Begge har samme fanerad øverst: **Forside · Program · Praktisk · Svar · Gave**. Forsiden er én lang side med alt, mens de andre fanene viser bare sin egen del. Hver fane er sin egen visning, styrt av adressen (`#program`, `#svar` osv.), så lenker kan deles direkte og tilbakeknappen virker. Svar-fanen er uthevet, og forsiden har «Svar nå»-knapp og en kort oversikt over når, hvor og svarfrist.
 
 ## Kjøre lokalt
 
@@ -35,6 +35,8 @@ Plassholdere vises som røde, stiplede felt på siden (`.fyll`):
 
 ## Bildekilder
 
+Kreditering er fjernet fra sidene fordi bildene skal byttes. Gjestegård-fotoet (CC BY-SA) krever kreditering så lenge det brukes.
+
 - Malungen gjestegård: Bene Riobó, [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Malungen_Gjesteg%C3%A5rd.jpg) (krever kreditering, står i footer)
 - Prestekrage-plansje: Fitschen og Schmeil, *Pflanzen der Heimat*, 1913, offentlig eie
 - Kornblomsteng: Gerda Arendt, [CC0](https://commons.wikimedia.org/wiki/File:Cornflower_field,_Eschenhahn.jpg)
@@ -51,6 +53,7 @@ Plassholdere vises som røde, stiplede felt på siden (`.fyll`):
 Svarene lagres i tabellen `kh_responses` i samme Supabase-prosjekt som Ragnhild & Vetle (`bevrttmvumfodpkauiio`). Oppsettet ligger i `supabase/kh_responses.sql`.
 
 - Én rad per gjest. Gjester sendt i samme skjema deler `household_id`.
+- `allergies` inneholder avkryssede valg (gluten, laktose, nøtter, skalldyr, fisk, egg, vegetar, vegan) og fritekst, kommaseparert.
 - Den offentlige nøkkelen i `main.js` kan bare legge til rader, ikke lese, endre eller slette, verken her eller i R&V sin `responses`. Testet mot live-databasen 2026-10-06.
 - Les svarene i Supabase-dashbordet (Table Editor → `kh_responses`) eller med service_role-nøkkelen fra et lokalt skript. Den nøkkelen skal aldri inn i repoet.
 - Alle med tilgang til prosjektets organisasjon i Supabase ser begge bryllupenes gjestelister.

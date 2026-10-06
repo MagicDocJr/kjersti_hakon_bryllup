@@ -154,7 +154,8 @@ body[data-tab]:not([data-tab="forside"]) .masthead + main > .tab-panel > .band:f
 /* the blue programme and gift bands read better with a blue masthead */
 body[data-tab="program"] .masthead, body[data-tab="gave"] .masthead { background: var(--blue); }
 
-body[data-tab] .tab-panel:not(.is-active) { display: none; }
+/* the front page scrolls through everything; the other tabs show one section */
+body[data-tab]:not([data-tab="forside"]) .tab-panel:not(.is-active) { display: none; }
 .tab-panel:focus { outline: none; }
 
 /* ============ HERO ============ */
@@ -439,6 +440,7 @@ fieldset.field { border: 0; margin: 0; padding: 0; }
 .field [aria-invalid="true"] { border-color: var(--coral); }
 .hint { font-size: 13px; color: var(--ink-soft); }
 
+.sub-label { margin-top: 10px; font-size: 13px; color: var(--ink-soft); }
 .choices { display: flex; flex-wrap: wrap; gap: 8px; }
 .choice { position: relative; }
 .choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }

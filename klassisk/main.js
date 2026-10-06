@@ -101,10 +101,21 @@ function guestTemplate(n) {
                 <label class="choice"><input type="radio" name="${id}-stay" value="no" /><span>Nei, jeg ordner meg selv</span></label>
             </div>
         </fieldset>
-        <div class="field" data-when="yes">
-            <label for="${id}-allergies">Allergier eller matpreferanser</label>
-            <textarea id="${id}-allergies" name="allergies" rows="2" placeholder="F.eks. glutenfri, vegetar"></textarea>
-        </div>
+        <fieldset class="field" data-when="yes">
+            <legend>Allergier og matpreferanser</legend>
+            <div class="choices" data-group="diet">
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Gluten" /><span>Gluten</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Laktose" /><span>Laktose</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Nøtter" /><span>Nøtter</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Skalldyr" /><span>Skalldyr</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Fisk" /><span>Fisk</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Egg" /><span>Egg</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Vegetar" /><span>Vegetar</span></label>
+                <label class="choice"><input type="checkbox" name="${id}-diet" value="Vegan" /><span>Vegan</span></label>
+            </div>
+            <label class="sub-label" for="${id}-allergies">Annet vi bør vite om <span class="opt">(valgfritt)</span></label>
+            <textarea id="${id}-allergies" name="allergies" rows="2" placeholder="F.eks. alvorlig nøtteallergi, gravid, barnemat"></textarea>
+        </fieldset>
     </div>`;
 }
 
@@ -142,7 +153,10 @@ function readForm() {
         last_name: g.querySelector('[name="last_name"]').value.trim(),
         attending: g.querySelector('[data-group="attending"] input:checked')?.value ?? null,
         stay: g.querySelector('[data-group="stay"] input:checked')?.value ?? null,
-        allergies: g.querySelector('[name="allergies"]').value.trim(),
+        allergies: [
+            ...[...g.querySelectorAll('[data-group="diet"] input:checked')].map((c) => c.value),
+            g.querySelector('[name="allergies"]').value.trim(),
+        ].filter(Boolean).join(', '),
     }));
     return { email, message, guests };
 }
