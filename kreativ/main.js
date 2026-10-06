@@ -63,13 +63,54 @@ function osloParts(date) {
 // data-at values are Oslo local time in June (CEST, UTC+2)
 const parseLocal = (s) => new Date(`${s}:00+02:00`);
 
+/* ======================================================================
+   Hero meadow
+   ====================================================================== */
 const hero = document.querySelector('.hero');
+const canvas = document.getElementById('meadow');
+const heroCopy = document.getElementById('hero-copy');
+const hint = document.getElementById('hero-hint');
+let meadow = null;
+
+function useFallback() {
+    const img = document.getElementById('meadow-fallback');
+    img.srcset = img.dataset.srcset;
+    img.src = img.dataset.src;
+    hero.classList.add('no-webgl');
+}
+
+function webglOk() {
+    try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; }
+}
+
+if (webglOk()) {
+    const lowPower = matchMedia('(max-width: 760px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
+    import('./meadow.js').then(({ createMeadow }) => {
+        meadow = createMeadow(canvas, { lowPower, reducedMotion: reduceMotion });
+        if (location.search.includes('still')) { meadow.renderOnce(); return; } // for screenshots
+        const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !document.hidden) meadow.start(); else meadow.stop(); });
+        io.observe(hero);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) meadow.stop();
+            else if (hero.getBoundingClientRect().bottom > 0) meadow.start();
+        });
+        if (reduceMotion) meadow.renderOnce();
+    }).catch((err) => { console.error(err); useFallback(); });
+} else {
+    useFallback();
+}
+
+let hintTimer = setTimeout(() => hint.classList.add('is-gone'), 9000);
+hero.addEventListener('pointermove', () => {
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(() => hint.classList.add('is-gone'), 3500);
+}, { passive: true, once: true });
 
 /* ======================================================================
    Scroll: top bar, programme sky
    ====================================================================== */
 const topbar = document.getElementById('topbar');
-const program = document.getElementById('program');
+const program = document.querySelector('.program');
 const events = [...program.querySelectorAll('[data-at]')];
 const root = document.documentElement;
 const sunEl = document.getElementById('sun');
@@ -173,7 +214,13 @@ let ticking = false;
 function onScroll() {
     const y = scrollY;
     const h = hero.offsetHeight;
-    topbar.classList.toggle('is-on', y > h * 0.75);
+    if (!h) return; // hero lives on the Forside tab
+    const p = Math.min(1, y / h);
+    if (meadow) meadow.setScroll(p);
+    if (!reduceMotion) {
+        heroCopy.style.transform = `translate3d(0, ${(-y * 0.25).toFixed(1)}px, 0)`;
+        heroCopy.style.opacity = String(Math.max(0, 1 - p * 1.6));
+    }
 }
 
 function frame() {
@@ -211,15 +258,51 @@ addEventListener('load', () => { measure(); kick(); });
     if (set) document.getElementById('sunset').textContent = osloParts(new Date(set)).time;
 })();
 
-// Highlight current nav section
-const navLinks = [...topbar.querySelectorAll('.topbar-links a')];
-const navIO = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-        if (!e.isIntersecting) return;
-        navLinks.forEach((a) => a.classList.toggle('is-current', a.getAttribute('href') === `#${e.target.id}`));
-    });
-}, { rootMargin: '-45% 0px -50% 0px' });
-['stedet', 'program', 'svar', 'gave'].forEach((id) => navIO.observe(document.getElementById(id)));
+/* ======================================================================
+   Tabs: one panel per tab, chosen by the URL hash (#program, #svar ...),
+   so links can be shared and the back button works.
+   ====================================================================== */
+const TABS = ['forside', 'program', 'praktisk', 'svar', 'gave'];
+const ALIASES = { top: 'forside', stedet: 'praktisk' };
+const tabLinks = [...topbar.querySelectorAll('.tabs a')];
+let currentTab = null;
+
+function showTab(tab, { scrollTo = null, focus = true } = {}) {
+    if (tab !== currentTab) {
+        currentTab = tab;
+        document.body.dataset.tab = tab;
+        TABS.forEach((t) => document.getElementById(`tab-${t}`).classList.toggle('is-active', t === tab));
+        tabLinks.forEach((a) => {
+            if (a.getAttribute('href') === `#${tab}`) a.setAttribute('aria-current', 'page');
+            else a.removeAttribute('aria-current');
+        });
+        if (tab === 'program') { drawTrees(); measure(); paintSky(targetTime()); }
+    }
+    if (scrollTo) scrollTo.scrollIntoView();
+    else window.scrollTo(0, 0);
+    onScroll();
+    if (focus) document.getElementById(`tab-${tab}`).focus({ preventScroll: true });
+}
+
+function route({ focus = true } = {}) {
+    const h = decodeURIComponent(location.hash.slice(1));
+    if (TABS.includes(h)) return showTab(h, { focus });
+    if (ALIASES[h]) return showTab(ALIASES[h], { focus });
+    if (h === 'innhold') return showTab(currentTab || 'forside');
+    // an anchor inside a panel, e.g. #invitasjon from the hero arrow
+    const el = h && document.getElementById(h);
+    const panel = el?.closest('.tab-panel');
+    if (panel) return showTab(panel.id.replace('tab-', ''), { scrollTo: el, focus: false });
+    return showTab('forside', { focus });
+}
+
+addEventListener('hashchange', () => route());
+// clicking the tab you are already on takes you back to its top
+document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (a && a.getAttribute('href') === location.hash) { e.preventDefault(); route(); }
+});
+route({ focus: false });
 
 /* ======================================================================
    Countdown

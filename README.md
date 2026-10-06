@@ -5,10 +5,11 @@ To versjoner av samme side for bryllupet 25.–27. juni 2027 på Malungen gjeste
 | Mappe | Hva |
 |---|---|
 | `klassisk/` | Brudeparets skisse, strammet opp: himmelblå hero med blomstereng, lyseblå/hvite bånd, program med strektegninger, bildestripe, gave og QR. |
-| `kreativ/` | Friere, renere tolkning: stor typografi og et kornblomstfoto øverst, og et program der himmelen følger sola over Malungen time for time (regnet ut for 25.–27. juni 2027). |
-| `kreativ-eng/` | Samme som `kreativ/`, men med den levende WebGL-enga (kornblomster og prestekrager som beveger seg i vinden og viker for musepeker/finger) øverst. `?still` tegner enga én gang uten animasjon. |
+| `kreativ/` | Friere tolkning: en levende WebGL-eng med kornblomster og prestekrager øverst, og et program der himmelen følger sola over Malungen time for time (regnet ut for 25.–27. juni 2027). `?still` tegner enga én gang uten animasjon. |
 
 Begge er ren HTML/CSS/JS uten byggesteg, som Ragnhild & Vetle-siden.
+
+Begge har samme fanerad øverst: **Forside · Program · Praktisk · Svar · Gave**. Hver fane er sin egen visning, styrt av adressen (`#program`, `#svar` osv.), så lenker kan deles direkte og tilbakeknappen virker. Svar-fanen er uthevet, og forsiden har «Svar nå»-knapp og en kort oversikt over når, hvor og svarfrist.
 
 ## Kjøre lokalt
 
@@ -17,6 +18,7 @@ python3 -m http.server 5317
 # http://127.0.0.1:5317/            velg versjon
 # http://127.0.0.1:5317/klassisk/
 # http://127.0.0.1:5317/kreativ/
+# http://127.0.0.1:5317/klassisk/#svar   rett til svarskjemaet
 ```
 
 ## Må fylles inn før lansering

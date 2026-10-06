@@ -3,6 +3,38 @@
 const PRICE_PER_PERSON = 1500;
 const WEDDING = new Date('2027-06-26T13:00:00+02:00');
 
+/* ---------- Tabs ----------
+   One panel per tab, chosen by the URL hash (#program, #svar ...), so links
+   can be shared and the back button works. Without JS every panel shows. */
+const TABS = ['forside', 'program', 'praktisk', 'svar', 'gave'];
+const ALIASES = { top: 'forside', sted: 'praktisk', innhold: 'forside' };
+const tabLinks = [...document.querySelectorAll('.tabbar a')];
+
+function tabFromHash() {
+    const h = decodeURIComponent(location.hash.slice(1));
+    if (TABS.includes(h)) return h;
+    return ALIASES[h] || 'forside';
+}
+
+function showTab(tab, { focus = true } = {}) {
+    document.body.dataset.tab = tab;
+    TABS.forEach((t) => document.getElementById(`tab-${t}`).classList.toggle('is-active', t === tab));
+    tabLinks.forEach((a) => {
+        if (a.getAttribute('href') === `#${tab}`) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+    });
+    window.scrollTo(0, 0);
+    if (focus) document.getElementById(`tab-${tab}`).focus({ preventScroll: true });
+}
+
+addEventListener('hashchange', () => showTab(tabFromHash()));
+// clicking the tab you are already on takes you back to its top
+document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (a && a.getAttribute('href') === location.hash) { e.preventDefault(); showTab(tabFromHash()); }
+});
+showTab(tabFromHash(), { focus: false });
+
 /* ---------- Countdown ---------- */
 const countdown = document.getElementById('countdown');
 function renderCountdown() {

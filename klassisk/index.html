@@ -25,15 +25,29 @@
 </head>
 <body>
 
-<!-- ============ HERO ============ -->
-<header class="hero" id="top">
-    <nav class="hero-nav" aria-label="Snarveier">
-        <a href="#sted">Sted</a>
-        <a href="#program">Program</a>
-        <a href="#svar">Svar</a>
-        <a href="#gave">Ønskeliste</a>
-    </nav>
+<a class="skip" href="#innhold">Hopp til innholdet</a>
 
+<nav class="tabbar" aria-label="Hovedmeny">
+    <ul>
+        <li><a href="#forside">Forside</a></li>
+        <li><a href="#program">Program</a></li>
+        <li><a href="#praktisk">Praktisk</a></li>
+        <li><a href="#svar" class="tab-svar">Svar</a></li>
+        <li><a href="#gave">Gave</a></li>
+    </ul>
+</nav>
+
+<!-- shown above every tab except Forside -->
+<header class="masthead">
+    <h1 class="masthead-names script"><a href="#forside">Kjersti &amp; Håkon</a></h1>
+    <p class="masthead-meta">25.–27. juni 2027 · Malungen gjestegård</p>
+</header>
+
+<main id="innhold">
+
+<!-- ============ FORSIDE ============ -->
+<div class="tab-panel" id="tab-forside" tabindex="-1">
+<header class="hero" id="top">
     <div class="hero-inner">
         <figure class="hero-photo">
             <img src="img/couple-1-sm.webp" srcset="img/couple-1-sm.webp 700w, img/couple-1.webp 1200w" sizes="(max-width: 760px) 70vw, 340px" alt="Kjersti og Håkon" width="700" height="875" fetchpriority="high" />
@@ -56,9 +70,6 @@
     </div>
 </header>
 
-<main>
-
-<!-- ============ VELKOMMEN ============ -->
 <section class="band band-blue intro" aria-labelledby="intro-title">
     <h2 class="visually-hidden" id="intro-title">Velkommen</h2>
     <div class="intro-row">
@@ -70,112 +81,28 @@
     </div>
     <p class="intro-lede">Vi gifter oss helgen 25.–27. juni 2027 og ønsker å feste med dere!</p>
     <p class="countdown" id="countdown" aria-live="polite"></p>
+    <dl class="facts">
+        <div><dt>Når</dt><dd>Fredag 25. til søndag 27. juni 2027</dd></div>
+        <div><dt>Hvor</dt><dd>Malungen gjestegård, Vallset</dd></div>
+        <div><dt>Svar innen</dt><dd>1. mars 2027</dd></div>
+    </dl>
+    <a class="btn btn-big" href="#svar">Svar nå</a>
+    <p class="intro-links"><a class="text-link" href="#program">Se programmet</a> <a class="text-link" href="#praktisk">Overnatting og kleskode</a></p>
     <div class="monogram" aria-hidden="true"><span>K</span><span>H</span></div>
 </section>
 
-<!-- ============ STED OG OVERNATTING ============ -->
-<section class="band band-white sted" id="sted" aria-labelledby="sted-title">
-    <div class="wrap sted-grid">
-        <figure class="sted-photo">
-            <img src="img/malungen-sm.webp" srcset="img/malungen-sm.webp 900w, img/malungen.webp 1800w" sizes="(max-width: 860px) 92vw, 52vw" alt="Hovedbygningen på Malungen gjestegård, et mørkt tømmerhus med rødt teglsteinstak og grønn plen" width="900" height="600" loading="lazy" />
-            <figcaption>Malungen gjestegård, Vallset</figcaption>
-        </figure>
-
-        <div class="sted-text">
-            <h2 class="h-caps" id="sted-title">Sted og overnatting</h2>
-
-            <h3>Malungen gjestegård</h3>
-            <p>Malungen gjestegård ligger ved Malungtjernet i Vallset i Stange kommune. Vi har leid hele gjestegården og hyttene rundt fra fredag til søndag, så hele helgen er vår.</p>
-
-            <h3>Overnatting</h3>
-            <p>Vi ønsker å feire med dere fra fredag til søndag, og tilbyr overnatting på stedet for 1500 kr per person for hele helgen. Sengetøy og håndklær er inkludert.</p>
-            <p>Rommene fordeles før helgen, og vi sender ut romfordelingen på e-post.</p>
-
-            <h3>Veibeskrivelse og parkering</h3>
-            <p>Adressen er <strong>Odalsvegen 1601, 2330 Vallset</strong>. Det er god plass på parkeringsplassen ved gjestegården.</p>
-            <p><a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Malungen+gjesteg%C3%A5rd+Odalsvegen+1601+Vallset" target="_blank" rel="noopener">Åpne i Google Maps</a></p>
-        </div>
+<section class="band band-cream galleri" aria-label="Bilder">
+    <div class="galleri-row">
+        <figure><img src="img/couple-3-sm.webp" alt="Kjersti og Håkon i solnedgang" width="700" height="875" loading="lazy" /></figure>
+        <figure class="mid"><img src="img/daisies-sm.webp" srcset="img/daisies-sm.webp 700w, img/daisies.webp 1200w" sizes="(max-width: 760px) 80vw, 420px" alt="Prestekrager i glassvase" width="700" height="875" loading="lazy" /></figure>
+        <figure><img src="img/couple-1-sm.webp" alt="Kjersti og Håkon" width="700" height="875" loading="lazy" /></figure>
     </div>
 </section>
-
-<!-- ============ PRAKTISK + SVAR ============ -->
-<section class="band band-white praktisk" aria-label="Praktisk informasjon">
-    <div class="wrap praktisk-grid">
-
-        <div class="praktisk-info">
-            <h3>Kleskode fredag</h3>
-            <p>Sommerlig pent tøy til å være ute i.</p>
-            <p>Grillingen skjer på tunet, så ikke velg sko med tynne hæler.</p>
-
-            <h3>Kleskode lørdag</h3>
-            <p>Mørk dress eller bunad.</p>
-            <p>Unngå hvitt antrekk ;)</p>
-            <p>Vielsen skjer på tunet, så ikke velg sko med tynne hæler her heller.</p>
-
-            <h3>Pakkeliste</h3>
-            <ul class="checklist" id="pakkeliste">
-                <li><label><input type="checkbox" id="pakk-bad" /> <span>Badetøy, Malungtjernet ligger rett ved gården</span></label></li>
-                <li><label><input type="checkbox" id="pakk-sko" /> <span>Gode sko til tunet og stiene</span></label></li>
-                <li><label><input type="checkbox" id="pakk-genser" /> <span>En varm genser til de lyse sommernettene</span></label></li>
-                <li><label><input type="checkbox" id="pakk-mygg" /> <span>Myggspray</span></label></li>
-                <li><label><input type="checkbox" id="pakk-sove" /> <span>Godt humør og danseskoene</span></label></li>
-            </ul>
-        </div>
-
-        <figure class="daisy">
-            <img src="img/daisy-plate-sm.webp" srcset="img/daisy-plate-sm.webp 600w, img/daisy-plate.webp 1100w" sizes="(max-width: 860px) 70vw, 380px" alt="Akvarell av prestekrager" width="600" height="902" loading="lazy" />
-        </figure>
-
-        <div class="svar" id="svar">
-            <h2 class="h-caps">Svar.</h2>
-            <p>Vi trenger svar fra alle innen <strong>1. mars 2027</strong>. Fyll inn ett skjema per husstand, og legg til alle som følger deg.</p>
-
-            <form class="rsvp" id="rsvp" novalidate>
-                <div id="guests"></div>
-
-                <button type="button" class="btn-ghost" id="add-guest">+ Legg til en gjest</button>
-
-                <div class="field">
-                    <label for="rsvp-email">E-post</label>
-                    <input type="email" id="rsvp-email" name="email" autocomplete="email" required placeholder="navn@eksempel.no" />
-                    <p class="hint">Vi sender romfordeling og praktisk info hit.</p>
-                </div>
-
-                <div class="field">
-                    <label for="rsvp-msg">Hilsen til brudeparet <span class="opt">(valgfritt)</span></label>
-                    <textarea id="rsvp-msg" name="message" rows="3"></textarea>
-                </div>
-
-                <p class="form-error" id="rsvp-error" role="alert" hidden></p>
-                <button type="submit" class="btn" id="rsvp-submit">Send svar</button>
-            </form>
-
-            <div class="rsvp-done" id="rsvp-done" hidden tabindex="-1">
-                <h3>Takk, vi har fått svaret ditt!</h3>
-                <div id="rsvp-summary"></div>
-                <button type="button" class="btn-ghost" id="rsvp-again">Send et nytt svar</button>
-            </div>
-
-            <div class="betaling">
-                <h3>Betaling for overnatting</h3>
-                <p>Overfør 1500 kr per person til kontonummer <span class="fyll">kontonummer kommer</span>. Merk overføringen med navn.</p>
-            </div>
-        </div>
-
-        <div class="bidrag">
-            <h2 class="h-caps">Bidrag og taler</h2>
-            <p>Har du lyst til å si noen ord, eller bidra med noe annet festlig i løpet av kvelden? Det setter vi veldig stor pris på. Ta kontakt med toastmasterne våre, så hjelper de deg å finne en plass i programmet.</p>
-            <h3>Toastmastere</h3>
-            <ul class="contacts">
-                <li><span class="name">Thea von Hirsch</span> <span class="fyll">e-post og telefon kommer</span></li>
-                <li><span class="name">Håkon Kjernæs</span> <span class="fyll">e-post og telefon kommer</span></li>
-            </ul>
-        </div>
-    </div>
-</section>
+</div>
 
 <!-- ============ PROGRAM ============ -->
-<section class="band band-blue program" id="program" aria-label="Program">
+<div class="tab-panel" id="tab-program" tabindex="-1">
+<section class="band band-blue program" aria-label="Program">
     <div class="wrap">
 
         <article class="day day-fri" aria-labelledby="fre-title">
@@ -233,18 +160,120 @@
         </article>
     </div>
 </section>
+</div>
 
-<!-- ============ BILDER ============ -->
-<section class="band band-cream galleri" aria-label="Bilder">
-    <div class="galleri-row">
-        <figure><img src="img/couple-3-sm.webp" alt="Kjersti og Håkon i solnedgang" width="700" height="875" loading="lazy" /></figure>
-        <figure class="mid"><img src="img/daisies-sm.webp" srcset="img/daisies-sm.webp 700w, img/daisies.webp 1200w" sizes="(max-width: 760px) 80vw, 420px" alt="Prestekrager i glassvase" width="700" height="875" loading="lazy" /></figure>
-        <figure><img src="img/couple-1-sm.webp" alt="Kjersti og Håkon" width="700" height="875" loading="lazy" /></figure>
+<!-- ============ PRAKTISK ============ -->
+<div class="tab-panel" id="tab-praktisk" tabindex="-1">
+<section class="band band-white sted" aria-labelledby="sted-title">
+    <div class="wrap sted-grid">
+        <figure class="sted-photo">
+            <img src="img/malungen-sm.webp" srcset="img/malungen-sm.webp 900w, img/malungen.webp 1800w" sizes="(max-width: 860px) 92vw, 52vw" alt="Hovedbygningen på Malungen gjestegård, et mørkt tømmerhus med rødt teglsteinstak og grønn plen" width="900" height="600" loading="lazy" />
+            <figcaption>Malungen gjestegård, Vallset</figcaption>
+        </figure>
+
+        <div class="sted-text">
+            <h2 class="h-caps" id="sted-title">Sted og overnatting</h2>
+
+            <h3>Malungen gjestegård</h3>
+            <p>Malungen gjestegård ligger ved Malungtjernet i Vallset i Stange kommune. Vi har leid hele gjestegården og hyttene rundt fra fredag til søndag, så hele helgen er vår.</p>
+
+            <h3>Overnatting</h3>
+            <p>Vi ønsker å feire med dere fra fredag til søndag, og tilbyr overnatting på stedet for 1500 kr per person for hele helgen. Sengetøy og håndklær er inkludert.</p>
+            <p>Rommene fordeles før helgen, og vi sender ut romfordelingen på e-post.</p>
+
+            <h3>Veibeskrivelse og parkering</h3>
+            <p>Adressen er <strong>Odalsvegen 1601, 2330 Vallset</strong>. Det er god plass på parkeringsplassen ved gjestegården.</p>
+            <p><a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Malungen+gjesteg%C3%A5rd+Odalsvegen+1601+Vallset" target="_blank" rel="noopener">Åpne i Google Maps</a></p>
+        </div>
     </div>
 </section>
 
+<section class="band band-white praktisk" aria-label="Praktisk informasjon">
+    <div class="wrap praktisk-grid">
+
+        <div class="praktisk-info">
+            <h3>Kleskode fredag</h3>
+            <p>Sommerlig pent tøy til å være ute i.</p>
+            <p>Grillingen skjer på tunet, så ikke velg sko med tynne hæler.</p>
+
+            <h3>Kleskode lørdag</h3>
+            <p>Mørk dress eller bunad.</p>
+            <p>Unngå hvitt antrekk ;)</p>
+            <p>Vielsen skjer på tunet, så ikke velg sko med tynne hæler her heller.</p>
+
+            <h3>Pakkeliste</h3>
+            <ul class="checklist" id="pakkeliste">
+                <li><label><input type="checkbox" id="pakk-bad" /> <span>Badetøy, Malungtjernet ligger rett ved gården</span></label></li>
+                <li><label><input type="checkbox" id="pakk-sko" /> <span>Gode sko til tunet og stiene</span></label></li>
+                <li><label><input type="checkbox" id="pakk-genser" /> <span>En varm genser til de lyse sommernettene</span></label></li>
+                <li><label><input type="checkbox" id="pakk-mygg" /> <span>Myggspray</span></label></li>
+                <li><label><input type="checkbox" id="pakk-sove" /> <span>Godt humør og danseskoene</span></label></li>
+            </ul>
+        </div>
+
+        <figure class="daisy">
+            <img src="img/daisy-plate-sm.webp" srcset="img/daisy-plate-sm.webp 600w, img/daisy-plate.webp 1100w" sizes="(max-width: 860px) 70vw, 380px" alt="Akvarell av prestekrager" width="600" height="902" loading="lazy" />
+        </figure>
+
+        <div class="bidrag">
+            <h2 class="h-caps">Bidrag og taler</h2>
+            <p>Har du lyst til å si noen ord, eller bidra med noe annet festlig i løpet av kvelden? Det setter vi veldig stor pris på. Ta kontakt med toastmasterne våre, så hjelper de deg å finne en plass i programmet.</p>
+            <h3>Toastmastere</h3>
+            <ul class="contacts">
+                <li><span class="name">Thea von Hirsch</span> <span class="fyll">e-post og telefon kommer</span></li>
+                <li><span class="name">Håkon Kjernæs</span> <span class="fyll">e-post og telefon kommer</span></li>
+            </ul>
+        </div>
+    </div>
+</section>
+</div>
+
+<!-- ============ SVAR ============ -->
+<div class="tab-panel" id="tab-svar" tabindex="-1">
+<section class="band band-white svar-page" aria-labelledby="svar-title">
+    <div class="wrap svar-wrap">
+        <div class="svar">
+            <h2 class="h-caps" id="svar-title">Svar.</h2>
+            <p>Vi trenger svar fra alle innen <strong>1. mars 2027</strong>. Fyll inn ett skjema per husstand, og legg til alle som følger deg.</p>
+
+            <form class="rsvp" id="rsvp" novalidate>
+                <div id="guests"></div>
+
+                <button type="button" class="btn-ghost" id="add-guest">+ Legg til en gjest</button>
+
+                <div class="field">
+                    <label for="rsvp-email">E-post</label>
+                    <input type="email" id="rsvp-email" name="email" autocomplete="email" required placeholder="navn@eksempel.no" />
+                    <p class="hint">Vi sender romfordeling og praktisk info hit.</p>
+                </div>
+
+                <div class="field">
+                    <label for="rsvp-msg">Hilsen til brudeparet <span class="opt">(valgfritt)</span></label>
+                    <textarea id="rsvp-msg" name="message" rows="3"></textarea>
+                </div>
+
+                <p class="form-error" id="rsvp-error" role="alert" hidden></p>
+                <button type="submit" class="btn" id="rsvp-submit">Send svar</button>
+            </form>
+
+            <div class="rsvp-done" id="rsvp-done" hidden tabindex="-1">
+                <h3>Takk, vi har fått svaret ditt!</h3>
+                <div id="rsvp-summary"></div>
+                <button type="button" class="btn-ghost" id="rsvp-again">Send et nytt svar</button>
+            </div>
+
+            <div class="betaling">
+                <h3>Betaling for overnatting</h3>
+                <p>Overfør 1500 kr per person til kontonummer <span class="fyll">kontonummer kommer</span>. Merk overføringen med navn.</p>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+
 <!-- ============ GAVE ============ -->
-<section class="band band-blue gave" id="gave" aria-labelledby="gave-title">
+<div class="tab-panel" id="tab-gave" tabindex="-1">
+<section class="band band-blue gave" aria-labelledby="gave-title">
     <div class="wrap gave-grid">
         <figure class="gave-art">
             <img src="img/brudepar.svg" alt="" width="200" height="240" loading="lazy" />
@@ -264,6 +293,7 @@
         <div class="monogram monogram-end" aria-hidden="true"><span>K</span><span>H</span></div>
     </div>
 </section>
+</div>
 
 </main>
 
