@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 250" role="img" aria-label="To personer som holder et stort hjerte">
+  <defs>
+    <filter id="ink" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/>
+    </filter>
+    <filter id="wash" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4"/>
+    </filter>
+  </defs>
+  <g filter="url(#ink)" stroke="#2b2724" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- heads peeking over the heart -->
+    <circle cx="70" cy="34" r="13" fill="#f6e3d6"/>
+    <path d="M57 31c2-12 22-16 27-2 2 6-2 12-3 18 8-2 12 8 6 14" fill="#6e4b36"/>
+    <circle cx="130" cy="36" r="12" fill="#f6e3d6"/>
+    <path d="M118 33c1-10 20-14 24 0-6-4-14-4-24 0Z" fill="#c9a26a"/>
+    <!-- legs: left person, dress hem and legs -->
+    <path d="M58 150l-6 22h40l-6-22" fill="#e9b7b0"/>
+    <path d="M66 172l-2 50M80 172l2 50" fill="none"/>
+    <path d="M64 222h-9M82 222h9" stroke-width="3"/>
+    <!-- legs: right person, trousers -->
+    <path d="M114 150l-2 72h10l4-50 4 50h10l-2-72Z" fill="#c8443a" fill-opacity=".85"/>
+    <path d="M110 224h13M128 224h14" stroke-width="3.2"/>
+    <!-- heart -->
+    <path d="M100 74C96 44 66 30 46 44 24 60 30 102 100 158 170 102 176 60 154 44 134 30 104 44 100 74Z" fill="#fff" stroke="#c8443a" stroke-width="3.6"/>
+    <path d="M100 82C97 58 72 46 55 56" fill="none" stroke="#c8443a" stroke-width="1.2" opacity=".5"/>
+    <!-- hands -->
+    <ellipse cx="34" cy="80" rx="6" ry="8" fill="#f6e3d6" transform="rotate(-18 34 80)"/>
+    <ellipse cx="166" cy="80" rx="6" ry="8" fill="#f6e3d6" transform="rotate(18 166 80)"/>
+  </g>
+  <ellipse cx="100" cy="232" rx="66" ry="5" fill="#8fa3bd" opacity=".25" filter="url(#wash)"/>
+</svg>

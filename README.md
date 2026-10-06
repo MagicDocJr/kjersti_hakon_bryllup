@@ -1,0 +1,57 @@
+# Kjersti og Håkon — bryllupsside
+
+To versjoner av samme side for bryllupet 25.–27. juni 2027 på Malungen gjestegård:
+
+| Mappe | Hva |
+|---|---|
+| `klassisk/` | Brudeparets skisse, strammet opp: himmelblå hero med blomstereng, lyseblå/hvite bånd, program med strektegninger, bildestripe, gave og QR. |
+| `kreativ/` | Friere, renere tolkning: stor typografi og et kornblomstfoto øverst, og et program der himmelen følger sola over Malungen time for time (regnet ut for 25.–27. juni 2027). |
+| `kreativ-eng/` | Samme som `kreativ/`, men med den levende WebGL-enga (kornblomster og prestekrager som beveger seg i vinden og viker for musepeker/finger) øverst. `?still` tegner enga én gang uten animasjon. |
+
+Begge er ren HTML/CSS/JS uten byggesteg, som Ragnhild & Vetle-siden.
+
+## Kjøre lokalt
+
+```sh
+python3 -m http.server 5317
+# http://127.0.0.1:5317/            velg versjon
+# http://127.0.0.1:5317/klassisk/
+# http://127.0.0.1:5317/kreativ/
+```
+
+## Må fylles inn før lansering
+
+Plassholdere vises som røde, stiplede felt på siden (`.fyll`):
+
+- **Kontonummer** for overnatting (1500 kr per person) og for gavebidrag
+- **Toastmastere**: e-post og telefon. Navnene (Thea von Hirsch, Håkon Kjernæs) er lest av en lavoppløst skisse og må sjekkes.
+- **Ønskeliste-lenke**: peker nå til `https://onskeskyen.no/`. Bytt URL i `index.html` og lag ny QR (`img/qr-onskeliste.svg`).
+- **Svarfrist**: satt til 1. mars 2027.
+- **Svarskjema-backend**: `sendRsvp()` i `main.js` later bare som den sender. Koble på Supabase + EmailJS slik som i `Rag_vetl_bryllup/src/registrering/registrering.js`.
+- **Bilder av paret**: `couple-1/2/3` er stand-in-bilder fra Unsplash. Bytt med parets egne (4:5 stående, ca. 1200 px bredde, webp).
+- Tekstene «Endelig / sier vi ja» (klassisk) og kveldsprogrammet fredag 21.00 er forslag.
+
+## Bildekilder
+
+- Malungen gjestegård: Bene Riobó, [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Malungen_Gjesteg%C3%A5rd.jpg) (krever kreditering, står i footer)
+- Prestekrage-plansje: Fitschen og Schmeil, *Pflanzen der Heimat*, 1913, offentlig eie
+- Kornblomsteng: Gerda Arendt, [CC0](https://commons.wikimedia.org/wiki/File:Cornflower_field,_Eschenhahn.jpg)
+- Stand-in parbilder og prestekrager i vase: Unsplash-lisens
+- Strektegningene (grill, vin, frokost, hjerte, brudepar) og QR-koden er laget for prosjektet
+
+## Teknisk, kreativ versjon
+
+- Programhimmelen: `sunPosition()` i `main.js` regner solhøyde og asimut for Malungen (60,77° N, 11,45° Ø). Scrollposisjonen mellom to programpunkter gjøres om til et klokkeslett, så natta mellom fredag og lørdag går gjennom skumring og soloppgang. En smal linje under menyen viser klokkeslett og solhøyde.
+- `prefers-reduced-motion` slår av overgangene.
+
+## Publisering
+
+GitHub Pages fra `main` (rotmappen), med eget domene `www.kjerstioghakon.no` (filen `CNAME`). DNS ligger hos Domeneshop:
+
+| Type | Navn | Verdi |
+|---|---|---|
+| A | (tom / @) | 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153 |
+| AAAA | (tom / @) | 2606:50c0:8000::153, 2606:50c0:8001::153, 2606:50c0:8002::153, 2606:50c0:8003::153 |
+| CNAME | www | magicdocjr.github.io |
+
+Alle sidene har `noindex` til ekte bilder og detaljer er på plass. Når paret har valgt versjon, flytt den til roten (eller la `index.html` videresende dit).
