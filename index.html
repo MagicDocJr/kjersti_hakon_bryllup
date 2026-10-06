@@ -6,12 +6,12 @@
     <title>Kjersti og Håkon, 25.–27. juni 2027</title>
     <!-- placeholder until the real site has the couple's photos and details -->
     <meta name="robots" content="noindex" />
-    <meta name="description" content="Kjersti og Håkon gifter seg helgen 25.–27. juni 2027 på Malungen gjestegård. Sett av datoen – invitasjon og svarskjema kommer." />
+    <meta name="description" content="Kjersti og Håkon gifter seg helgen 25.–27. juni 2027 på Malungen gjestegård. Sett av datoen – nettside kommer snart." />
     <meta name="theme-color" content="#0b1030" />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Kjersti og Håkon gifter seg" />
-    <meta property="og:description" content="Sett av helgen 25.–27. juni 2027. Invitasjon og svarskjema kommer." />
+    <meta property="og:description" content="Sett av helgen 25.–27. juni 2027. Nettside kommer snart." />
     <meta property="og:url" content="https://www.kjerstioghakon.no/" />
     <meta property="og:image" content="https://www.kjerstioghakon.no/assets/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
@@ -135,11 +135,9 @@
         .swap { animation: swap 1.6s cubic-bezier(.16, .8, .2, 1); }
         @keyframes swap { 0% { opacity: 0.15; filter: blur(8px); } 100% { opacity: 1; filter: blur(0); } }
 
-        .knot { margin-top: 26px; display: grid; justify-items: center; gap: 10px; }
-        .knot p { font-family: var(--f-display); font-style: italic; font-size: clamp(16px, 2vw, 19px); color: var(--ivory-soft); max-width: 34ch; text-wrap: balance; }
 
         .until { margin-top: 14px; font-size: 14px; color: var(--ivory-soft); }
-        .soon { margin-top: 22px; max-width: 36ch; font-size: 17px; text-wrap: balance; }
+        .soon { margin-top: 30px; font-family: var(--f-display); font-style: italic; font-size: clamp(20px, 2.6vw, 26px); }
 
         .cal { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
         .btn {
@@ -162,13 +160,12 @@
 
         /* the entrance is a sequence: names, then the light rises, then the details */
         @media (prefers-reduced-motion: no-preference) {
-            .kicker, h1, .when, .where, .count, .until, .knot, .soon, .cal, footer { animation: rise 2.2s cubic-bezier(.16, .8, .2, 1) both; }
+            .kicker, h1, .when, .where, .count, .until, .soon, .cal, footer { animation: rise 2.2s cubic-bezier(.16, .8, .2, 1) both; }
             .threads { animation: fade 4s ease both .6s; }
             .kicker { animation-delay: .2s; }
             h1 { animation-delay: .5s; }
             .when, .where { animation-delay: 1.1s; }
             .count, .until { animation-delay: 1.8s; }
-            .knot { animation-delay: 2.6s; }
             .soon, .cal, footer { animation-delay: 3s; }
             @keyframes rise { from { opacity: 0; transform: translateY(16px); filter: blur(4px); } }
             @keyframes fade { from { opacity: 0; } }
@@ -200,11 +197,7 @@
     <p class="until" id="until">til vielsen lørdag 26. juni kl. 13.00</p>
     <p class="sr" id="sr-count" aria-live="off"></p>
 
-    <div class="knot">
-        <p id="knot-text">To tråder, én knute. Jo nærmere dagen kommer, desto tettere flettes de.</p>
-    </div>
-
-    <p class="soon" id="soon">Invitasjon, program og svarskjema kommer her snart. Sett av hele helgen, vi gleder oss til å feire med dere!</p>
+    <p class="soon" id="soon">Nettside kommer snart</p>
 
     <div class="cal">
         <a class="btn btn-solid" href="/assets/kjersti-og-hakon.ics" download="kjersti-og-hakon.ics">Legg til i kalenderen</a>
@@ -268,7 +261,6 @@
                 mode = 'after';
                 set(el.d, 'Gift!'); el.d.classList.add('word'); el.dl.textContent = '26. juni 2027';
                 clockRow.hidden = true; $('until').hidden = true;
-                $('knot-text').textContent = 'To tråder, én knute.';
                 $('soon').textContent = 'Takk for at dere feiret med oss!';
                 document.querySelector('.cal').hidden = true;
                 sr.textContent = 'Kjersti og Håkon er gift.';
