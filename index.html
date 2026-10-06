@@ -84,37 +84,44 @@
         .when { margin-top: 18px; font-family: var(--f-display); font-variation-settings: "opsz" 24; font-weight: 500; font-size: clamp(19px, 2.4vw, 24px); }
         .where { margin-top: 2px; color: var(--ivory-soft); }
 
-        /* the particle stage */
-        .stage {
-            position: relative;
-            margin-top: clamp(8px, 2vh, 20px);
-            width: 100%;
-            height: clamp(280px, 46vh, 500px);
-            touch-action: pan-y;
-            cursor: crosshair;
-        }
-        .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-        .labels { position: absolute; inset: 0; pointer-events: none; }
-        .lab {
-            position: absolute;
-            transform: translateX(-50%);
-            font-size: 13px;
-            letter-spacing: 0.06em;
-            color: var(--ivory-soft);
-            white-space: nowrap;
-        }
-        .lab-days { font-family: var(--f-display); font-style: italic; font-size: clamp(16px, 2vw, 20px); letter-spacing: 0; color: var(--ivory); }
+        /* the two threads live on a full-screen canvas behind everything */
+        .threads { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+        main { position: relative; z-index: 1; }
+        h1, .when, .count { text-shadow: 0 0 40px rgba(11, 16, 48, 0.85), 0 0 12px rgba(11, 16, 48, 0.6); }
 
-        /* plain countdown if WebGL is not available */
-        .fallback { display: none; position: absolute; inset: 0; align-content: center; grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 480px; margin: auto; }
-        .no-gl .fallback { display: grid; }
-        .no-gl canvas, .no-gl .labels { display: none; }
-        .fallback div { display: flex; flex-direction: column-reverse; padding: 10px 4px; }
-        .fallback div + div { border-left: 1px solid var(--line); }
-        .fallback dd { font-family: var(--f-display); font-size: clamp(36px, 8vw, 64px); line-height: 1; font-variant-numeric: lining-nums tabular-nums; }
-        .fallback dt { margin-top: 8px; font-size: 13px; color: var(--ivory-soft); }
+        .count {
+            margin-top: clamp(30px, 6vh, 64px);
+            display: grid;
+            justify-items: center;
+            font-variant-numeric: lining-nums tabular-nums;
+        }
+        .days {
+            font-family: var(--f-display);
+            font-variation-settings: "opsz" 30;
+            font-weight: 400;
+            font-size: clamp(96px, 17vw, 196px);
+            line-height: 0.85;
+            letter-spacing: -0.03em;
+        }
+        .days-label { margin-top: 6px; font-family: var(--f-display); font-style: italic; font-size: clamp(19px, 2.4vw, 24px); }
+        .clock { margin-top: 18px; display: flex; gap: 28px; justify-content: center; color: var(--ivory-soft); }
+        .clock b { font-family: var(--f-display); font-weight: 400; font-size: clamp(26px, 3.6vw, 34px); color: var(--ivory); margin-right: 6px; }
+        /* a slow cross-fade when a number changes */
+        .swap { animation: swap 1.6s cubic-bezier(.16, .8, .2, 1); }
+        @keyframes swap { 0% { opacity: 0.15; filter: blur(8px); } 100% { opacity: 1; filter: blur(0); } }
 
-        .until { font-size: 14px; color: var(--ivory-soft); }
+        .knot { margin-top: 26px; display: grid; justify-items: center; gap: 10px; }
+        .knot p { font-family: var(--f-display); font-style: italic; font-size: clamp(16px, 2vw, 19px); color: var(--ivory-soft); max-width: 34ch; text-wrap: balance; }
+        .knot button {
+            font: inherit; font-size: 14px; letter-spacing: 0.04em;
+            color: var(--ivory); background: rgba(243, 239, 230, 0.06);
+            border: 1px solid rgba(243, 239, 230, 0.35); border-radius: 999px;
+            padding: 9px 18px; cursor: pointer; transition: background .3s, border-color .3s, opacity .6s;
+        }
+        .knot button:hover { background: rgba(243, 239, 230, 0.12); border-color: var(--ivory); }
+        .knot button[disabled] { opacity: 0.45; cursor: default; }
+
+        .until { margin-top: 14px; font-size: 14px; color: var(--ivory-soft); }
         .soon { margin-top: 22px; max-width: 36ch; font-size: 17px; text-wrap: balance; }
 
         .cal { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
@@ -138,12 +145,14 @@
 
         /* the entrance is a sequence: names, then the light rises, then the details */
         @media (prefers-reduced-motion: no-preference) {
-            .kicker, h1, .when, .where, .labels, .until, .soon, .cal, footer { animation: rise 2.2s cubic-bezier(.16, .8, .2, 1) both; }
+            .kicker, h1, .when, .where, .count, .until, .knot, .soon, .cal, footer { animation: rise 2.2s cubic-bezier(.16, .8, .2, 1) both; }
+            .threads { animation: fade 4s ease both .6s; }
             .kicker { animation-delay: .2s; }
             h1 { animation-delay: .5s; }
             .when, .where { animation-delay: 1.1s; }
-            .labels { animation-name: fade; animation-delay: 5s; }
-            .until, .soon, .cal, footer { animation-delay: 4s; }
+            .count, .until { animation-delay: 1.8s; }
+            .knot { animation-delay: 2.6s; }
+            .soon, .cal, footer { animation-delay: 3s; }
             @keyframes rise { from { opacity: 0; transform: translateY(16px); filter: blur(4px); } }
             @keyframes fade { from { opacity: 0; } }
         }
@@ -151,29 +160,30 @@
         @media (max-width: 600px) {
             h1 { flex-direction: column; align-items: center; gap: 0; font-size: clamp(52px, 16vw, 76px); }
             h1 .amp { font-size: 0.6em; line-height: 1; }
-            .stage { height: clamp(240px, 38vh, 340px); }
-            .lab { font-size: 12px; }
+            .clock { gap: 20px; }
         }
     </style>
 </head>
 <body>
+<canvas class="threads" id="threads" aria-hidden="true"></canvas>
 <main>
     <p class="kicker">Sett av datoen</p>
     <h1><span>Kjersti</span> <span class="amp" aria-label="og">&amp;</span> <span>Håkon</span></h1>
     <p class="when">25.–27. juni 2027</p>
     <p class="where">Malungen gjestegård, Vallset</p>
 
-    <div class="stage" id="stage" aria-hidden="true">
-        <canvas></canvas>
-        <div class="labels"></div>
-        <dl class="fallback">
-            <div><dt>dager</dt><dd id="c-d">–</dd></div>
-            <div><dt>timer</dt><dd id="c-h">–</dd></div>
-            <div><dt>minutter</dt><dd id="c-m">–</dd></div>
-        </dl>
+    <div class="count" aria-hidden="true">
+        <span class="days" id="c-d">–</span>
+        <span class="days-label" id="c-dl">dager</span>
+        <span class="clock"><span><b id="c-h">–</b>timer</span><span><b id="c-m">–</b>minutter</span></span>
     </div>
     <p class="until">til vielsen lørdag 26. juni kl. 13.00</p>
     <p class="sr" id="sr-count" aria-live="off"></p>
+
+    <div class="knot">
+        <p>To tråder, én knute. Jo nærmere dagen kommer, desto tettere flettes de.</p>
+        <button type="button" id="knot-btn">Se dem knytes</button>
+    </div>
 
     <p class="soon">Invitasjon, program og svarskjema kommer her snart. Sett av hele helgen, vi gleder oss til å feire med dere!</p>
 
@@ -186,18 +196,24 @@
 </main>
 
 <script>
-    // Plain countdown: drives the no-WebGL fallback and the screen-reader text.
+    // Countdown in plain type. Numbers cross-fade when they change.
     (function () {
         const WEDDING = new Date('2027-06-26T13:00:00+02:00').getTime();
-        const el = ['c-d', 'c-h', 'c-m'].map((id) => document.getElementById(id));
+        const el = { d: document.getElementById('c-d'), dl: document.getElementById('c-dl'), h: document.getElementById('c-h'), m: document.getElementById('c-m') };
         const sr = document.getElementById('sr-count');
         const two = (n) => String(n).padStart(2, '0');
+        const set = (node, text) => {
+            if (node.textContent === text) return;
+            node.textContent = text;
+            node.classList.remove('swap'); void node.offsetWidth; node.classList.add('swap');
+        };
         function tick() {
             let ms = Math.max(0, WEDDING - Date.now());
             const d = Math.floor(ms / 86400000); ms -= d * 86400000;
             const h = Math.floor(ms / 3600000); ms -= h * 3600000;
             const m = Math.floor(ms / 60000);
-            el[0].textContent = d; el[1].textContent = two(h); el[2].textContent = two(m);
+            set(el.d, String(d)); el.dl.textContent = d === 1 ? 'dag' : 'dager';
+            set(el.h, two(h)); set(el.m, two(m));
             sr.textContent = `${d} dager, ${h} timer og ${m} minutter igjen.`;
         }
         tick();
@@ -205,13 +221,26 @@
     })();
 </script>
 <script type="module">
-    const stage = document.getElementById('stage');
+    const canvas = document.getElementById('threads');
+    const btn = document.getElementById('knot-btn');
     const gl = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; } })();
-    if (!gl) stage.classList.add('no-gl');
+    if (!gl) { canvas.remove(); btn.closest('.knot').remove(); }
     else {
-        import('/assets/countdown.js')
-            .then(({ startCountdown }) => startCountdown(stage, { reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches }))
-            .catch((err) => { console.error(err); stage.classList.add('no-gl'); });
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        import('/assets/threads.js?v=5').then(({ startThreads }) => {
+            let playing = false;
+            const threads = startThreads(canvas, {
+                reducedMotion,
+                ringAround: document.querySelector('.days'),
+                onFrame(p) {
+                    // the button rests while the knot is being tied
+                    if (p > 0 && !playing) { playing = true; btn.disabled = true; btn.textContent = 'Lørdag 26. juni'; }
+                    if (p === 0 && playing) { playing = false; btn.disabled = false; btn.textContent = 'Se dem knytes'; }
+                },
+            });
+            if (reducedMotion) btn.closest('.knot').querySelector('button').remove();
+            btn.addEventListener('click', () => threads.playKnot());
+        }).catch((err) => { console.error(err); canvas.remove(); btn.closest('.knot').remove(); });
     }
 </script>
 </body>
