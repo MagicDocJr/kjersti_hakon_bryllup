@@ -1,6 +1,6 @@
 // "To tråder, én knute": two silk ribbons, cornflower and champagne, drift
 // through the night and braid tighter as the wedding gets closer. On the day
-// itself they tie into a knot. Everything is computed on the GPU from one
+// itself they close into a ring around the countdown. Everything is computed on the GPU from one
 // shared centre curve, so the ribbons stay smooth at any frame rate.
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.186.1/three.module.min.js';
 
@@ -32,6 +32,11 @@ vec3 centre(float u) {
     float a = s * TAU;
     vec3 ring = vec3(uKnotC.x + uKnotR.x * sin(a) + (u - 0.5) * 0.8, uKnotC.y - uKnotR.y * cos(a), 0.7 * sin(a));
     float w = smoothstep(0.28, 0.4, u) * (1.0 - smoothstep(0.6, 0.72, u));
+    // the rest of the thread settles into a level line along the ring's base,
+    // so it runs beneath the words instead of through them
+    float base = uKnotC.y - uKnotR.y;
+    p.y = mix(p.y, base + 0.18 * sin(u * TAU * 1.3 + t * 0.1), uKnot * 0.9);
+    p.z = mix(p.z, 0.0, uKnot * 0.7);
     p = mix(p, ring, uKnot * w);
     return p;
 }
@@ -51,15 +56,17 @@ vec3 strand(float u, float phase, out float theta) {
 }
 `;
 
-function ribbonMaterial(color, phase, shared) {
+// glow = a wide, faint, additive copy of the ribbon drawn underneath it
+function ribbonMaterial(color, phase, shared, reveal, glow = false) {
     return new THREE.ShaderMaterial({
-        uniforms: { ...shared, uColor: { value: new THREE.Color(color) }, uPhase: { value: phase } },
+        uniforms: { ...shared, uColor: { value: new THREE.Color(color) }, uPhase: { value: phase }, uReveal: reveal, uGlow: { value: glow ? 1 : 0 } },
         transparent: true,
         side: THREE.DoubleSide,
-        depthWrite: true,
+        depthWrite: !glow,
+        blending: glow ? THREE.AdditiveBlending : THREE.NormalBlending,
         vertexShader: /* glsl */ `
             ${CURVE}
-            uniform float uPhase, uWidth, uPointerOn;
+            uniform float uPhase, uWidth, uPointerOn, uGlow;
             uniform vec2 uPointer;
             attribute float aU; attribute float aV;
             varying vec3 vT; varying vec3 vN; varying vec3 vPos; varying float vU; varying float vV;
@@ -72,7 +79,7 @@ function ribbonMaterial(color, phase, shared) {
                 // the ribbon face turns slowly as it travels, like silk in water
                 float phi = th * 0.5 + uTime * 0.17;
                 vec3 W = N * cos(phi) + B * sin(phi);
-                float width = uWidth * (0.85 + 0.15 * sin(aU * 23.0 + uTime * 0.4));
+                float width = uWidth * (0.85 + 0.15 * sin(aU * 23.0 + uTime * 0.4)) * mix(1.0, 4.5, uGlow);
                 vec3 pos = p + W * aV * width;
                 // drawn softly toward the pointer
                 vec2 d = uPointer - pos.xy;
@@ -84,6 +91,7 @@ function ribbonMaterial(color, phase, shared) {
             }`,
         fragmentShader: /* glsl */ `
             uniform vec3 uColor;
+            uniform float uReveal, uGlow;
             varying vec3 vT; varying vec3 vN; varying vec3 vPos; varying float vU; varying float vV;
             void main() {
                 vec3 n = normalize(vN) * (gl_FrontFacing ? 1.0 : -1.0);
@@ -97,17 +105,29 @@ function ribbonMaterial(color, phase, shared) {
                 float diff = 0.32 + 0.68 * abs(dot(n, L));
                 float rim = pow(1.0 - abs(dot(n, V)), 3.0);
                 vec3 col = uColor * diff + vec3(1.0, 0.96, 0.9) * sheen + uColor * rim * 0.7;
+                // depth: the parts further back sink into the night
+                col *= 0.62 + 0.38 * smoothstep(-1.6, 1.4, vPos.z);
+                // the ribbon unspools from the left; its leading edge glows warm
+                float shown = 1.0 - smoothstep(uReveal - 0.05, uReveal, vU);
+                float head = exp(-pow((uReveal - vU) / 0.025, 2.0)) * step(uReveal, 1.04);
+                col += vec3(1.0, 0.9, 0.72) * head * 0.9;
+                float tails = smoothstep(0.0, 0.1, vU) * smoothstep(1.0, 0.9, vU);
+                if (uGlow > 0.5) {
+                    float halo = exp(-vV * vV * 5.0);
+                    gl_FragColor = vec4(uColor * 0.55 + vec3(0.25), halo * tails * shown * 0.16);
+                    return;
+                }
                 // soft selvedge and fading tails
                 float edge = smoothstep(1.0, 0.55, abs(vV));
-                float tails = smoothstep(0.0, 0.1, vU) * smoothstep(1.0, 0.9, vU);
-                gl_FragColor = vec4(col, edge * tails * 0.96);
+                gl_FragColor = vec4(col, edge * tails * shown * 0.96);
             }`,
     });
 }
 
-export function startThreads(canvas, { reducedMotion = false, onFrame, ringAround = null } = {}) {
+export function startThreads(canvas, { reducedMotion = false, onFrame, ringAround = null, clock = Date.now } = {}) {
+    const compactDpr = matchMedia('(max-width: 640px)').matches;
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compactDpr ? 1.5 : 2));
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
     camera.position.set(0, 0, 20);
@@ -115,7 +135,7 @@ export function startThreads(canvas, { reducedMotion = false, onFrame, ringAroun
     const compact = matchMedia('(max-width: 640px)').matches;
     const shared = {
         uTime: { value: 0 },
-        uSep: { value: separationFor(Date.now()) },
+        uSep: { value: separationFor(clock()) },
         uKnot: { value: 0 },
         uWidthW: { value: 16 },
         uYOff: { value: 0 },
@@ -135,9 +155,14 @@ export function startThreads(canvas, { reducedMotion = false, onFrame, ringAroun
     base.setAttribute('aU', new THREE.BufferAttribute(aU, 1));
     base.setAttribute('aV', new THREE.BufferAttribute(aV, 1));
 
-    const blue = new THREE.Mesh(base, ribbonMaterial('#4c69e6', 0, shared));
-    const ivory = new THREE.Mesh(base, ribbonMaterial('#ecdcbc', Math.PI, shared));
-    for (const m of [blue, ivory]) { m.frustumCulled = false; scene.add(m); }
+    const revealBlue = { value: reducedMotion ? 1.2 : 0 }, revealIvory = { value: reducedMotion ? 1.2 : 0 };
+    const meshes = [
+        new THREE.Mesh(base, ribbonMaterial('#4c69e6', 0, shared, revealBlue, true)),
+        new THREE.Mesh(base, ribbonMaterial('#ecdcbc', Math.PI, shared, revealIvory, true)),
+        new THREE.Mesh(base, ribbonMaterial('#4c69e6', 0, shared, revealBlue)),
+        new THREE.Mesh(base, ribbonMaterial('#ecdcbc', Math.PI, shared, revealIvory)),
+    ];
+    meshes.forEach((m, i) => { m.frustumCulled = false; m.renderOrder = i < 2 ? 0 : 1; scene.add(m); });
 
     /* a few slow motes of light, far behind */
     const MOTES = compact ? 90 : 180;
@@ -178,8 +203,10 @@ export function startThreads(canvas, { reducedMotion = false, onFrame, ringAroun
         const amp = Math.min(1, Math.max(0.34, shared.uWidthW.value / 17));
         shared.uAmp.value = amp;
         shared.uWidth.value = (compact ? 0.2 : 0.24) * Math.sqrt(amp);
-        shared.uYOff.value = camera.aspect < 0.8 ? visH * 0.06 : visH * 0.04;
+        baseYOff = camera.aspect < 0.8 ? visH * 0.06 : visH * 0.04;
+        worldPerPx = visH / (canvas.clientHeight || 1);
     }
+    let baseYOff = 0, worldPerPx = 0.01;
     resize();
     new ResizeObserver(resize).observe(canvas);
 
@@ -211,6 +238,7 @@ export function startThreads(canvas, { reducedMotion = false, onFrame, ringAroun
     }
 
     let running = false, raf = 0, elapsed = 30;
+    const born = performance.now() / 1000;
     let last = performance.now() / 1000;
     function frame() {
         const now = performance.now() / 1000;
@@ -218,8 +246,17 @@ export function startThreads(canvas, { reducedMotion = false, onFrame, ringAroun
         last = now;
         if (!reducedMotion) elapsed += dt;
         shared.uTime.value = elapsed;
+        // the two ribbons unspool one after the other on arrival
+        if (!reducedMotion) {
+            const ease = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+            const t = now - born;
+            revealBlue.value = ease((t - 0.7) / 3.4) * 1.12;
+            revealIvory.value = ease((t - 1.3) / 3.4) * 1.12;
+        }
+        // drift up a little as the page scrolls
+        shared.uYOff.value = baseYOff + scrollY * worldPerPx * 0.35;
         const p = previewAmount(now);
-        const sep = separationFor(Date.now()) * (1 - p);
+        const sep = separationFor(clock()) * (1 - p);
         shared.uSep.value = sep;
         const k = 1 - Math.min(1, sep / 0.22);
         shared.uKnot.value = k * k * (3 - 2 * k);
@@ -230,15 +267,17 @@ export function startThreads(canvas, { reducedMotion = false, onFrame, ringAroun
             const visH = 2 * camera.position.z * Math.tan((camera.fov * Math.PI) / 360), visW = visH * camera.aspect;
             const toX = (px) => ((px - c.left) / c.width - 0.5) * visW, toY = (py) => -((py - c.top) / c.height - 0.5) * visH;
             shared.uKnotC.value.set(toX(r.left + r.width / 2), toY(r.top + r.height / 2));
-            shared.uKnotR.value.set(Math.abs(toX(r.right) - toX(r.left)) * 0.62 + 0.3, Math.abs(toY(r.top) - toY(r.bottom)) * 0.62 + 0.25);
+            shared.uKnotR.value.set(Math.abs(toX(r.right) - toX(r.left)) * 0.6 + 0.45, Math.abs(toY(r.top) - toY(r.bottom)) * 0.64 + 0.22);
         }
         renderer.render(scene, camera);
-        onFrame?.(p);
+        onFrame?.(p, shared.uKnot.value);
         if (running) raf = requestAnimationFrame(frame);
     }
     const start = () => { if (!running) { running = true; last = performance.now() / 1000; raf = requestAnimationFrame(frame); } };
     const stop = () => { running = false; cancelAnimationFrame(raf); };
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    // if the GPU drops the context (phones do this), bow out gracefully
+    canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); stop(); canvas.style.opacity = '0'; });
     if (reducedMotion) frame(); else start();
     return { playKnot, stop, renderOnce: frame };
 }

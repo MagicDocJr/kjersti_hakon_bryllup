@@ -38,6 +38,7 @@
             color-scheme: dark;
         }
         *, *::before, *::after { box-sizing: border-box; }
+        [hidden] { display: none !important; }
         html { -webkit-text-size-adjust: 100%; }
         body {
             margin: 0;
@@ -103,6 +104,16 @@
             line-height: 0.85;
             letter-spacing: -0.03em;
         }
+        .days-wrap { display: grid; justify-items: center; padding: 0 0.4em; }
+        /* when the ring closes, the number warms to gold */
+        .days { transition: color 1.6s, text-shadow 1.6s; }
+        /* words ("I dag", "Gift!") sit smaller than numbers */
+        .days.word { font-size: clamp(64px, 11vw, 128px); line-height: 1; font-style: italic; }
+        .clock { transition: margin-top 1.6s cubic-bezier(.16, .8, .2, 1); }
+        .count { transition: padding-bottom 1.6s cubic-bezier(.16, .8, .2, 1); }
+        .count.tied .clock { margin-top: 66px; }
+        .count.tied { padding-bottom: 34px; }
+        .count.tied .days { color: #fff3dc; text-shadow: 0 0 36px rgba(236, 200, 140, 0.55), 0 0 90px rgba(236, 200, 140, 0.3); }
         .days-label { margin-top: 6px; font-family: var(--f-display); font-style: italic; font-size: clamp(19px, 2.4vw, 24px); }
         .clock { margin-top: 18px; display: flex; gap: 28px; justify-content: center; color: var(--ivory-soft); }
         .clock b { font-family: var(--f-display); font-weight: 400; font-size: clamp(26px, 3.6vw, 34px); color: var(--ivory); margin-right: 6px; }
@@ -173,19 +184,21 @@
     <p class="where">Malungen gjestegård, Vallset</p>
 
     <div class="count" aria-hidden="true">
-        <span class="days" id="c-d">–</span>
-        <span class="days-label" id="c-dl">dager</span>
+        <span class="days-wrap">
+            <span class="days" id="c-d">–</span>
+            <span class="days-label" id="c-dl">dager</span>
+        </span>
         <span class="clock"><span><b id="c-h">–</b>timer</span><span><b id="c-m">–</b>minutter</span></span>
     </div>
-    <p class="until">til vielsen lørdag 26. juni kl. 13.00</p>
+    <p class="until" id="until">til vielsen lørdag 26. juni kl. 13.00</p>
     <p class="sr" id="sr-count" aria-live="off"></p>
 
     <div class="knot">
-        <p>To tråder, én knute. Jo nærmere dagen kommer, desto tettere flettes de.</p>
+        <p id="knot-text">To tråder, én knute. Jo nærmere dagen kommer, desto tettere flettes de.</p>
         <button type="button" id="knot-btn">Se dem knytes</button>
     </div>
 
-    <p class="soon">Invitasjon, program og svarskjema kommer her snart. Sett av hele helgen, vi gleder oss til å feire med dere!</p>
+    <p class="soon" id="soon">Invitasjon, program og svarskjema kommer her snart. Sett av hele helgen, vi gleder oss til å feire med dere!</p>
 
     <div class="cal">
         <a class="btn btn-solid" href="/assets/kjersti-og-hakon.ics" download="kjersti-og-hakon.ics">Legg til i kalenderen</a>
@@ -197,22 +210,47 @@
 
 <script>
     // Countdown in plain type. Numbers cross-fade when they change.
+    // ?now=2027-06-26T10:00 previews the page at another moment (for testing).
+    window.KH_CLOCK = (() => {
+        const q = new URLSearchParams(location.search).get('now');
+        const off = q && !isNaN(Date.parse(q)) ? Date.parse(q) - Date.now() : 0;
+        return () => Date.now() + off;
+    })();
     (function () {
         const WEDDING = new Date('2027-06-26T13:00:00+02:00').getTime();
-        const el = { d: document.getElementById('c-d'), dl: document.getElementById('c-dl'), h: document.getElementById('c-h'), m: document.getElementById('c-m') };
-        const sr = document.getElementById('sr-count');
+        const $ = (id) => document.getElementById(id);
+        const el = { d: $('c-d'), dl: $('c-dl'), h: $('c-h'), m: $('c-m') };
+        const clockRow = document.querySelector('.clock');
+        const sr = $('sr-count');
         const two = (n) => String(n).padStart(2, '0');
         const set = (node, text) => {
             if (node.textContent === text) return;
             node.textContent = text;
             node.classList.remove('swap'); void node.offsetWidth; node.classList.add('swap');
         };
+        let mode = '';
         function tick() {
-            let ms = Math.max(0, WEDDING - Date.now());
+            const now = window.KH_CLOCK();
+            let ms = WEDDING - now;
+            if (ms <= 0) {
+                if (mode === 'after') return;
+                mode = 'after';
+                set(el.d, 'Gift!'); el.d.classList.add('word'); el.dl.textContent = '26. juni 2027';
+                clockRow.hidden = true; $('until').hidden = true;
+                $('knot-text').textContent = 'To tråder, én knute.';
+                $('knot-btn').hidden = true;
+                $('soon').textContent = 'Takk for at dere feiret med oss!';
+                document.querySelector('.cal').hidden = true;
+                sr.textContent = 'Kjersti og Håkon er gift.';
+                return;
+            }
             const d = Math.floor(ms / 86400000); ms -= d * 86400000;
             const h = Math.floor(ms / 3600000); ms -= h * 3600000;
             const m = Math.floor(ms / 60000);
-            set(el.d, String(d)); el.dl.textContent = d === 1 ? 'dag' : 'dager';
+            const sameDay = new Date(now).toLocaleDateString('nb-NO', { timeZone: 'Europe/Oslo' }) === new Date(WEDDING).toLocaleDateString('nb-NO', { timeZone: 'Europe/Oslo' });
+            el.d.classList.toggle('word', sameDay);
+            if (sameDay) { set(el.d, 'I dag'); el.dl.textContent = 'vielsen er kl. 13.00'; $('knot-btn').hidden = true; }
+            else { set(el.d, String(d)); el.dl.textContent = d === 1 ? 'dag' : 'dager'; }
             set(el.h, two(h)); set(el.m, two(m));
             sr.textContent = `${d} dager, ${h} timer og ${m} minutter igjen.`;
         }
@@ -227,12 +265,15 @@
     if (!gl) { canvas.remove(); btn.closest('.knot').remove(); }
     else {
         const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        import('/assets/threads.js?v=5').then(({ startThreads }) => {
+        import('/assets/threads.js?v=9').then(({ startThreads }) => {
             let playing = false;
+            const count = document.querySelector('.count');
             const threads = startThreads(canvas, {
                 reducedMotion,
-                ringAround: document.querySelector('.days'),
-                onFrame(p) {
+                ringAround: document.querySelector('.days-wrap'),
+                clock: window.KH_CLOCK,
+                onFrame(p, knot) {
+                    count.classList.toggle('tied', knot > 0.85);
                     // the button rests while the knot is being tied
                     if (p > 0 && !playing) { playing = true; btn.disabled = true; btn.textContent = 'Lørdag 26. juni'; }
                     if (p === 0 && playing) { playing = false; btn.disabled = false; btn.textContent = 'Se dem knytes'; }
