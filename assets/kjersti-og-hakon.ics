@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Kjersti og Haakon//Bryllup//NO
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:bryllup-2027-06-25@kjerstioghakon.no
+DTSTAMP:20261006T120000Z
+DTSTART;VALUE=DATE:20270625
+DTEND;VALUE=DATE:20270628
+SUMMARY:Kjersti og Håkon gifter seg
+LOCATION:Malungen gjestegård\, Odalsvegen 1601\, 2330 Vallset
+DESCRIPTION:Bryllupshelg på Malungen gjestegård. Invitasjon\, program og svarskjema kommer på https://www.kjerstioghakon.no
+URL:https://www.kjerstioghakon.no
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR

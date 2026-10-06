@@ -2,23 +2,218 @@
 <html lang="no">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kjersti og Håkon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Kjersti og Håkon, 25.–27. juni 2027</title>
+    <!-- placeholder until the real site has the couple's photos and details -->
     <meta name="robots" content="noindex" />
-    <meta name="description" content="Kjersti og Håkon gifter seg 25.–27. juni 2027 på Malungen gjestegård." />
+    <meta name="description" content="Kjersti og Håkon gifter seg helgen 25.–27. juni 2027 på Malungen gjestegård. Sett av datoen – invitasjon og svarskjema kommer." />
+    <meta name="theme-color" content="#f3efe6" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
     <meta property="og:title" content="Kjersti og Håkon gifter seg" />
-    <meta property="og:image" content="https://www.kjerstioghakon.no/klassisk/img/og-image.jpg" />
-    <link rel="icon" href="klassisk/img/favicon.svg" type="image/svg+xml" />
+    <meta property="og:description" content="Sett av helgen 25.–27. juni 2027. Invitasjon og svarskjema kommer." />
+    <meta property="og:url" content="https://www.kjerstioghakon.no/" />
+    <meta property="og:image" content="https://www.kjerstioghakon.no/assets/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="nb_NO" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500&family=Pinyon+Script&display=swap" />
     <style>
-        body { margin: 0; min-height: 100vh; display: grid; place-content: center; gap: 20px; padding: 24px; background: #f3efe6; color: #1c2347; font: 16px/1.6 Georgia, serif; text-align: center; }
-        a { display: block; padding: 18px 28px; border: 1px solid #1c2347; color: inherit; text-decoration: none; font-size: 20px; }
-        a:hover { background: #1c2347; color: #f3efe6; }
-        p { margin: 0; }
+        /* Save-the-date placeholder: one calm card on paper, an arched
+           cornflower window, the names, and a countdown to the ceremony. */
+        :root {
+            --paper: #f3efe6;
+            --paper-deep: #e9e2d3;
+            --ink: #1c2347;
+            --ink-soft: #545a78;
+            --cornflower: #3651c9;
+            --line: rgba(28, 35, 71, 0.16);
+            --f-display: 'Bodoni Moda', 'Didot', Georgia, serif;
+            --f-text: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+            --f-script: 'Pinyon Script', 'Snell Roundhand', cursive;
+            color-scheme: light;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
+        body {
+            margin: 0;
+            min-height: 100svh;
+            display: grid;
+            place-items: center;
+            padding: max(32px, env(safe-area-inset-top, 0px)) 20px max(32px, env(safe-area-inset-bottom, 0px));
+            background:
+                radial-gradient(120% 70% at 50% 0%, #f8f5ee 0%, rgba(248, 245, 238, 0) 60%),
+                var(--paper);
+            color: var(--ink);
+            font-family: var(--f-text);
+            font-size: 16px;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            text-align: center;
+        }
+        p, h1, dl, dd { margin: 0; }
+        a { color: inherit; }
+        :focus-visible { outline: 2px solid var(--cornflower); outline-offset: 3px; }
+
+        main { width: min(880px, 100%); display: grid; justify-items: center; }
+        main > .count, main > .soon, main > .count-label { max-width: 640px; }
+
+        .kicker {
+            font-family: var(--f-display);
+            font-style: italic;
+            font-size: clamp(17px, 2.2vw, 20px);
+            color: var(--ink-soft);
+        }
+
+        .window {
+            margin-top: 22px;
+            width: clamp(140px, 30vw, 180px);
+            aspect-ratio: 3 / 4;
+            border-radius: 999px 999px 4px 4px;
+            overflow: hidden;
+            background: var(--paper-deep);
+            box-shadow: 0 30px 60px -38px rgba(28, 35, 71, 0.55);
+        }
+        .window img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        h1 {
+            margin-top: 26px;
+            font-family: var(--f-display);
+            font-variation-settings: "opsz" 30;
+            font-weight: 450;
+            font-size: clamp(52px, 9vw, 104px);
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 0.14em;
+        }
+        h1 .amp { font-family: var(--f-script); font-variation-settings: normal; color: var(--cornflower); font-size: 0.8em; letter-spacing: 0; padding-inline: 0.06em; }
+        .sub { margin-top: 10px; font-family: var(--f-display); font-style: italic; font-size: clamp(20px, 3vw, 26px); }
+
+        .when { margin-top: 26px; font-family: var(--f-display); font-variation-settings: "opsz" 24; font-weight: 500; font-size: clamp(22px, 3.4vw, 30px); letter-spacing: 0.01em; }
+        .where { margin-top: 4px; color: var(--ink-soft); }
+
+        .count {
+            margin-top: 34px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-block: 1px solid var(--line);
+        }
+        .count div { padding: 18px 4px 16px; }
+        .count div + div { border-left: 1px solid var(--line); }
+        .count dd {
+            font-family: var(--f-display);
+            font-variation-settings: "opsz" 30;
+            font-size: clamp(34px, 7vw, 54px);
+            line-height: 1;
+            font-variant-numeric: lining-nums tabular-nums;
+        }
+        .count dt { margin-top: 8px; font-size: 13px; color: var(--ink-soft); order: 2; }
+        .count div { display: flex; flex-direction: column; }
+        .count-label { margin-top: 12px; font-size: 14px; color: var(--ink-soft); }
+
+        .soon { margin-top: 30px; max-width: 34ch; font-size: 17px; text-wrap: balance; }
+
+        .cal { margin-top: 22px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .btn {
+            display: inline-block;
+            padding: 12px 22px;
+            border-radius: 999px;
+            border: 1px solid var(--ink);
+            font-weight: 500;
+            font-size: 15px;
+            text-decoration: none;
+            transition: background .2s, color .2s;
+        }
+        .btn-solid { background: var(--ink); color: var(--paper); }
+        .btn-solid:hover { background: var(--cornflower); border-color: var(--cornflower); }
+        .btn:not(.btn-solid):hover { background: var(--ink); color: var(--paper); }
+
+        footer { margin-top: 44px; font-size: 13px; color: var(--ink-soft); letter-spacing: 0.04em; }
+
+        @media (prefers-reduced-motion: no-preference) {
+            main > * { animation: rise .9s cubic-bezier(.2, .7, .2, 1) both; }
+            main > :nth-child(2) { animation-delay: .08s; }
+            main > :nth-child(3) { animation-delay: .16s; }
+            main > :nth-child(n+4) { animation-delay: .26s; }
+            @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+        }
+
+        /* phones: stack the names with the ampersand between them */
+        @media (max-width: 600px) {
+            h1 { flex-direction: column; align-items: center; gap: 0; font-size: clamp(58px, 18vw, 84px); }
+            h1 .amp { font-size: 0.6em; line-height: 0.95; }
+        }
+
+        @media (max-width: 420px) {
+            .count div { padding-inline: 2px; }
+            .count dt { font-size: 12px; }
+        }
     </style>
 </head>
 <body>
-    <p>Kjersti og Håkon, 25.–27. juni 2027</p>
-    <a href="klassisk/">Klassisk, etter skissen</a>
-    <a href="kreativ/">Kreativ, ren og rolig</a>
+<main>
+    <p class="kicker">Sett av datoen</p>
+    <div class="window"><img src="/assets/kornblomst.webp" alt="Kornblomster i en sommereng" width="900" height="900" /></div>
+    <h1><span class="n">Kjersti</span> <span class="amp" aria-label="og">&amp;</span> <span class="n">Håkon</span></h1>
+    <p class="sub">gifter seg</p>
+
+    <p class="when">25.–27. juni 2027</p>
+    <p class="where">Malungen gjestegård, Vallset</p>
+
+    <dl class="count" id="count" aria-hidden="true">
+        <div><dt>dager</dt><dd id="c-d">–</dd></div>
+        <div><dt>timer</dt><dd id="c-h">–</dd></div>
+        <div><dt>minutter</dt><dd id="c-m">–</dd></div>
+        <div><dt>sekunder</dt><dd id="c-s">–</dd></div>
+    </dl>
+    <p class="count-label" id="count-label">til vielsen lørdag 26. juni kl. 13.00</p>
+
+    <p class="soon">Invitasjon, program og svarskjema kommer her snart. Sett av hele helgen, vi gleder oss til å feire med dere!</p>
+
+    <div class="cal">
+        <a class="btn btn-solid" href="/assets/kjersti-og-hakon.ics" download="kjersti-og-hakon.ics">Legg til i kalenderen</a>
+        <a class="btn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Kjersti+og+H%C3%A5kon+gifter+seg&amp;dates=20270625/20270628&amp;location=Malungen+gjesteg%C3%A5rd%2C+Odalsvegen+1601%2C+2330+Vallset&amp;details=Invitasjon+og+svarskjema+kommer+p%C3%A5+https%3A%2F%2Fwww.kjerstioghakon.no" target="_blank" rel="noopener">Google Kalender</a>
+    </div>
+
+    <footer>kjerstioghakon.no</footer>
+</main>
+
+<script>
+    // Countdown to the ceremony, Saturday 26 June 2027 13:00 Oslo time.
+    const WEDDING = new Date('2027-06-26T13:00:00+02:00').getTime();
+    const el = { d: document.getElementById('c-d'), h: document.getElementById('c-h'), m: document.getElementById('c-m'), s: document.getElementById('c-s') };
+    const label = document.getElementById('count-label');
+    const two = (n) => String(n).padStart(2, '0');
+    let timer = 0;
+    function tick() {
+        let ms = WEDDING - Date.now();
+        if (ms <= 0) {
+            document.getElementById('count').hidden = true;
+            label.textContent = 'I dag gifter vi oss!';
+            clearInterval(timer);
+            return;
+        }
+        const d = Math.floor(ms / 86400000); ms -= d * 86400000;
+        const h = Math.floor(ms / 3600000); ms -= h * 3600000;
+        const m = Math.floor(ms / 60000); ms -= m * 60000;
+        const s = Math.floor(ms / 1000);
+        el.d.textContent = d;
+        el.h.textContent = two(h);
+        el.m.textContent = two(m);
+        el.s.textContent = two(s);
+        // one plain sentence for screen readers, refreshed per minute
+        const text = `${d} dager, ${h} timer og ${m} minutter til vielsen lørdag 26. juni klokken 13.`;
+        if (label.getAttribute('aria-label') !== text) label.setAttribute('aria-label', text);
+    }
+    tick();
+    timer = setInterval(tick, 1000);
+</script>
 </body>
 </html>

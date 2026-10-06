@@ -11,11 +11,18 @@ Begge er ren HTML/CSS/JS uten byggesteg, som Ragnhild & Vetle-siden.
 
 Begge har samme fanerad øverst: **Forside · Program · Praktisk · Svar · Gave**. Forsiden er én lang side med alt, mens de andre fanene viser bare sin egen del. Hver fane er sin egen visning, styrt av adressen (`#program`, `#svar` osv.), så lenker kan deles direkte og tilbakeknappen virker. Svar-fanen er uthevet, og forsiden har «Svar nå»-knapp og en kort oversikt over når, hvor og svarfrist.
 
+## Hva som ligger ute nå
+
+Forsiden på kjerstioghakon.no er en midlertidig «sett av datoen»-side (`index.html` + `assets/`) med nedtelling til vielsen og kalenderfil, til paret har sendt bilder og detaljer. Designene ligger fortsatt på `/klassisk/` og `/kreativ/` (lenket fra `/utkast/`), men lenkes ikke fra forsiden og er merket noindex.
+
+For å lansere: erstatt `index.html` med valgt versjon (eller la den sende videre dit).
+
 ## Kjøre lokalt
 
 ```sh
 python3 -m http.server 5317
-# http://127.0.0.1:5317/            velg versjon
+# http://127.0.0.1:5317/            «sett av datoen»-siden
+# http://127.0.0.1:5317/utkast/     velg versjon
 # http://127.0.0.1:5317/klassisk/
 # http://127.0.0.1:5317/kreativ/
 # http://127.0.0.1:5317/klassisk/#svar   rett til svarskjemaet
