@@ -1,0 +1,2 @@
+# calendar files must keep CRLF line endings (RFC 5545)
+*.ics -text
