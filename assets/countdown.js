@@ -1,20 +1,20 @@
 // Particle countdown: every digit is a cloud of glowing points sampled from
-// the glyph. When a digit changes, only its particles fly to the new shape.
+// the glyph. It changes once a minute, and the changed digits drift slowly
+// into their new shape in a wave from left to right.
 // Coordinates are CSS pixels inside the stage (orthographic camera, y down).
 import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.186.1/three.module.min.js';
 
 const WEDDING = new Date('2027-06-26T13:00:00+02:00').getTime();
 const FONT = '"Bodoni Moda", Didot, Georgia, serif';
-const DUR = 0.95; // seconds a particle spends flying between shapes
+const DUR = 3.2; // seconds a particle spends drifting between shapes
 
 function parts(now) {
     let ms = Math.max(0, WEDDING - now);
     const d = Math.floor(ms / 86400000); ms -= d * 86400000;
     const h = Math.floor(ms / 3600000); ms -= h * 3600000;
     const m = Math.floor(ms / 60000); ms -= m * 60000;
-    const s = Math.floor(ms / 1000);
     const two = (n) => String(n).padStart(2, '0');
-    return { days: String(d), clock: `${two(h)}:${two(m)}:${two(s)}` };
+    return { days: String(d), clock: `${two(h)}:${two(m)}` };
 }
 
 export async function startCountdown(stage, { reducedMotion = false } = {}) {
@@ -28,18 +28,19 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
     const camera = new THREE.OrthographicCamera(0, 1, 0, 1, -10, 10);
 
     const compact = stage.clientWidth < 640;
-    const BIG = compact ? 1700 : 2800, SMALL = compact ? 700 : 1050, COLON = compact ? 160 : 240, DUST = compact ? 260 : 520;
+    const BIG = compact ? 1700 : 2800, SMALL = compact ? 800 : 1300, COLON = compact ? 180 : 280, DUST = compact ? 160 : 320;
 
-    // 3 slots for days (right-aligned) + "HH:MM:SS"
+    // 3 slots for days (right-aligned) + "HH:MM"
     const slots = [];
     for (let i = 0; i < 3; i++) slots.push({ row: 0, count: BIG });
-    for (const ch of 'HH:MM:SS') slots.push({ row: 1, count: ch === ':' ? COLON : SMALL });
+    for (const ch of 'HH:MM') slots.push({ row: 1, count: ch === ':' ? COLON : SMALL });
     let offset = 0;
     for (const s of slots) { s.start = offset; offset += s.count; s.char = null; }
     const N = offset;
 
     const from = new Float32Array(N * 3), to = new Float32Array(N * 3);
-    const startAt = new Float32Array(N), rnd = new Float32Array(N * 4);
+    const startAt = new Float32Array(N), rnd = new Float32Array(N * 4), big = new Float32Array(N);
+    for (const sl of slots) if (sl.row === 0) big.fill(1, sl.start, sl.start + sl.count);
     for (let i = 0; i < N; i++) rnd.set([Math.random(), Math.random(), Math.random(), Math.random()], i * 4);
 
     const geo = new THREE.BufferGeometry();
@@ -49,6 +50,7 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
     geo.setAttribute('aTo', aTo);
     geo.setAttribute('aStart', aStart);
     geo.setAttribute('aRnd', new THREE.BufferAttribute(rnd, 4));
+    geo.setAttribute('aBig', new THREE.BufferAttribute(big, 1));
 
     const uniforms = {
         uTime: { value: 0 },
@@ -64,10 +66,10 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
         depthWrite: false,
         blending: THREE.AdditiveBlending,
         vertexShader: /* glsl */ `
-            attribute vec3 aFrom; attribute vec3 aTo; attribute float aStart; attribute vec4 aRnd;
+            attribute vec3 aFrom; attribute vec3 aTo; attribute float aStart; attribute vec4 aRnd; attribute float aBig;
             uniform float uTime, uDur, uPx, uPointerOn, uScale; uniform vec2 uPointer;
             varying vec3 vColor; varying float vAlpha;
-            float ease(float t) { return t < 0.5 ? 4.0 * t * t * t : 1.0 - pow(-2.0 * t + 2.0, 3.0) / 2.0; }
+            float ease(float t) { return t < 0.5 ? 16.0 * t * t * t * t * t : 1.0 - pow(-2.0 * t + 2.0, 5.0) / 2.0; }
             void main() {
                 float t = clamp((uTime - aStart) / uDur, 0.0, 1.0);
                 float e = ease(t);
@@ -75,19 +77,24 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
                 // fly in a soft arc rather than a straight line
                 float arc = sin(e * 3.14159265);
                 float ang = aRnd.z * 6.2831853;
-                p.xy += arc * vec2(cos(ang), sin(ang)) * (14.0 + 70.0 * aRnd.w) * uScale;
-                // breathing shimmer at rest
-                p.xy += vec2(sin(uTime * 0.9 + aRnd.z * 50.0), cos(uTime * 1.1 + aRnd.w * 40.0)) * 0.6 * uScale;
+                p.xy += arc * vec2(cos(ang), sin(ang) - 0.6) * (30.0 + 90.0 * aRnd.w) * uScale;
+                // a slow drift at rest, never a jitter
+                p.xy += vec2(sin(uTime * 0.23 + aRnd.z * 50.0), cos(uTime * 0.19 + aRnd.w * 40.0)) * 1.1 * uScale;
                 // the pointer parts the cloud
                 vec2 d = p.xy - uPointer;
                 float dist = length(d);
-                float reach = 110.0 * uScale;
-                p.xy += (d / max(dist, 1.0)) * max(0.0, reach - dist) * 0.55 * uPointerOn;
+                float reach = 120.0 * uScale;
+                float fall = max(0.0, 1.0 - dist / reach);
+                p.xy += (d / max(dist, 1.0)) * fall * fall * 38.0 * uScale * uPointerOn;
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-                gl_PointSize = (1.1 + aRnd.x * 2.1) * uPx * uScale * (1.0 + arc * 1.4);
+                // the big day digits spread their points wider, so each point is a little larger
+                gl_PointSize = (1.0 + aRnd.x * 1.9) * mix(1.0, 1.4, aBig) * uPx * uScale * (1.0 + arc * 0.8);
                 vec3 blue = mix(vec3(0.33, 0.45, 1.0), vec3(0.62, 0.71, 1.0), aRnd.y);
-                vColor = aRnd.y > 0.965 ? vec3(1.0, 0.82, 0.52) : mix(blue, vec3(0.94, 0.95, 1.0), smoothstep(0.72, 0.95, aRnd.y));
-                vAlpha = (0.5 + 0.5 * aRnd.x) * (1.0 - 0.35 * arc);
+                vColor = aRnd.y > 0.985 ? vec3(1.0, 0.84, 0.6) : mix(blue, vec3(0.9, 0.92, 1.0), smoothstep(0.8, 0.98, aRnd.y));
+                // the whole cloud breathes slowly; each point twinkles at its own pace
+                float breath = 0.82 + 0.18 * sin(uTime * 0.45);
+                float twinkle = 0.82 + 0.18 * sin(uTime * (0.3 + aRnd.w * 0.5) + aRnd.z * 60.0);
+                vAlpha = (0.55 + 0.45 * aRnd.x) * mix(1.0, 1.2, aBig) * breath * twinkle * (1.0 - 0.25 * arc);
             }`,
         fragmentShader: /* glsl */ `
             varying vec3 vColor; varying float vAlpha;
@@ -113,8 +120,8 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
             attribute vec4 aRnd; uniform float uTime, uPx; uniform vec2 uSize; varying float vA;
             void main() {
                 vec2 p = aRnd.xy * uSize;
-                p.x += sin(uTime * (0.05 + aRnd.z * 0.08) + aRnd.w * 20.0) * 30.0;
-                p.y = mod(p.y - uTime * (4.0 + aRnd.z * 8.0), uSize.y);
+                p.x += sin(uTime * (0.03 + aRnd.z * 0.05) + aRnd.w * 20.0) * 24.0;
+                p.y = mod(p.y - uTime * (1.5 + aRnd.z * 3.5), uSize.y);
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 0.0, 1.0);
                 gl_PointSize = (0.8 + aRnd.w * 1.6) * uPx;
                 vA = 0.12 + 0.3 * aRnd.z * (0.5 + 0.5 * sin(uTime * (0.6 + aRnd.w) + aRnd.x * 30.0));
@@ -150,15 +157,15 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
         const m = metrics;
         // days row as large as fits; clock row about a third of it
         const s0 = Math.min((W * 0.86) / (3 * m.adv), (H * 0.5) / m.cap);
-        const s1 = s0 * (compact ? 0.4 : 0.34);
+        const s1 = s0 * (compact ? 0.38 : 0.32);
         const gap = s0 * 0.3;
         const blockH = m.cap * s0 + gap + m.cap * s1 + 22;
         const y0 = (H - blockH) / 2 + m.cap * s0;
         const y1 = y0 + gap + m.cap * s1;
-        const clockW = (6 * m.adv * 1.12 + 2 * m.colon * 2.2) * s1;
+        const clockW = (4 * m.adv * 1.12 + m.colon * 2.2) * s1;
         let x = (W - clockW) / 2;
         const clock = [];
-        for (const ch of 'HH:MM:SS') {
+        for (const ch of 'HH:MM') {
             const w = (ch === ':' ? m.colon * 2.2 : m.adv * 1.12) * s1;
             clock.push({ x: x + w / 2, w });
             x += w;
@@ -223,8 +230,7 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
         labelBox.innerHTML =
             lab('dager', W / 2, L.y0 + L.s0 * 0.06, 'lab lab-days') +
             lab('timer', (c[0].x + c[1].x) / 2, under, 'lab') +
-            lab('minutter', (c[3].x + c[4].x) / 2, under, 'lab') +
-            lab('sekunder', (c[6].x + c[7].x) / 2, under, 'lab');
+            lab('minutter', (c[3].x + c[4].x) / 2, under, 'lab');
     }
 
     function charKey(slotIndex, st) {
@@ -248,15 +254,17 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
             for (let k = 0; k < slot.count; k++) {
                 const i = slot.start + k;
                 if (intro) {
-                    from[i * 3] = Math.random() * W;
-                    from[i * 3 + 1] = Math.random() * H;
-                    startAt[i] = now + Math.random() * 0.9;
+                    // rise from the glow below the stage, the days first
+                    from[i * 3] = W / 2 + (Math.random() - 0.5) * W * 1.3;
+                    from[i * 3 + 1] = H + 30 + Math.random() * H * 0.7;
+                    startAt[i] = now + 0.9 + (slot.row ? 0.6 : 0) + Math.random() * 1.6;
                 } else if (force) {
                     from[i * 3] = t[k * 2]; from[i * 3 + 1] = t[k * 2 + 1];
                     startAt[i] = -100;
                 } else {
                     from[i * 3] = to[i * 3]; from[i * 3 + 1] = to[i * 3 + 1];
-                    startAt[i] = now + Math.random() * 0.18;
+                    // a wave across the row rather than everything at once
+                    startAt[i] = now + (t[k * 2] / W) * 0.9 + Math.random() * 0.5;
                 }
                 to[i * 3] = t[k * 2]; to[i * 3 + 1] = t[k * 2 + 1];
             }
@@ -268,10 +276,10 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
         for (let i = 0; i < N; i++) {
             const dx = to[i * 3] - cx, dy = to[i * 3 + 1] - cy;
             const len = Math.hypot(dx, dy) || 1;
-            const push = (80 + Math.random() * 260) * uniforms.uScale.value;
+            const push = (20 + Math.random() * 70) * uniforms.uScale.value;
             from[i * 3] = to[i * 3] + (dx / len) * push;
             from[i * 3 + 1] = to[i * 3 + 1] + (dy / len) * push;
-            startAt[i] = now + Math.random() * 0.25;
+            startAt[i] = now + (len / 900) + Math.random() * 0.3;
         }
         aFrom.needsUpdate = aStart.needsUpdate = true;
     }
@@ -300,7 +308,7 @@ export async function startCountdown(stage, { reducedMotion = false } = {}) {
     function frame() {
         const now = clock();
         uniforms.uTime.value = now;
-        uniforms.uPointerOn.value += (pointerTarget - uniforms.uPointerOn.value) * 0.08;
+        uniforms.uPointerOn.value += (pointerTarget - uniforms.uPointerOn.value) * 0.025;
         const sec = Math.floor(Date.now() / 1000);
         if (sec !== lastSecond) { lastSecond = sec; update(now); }
         renderer.render(scene, camera);
