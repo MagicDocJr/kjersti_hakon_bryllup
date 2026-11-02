@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR-koder · Kjersti og Håkon</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Jost:wght@400;500&display=swap" />
+    <style>
+        /* QR codes for the invitation, to print or download. The codes point at
+           short addresses on the domain (/svar/, /onskeliste/), so they keep
+           working even if a page moves. */
+        :root { --paper: #f6f3ee; --ink: #2b2724; --ink-soft: #5a534d; --line: rgba(43, 39, 36, 0.12); --blue: #2f5a9a; }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 'Jost', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+        main { width: min(980px, 100%); margin-inline: auto; padding: 40px 20px 64px; }
+        header { text-align: center; margin-bottom: 32px; }
+        .mono { display: block; width: 48px; height: 52px; margin: 0 auto 14px; color: var(--ink); }
+        h1 { margin: 0; font: 400 32px 'Gilda Display', Georgia, serif; }
+        header p { margin: 8px 0 0; color: var(--ink-soft); }
+        .codes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+        .code { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 24px 20px 20px; text-align: center; display: grid; gap: 6px; justify-items: center; }
+        .code.main { grid-column: 1 / -1; padding: 32px 20px 26px; }
+        .code h2 { margin: 0; font: 400 24px 'Gilda Display', Georgia, serif; }
+        .code.main h2 { font-size: 30px; }
+        .code img { display: block; width: 180px; height: 180px; margin: 10px 0 6px; }
+        .code.main img { width: 260px; height: 260px; }
+        .url { font-size: 15px; color: var(--ink-soft); word-break: break-all; }
+        .dl { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+        .btn { font: 500 14px 'Jost', sans-serif; padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--ink); text-decoration: none; cursor: pointer; }
+        .btn:hover { border-color: var(--ink-soft); }
+        .btn.dark { background: var(--ink); border-color: var(--ink); color: #fff; }
+        .tips { margin-top: 28px; color: var(--ink-soft); font-size: 15px; display: grid; gap: 4px; text-align: center; }
+        .print-bar { text-align: center; margin-bottom: 24px; }
+        @media (max-width: 760px) {
+            .codes { grid-template-columns: 1fr; }
+            .code.main img { width: 220px; height: 220px; }
+        }
+        /* on paper: the codes only, large and black on white */
+        @media print {
+            @page { margin: 14mm; }
+            body { background: #fff; }
+            main { padding: 0; }
+            .dl, .print-bar, .tips { display: none; }
+            .code { border: 0; break-inside: avoid; }
+            .code.main img { width: 80mm; height: 80mm; }
+            .code img { width: 50mm; height: 50mm; }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <header>
+        <svg class="mono" viewBox="0 0 355 378" aria-hidden="true"><use href="../assets/monogram.svg#kh" /></svg>
+        <h1>QR-koder til invitasjonen</h1>
+        <p>Skriv ut, eller last ned og legg inn i invitasjonen.</p>
+    </header>
+
+    <p class="print-bar"><button type="button" class="btn dark" onclick="print()">Skriv ut</button></p>
+
+    <section class="codes">
+        <article class="code main">
+            <h2>Svar</h2>
+            <img src="../assets/qr-svar.svg" alt="QR-kode til svarskjemaet" width="260" height="260" />
+            <p class="url">kjerstioghakon.no/svar</p>
+            <p class="dl">
+                <a class="btn" href="../assets/qr-svar.svg" download="kjersti-hakon-qr-svar.svg">Last ned SVG (trykk)</a>
+                <a class="btn" href="../assets/qr-svar.png" download="kjersti-hakon-qr-svar.png">Last ned PNG</a>
+            </p>
+        </article>
+        <article class="code">
+            <h2>Nettsiden</h2>
+            <img src="../assets/qr-invitasjon.svg" alt="QR-kode til nettsiden" width="180" height="180" />
+            <p class="url">kjerstioghakon.no</p>
+            <p class="dl">
+                <a class="btn" href="../assets/qr-invitasjon.svg" download="kjersti-hakon-qr-nettside.svg">SVG</a>
+                <a class="btn" href="../assets/qr-invitasjon.png" download="kjersti-hakon-qr-nettside.png">PNG</a>
+            </p>
+        </article>
+        <article class="code">
+            <h2>Ønskeliste</h2>
+            <img src="../assets/qr-onskeliste.svg" alt="QR-kode til ønskelisten" width="180" height="180" />
+            <p class="url">kjerstioghakon.no/onskeliste</p>
+            <p class="dl">
+                <a class="btn" href="../assets/qr-onskeliste.svg" download="kjersti-hakon-qr-onskeliste.svg">SVG</a>
+                <a class="btn" href="../assets/qr-onskeliste.png" download="kjersti-hakon-qr-onskeliste.png">PNG</a>
+            </p>
+        </article>
+    </section>
+
+    <div class="tips">
+        <p>SVG blir skarp i alle størrelser og passer best til trykkeriet. PNG passer for Word, Canva og lignende.</p>
+        <p>Skriv koden ut minst 2 × 2 cm, og test den med mobilen før dere trykker alle invitasjonene.</p>
+    </div>
+</main>
+</body>
+</html>

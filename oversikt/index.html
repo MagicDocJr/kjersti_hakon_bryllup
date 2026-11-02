@@ -5,188 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gjesteoversikt · Kjersti og Håkon</title>
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Jost:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Hanken+Grotesk:wght@400;500;600&display=swap" />
     <style>
         /* Private overview for the couple. Reads kh_responses as the logged-in
-           kjerstioghakon@gmail.com user; RLS lets only that address SELECT.
-           Same paper, ink and blue as the wedding site. */
+           kjerstioghakon@gmail.com user; RLS lets only that address SELECT,
+           and change the paid columns. */
         :root {
-            --paper: #f6f3ee;
-            --card: #ffffff;
-            --ink: #2b2724;
-            --ink-soft: #5a534d;
-            --ink-faint: #8a827a;
-            --line: rgba(43, 39, 36, 0.12);
-            --blue: #2f5a9a;
-            --blue-track: #dbe6f5;
+            --paper: #f3efe6;
+            --card: #fbf9f4;
+            --ink: #1c2347;
+            --ink-soft: #4b5170;
+            --line: rgba(28, 35, 71, 0.16);
+            --cornflower: #3651c9;
             --yes: #2f6b45;
-            --yes-bg: #e6f1ea;
             --no: #a63f2b;
-            --no-bg: #f8e9e5;
-            --fresh: #fff4cc;
-            --f-display: 'Gilda Display', 'Didot', Georgia, serif;
-            --f-sans: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+            --f-display: 'Bodoni Moda', 'Didot', Georgia, serif;
+            --f-text: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
             color-scheme: light;
         }
         *, *::before, *::after { box-sizing: border-box; }
         [hidden] { display: none !important; }
-        body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--f-sans); -webkit-font-smoothing: antialiased; }
-        a { color: var(--blue); }
-        h1, h2, h3, p { margin: 0; }
-        .wrap { width: min(1120px, 100%); margin-inline: auto; padding: 28px 20px 72px; }
-        .mono { display: block; width: 34px; height: 36px; color: var(--ink); flex: none; }
-        button, .btn { font: 500 14px var(--f-sans); padding: 9px 16px; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; cursor: pointer; }
-        button:hover { border-color: var(--ink-faint); }
-        button:disabled { opacity: 0.5; cursor: default; }
-        .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
-        .label { font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); }
-
-        /* ---------- login ---------- */
-        .login { width: min(380px, calc(100% - 32px)); margin: 14vh auto 0; padding: 36px 28px 30px; display: grid; gap: 6px; }
-        .login .mono { width: 52px; height: 56px; margin: 0 auto 10px; }
-        .login h1 { font: 400 30px var(--f-display); text-align: center; margin-bottom: 18px; }
-        .login label { font-size: 14px; font-weight: 500; margin-top: 10px; }
-        .login input { font: inherit; font-size: 17px; height: 48px; padding: 0 14px; border: 1px solid rgba(43, 39, 36, 0.25); border-radius: 8px; background: #fff; }
-        .login input:focus { outline: 2px solid var(--blue-track); border-color: var(--blue); }
-        .login button { margin-top: 18px; height: 48px; background: var(--ink); border-color: var(--ink); color: #fff; font-size: 15px; }
-        .err { color: var(--no); font-size: 14px; margin-top: 8px; text-align: center; }
-
-        /* ---------- header ---------- */
-        header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
-        header h1 { font: 400 26px var(--f-display); }
-        .tools-top { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .live { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-soft); margin-right: 4px; }
-        .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #c9c2b8; }
+        body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--f-text); -webkit-font-smoothing: antialiased; }
+        a { color: var(--cornflower); }
+        .wrap { width: min(1200px, 100%); margin-inline: auto; padding: 32px 20px 64px; }
+        header { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+        header svg { width: 40px; height: 43px; flex: none; }
+        h1 { margin: 0; font: 400 clamp(26px, 3vw, 34px)/1.1 var(--f-display); }
+        header .who { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--ink-soft); }
+        .live { display: inline-flex; align-items: center; gap: 6px; }
+        .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #b9b4a8; }
         .live.on::before { background: #3aa365; box-shadow: 0 0 0 3px rgba(58, 163, 101, 0.18); }
+        button, .btn { font: 500 14px var(--f-text); padding: 9px 16px; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); border-radius: 999px; cursor: pointer; text-decoration: none; }
+        button.ghost { background: transparent; color: var(--ink); }
+        button:disabled { opacity: 0.5; cursor: default; }
 
-        /* ---------- headline ---------- */
-        .hero { padding: 28px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px 32px; align-items: end; }
-        .hero-num { font: 600 72px/0.95 var(--f-sans); letter-spacing: -0.02em; font-variant-numeric: lining-nums; }
-        .hero-num span { font: 400 22px var(--f-display); letter-spacing: 0; margin-left: 10px; color: var(--ink-soft); }
-        .hero-sub { margin-top: 10px; color: var(--ink-soft); }
-        .deadline { text-align: right; }
-        .deadline b { display: block; font: 600 28px/1.1 var(--f-sans); margin-top: 4px; }
-        .deadline small { color: var(--ink-soft); font-size: 14px; }
+        /* login */
+        .login { max-width: 380px; margin: 12vh auto 0; background: var(--card); border: 1px solid var(--line); padding: 32px 28px; border-radius: 6px; }
+        .login svg { display: block; width: 56px; height: 60px; margin: 0 auto 14px; }
+        .login h1 { text-align: center; margin-bottom: 22px; }
+        .login label { display: block; font-size: 13px; font-weight: 500; margin: 14px 0 6px; }
+        .login input { width: 100%; font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: #fff; }
+        .login button { width: 100%; margin-top: 20px; }
+        .err { color: var(--no); font-size: 14px; margin: 12px 0 0; }
 
-        /* ---------- stat tiles ---------- */
-        .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
-        .tile { padding: 18px 20px 20px; display: grid; gap: 4px; align-content: start; }
-        .tile b { font: 600 36px/1.1 var(--f-sans); font-variant-numeric: lining-nums; }
-        .tile small { color: var(--ink-soft); font-size: 14px; }
-        .meter { height: 8px; border-radius: 4px; background: var(--blue-track); overflow: hidden; margin-top: 8px; }
-        .meter i { display: block; height: 100%; border-radius: 4px; background: var(--blue); transition: width .4s; }
+        /* numbers */
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 28px; }
+        .stat { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
+        .stat b { display: block; font: 400 34px/1.1 var(--f-display); font-variant-numeric: lining-nums tabular-nums; }
+        .stat span { font-size: 13px; color: var(--ink-soft); }
+        .stat small { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-soft); }
 
-        /* ---------- replies over time ---------- */
-        .trend { margin-top: 14px; padding: 20px 20px 14px; }
-        .trend-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
-        .trend-head small { color: var(--ink-soft); font-size: 14px; }
-        .chart { position: relative; }
-        .chart svg { display: block; overflow: visible; }
-        .chart .grid { stroke: var(--line); stroke-width: 1; }
-        .chart .axis { fill: var(--ink-faint); font: 12px var(--f-sans); }
-        .chart .line { fill: none; stroke: var(--blue); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-        .chart .dot { fill: var(--blue); stroke: #fff; stroke-width: 2; }
-        .chart .cross { stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 3 3; }
-        .tip { position: absolute; pointer-events: none; transform: translate(-50%, -100%); margin-top: -12px; background: var(--ink); color: #fff; font-size: 13px; line-height: 1.35; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+        .tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+        .tools input[type="search"] { flex: 1 1 220px; font: inherit; padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+        .tools select { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; }
+        .tools .count { font-size: 13px; color: var(--ink-soft); }
 
-        /* ---------- lists ---------- */
-        .lists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
-        .list { padding: 20px; }
-        .list h2 { font: 400 22px var(--f-display); margin-bottom: 12px; display: flex; align-items: baseline; gap: 10px; }
-        .list h2 span { font: 500 14px var(--f-sans); color: var(--ink-soft); }
-        .list ul { list-style: none; margin: 0; padding: 0; }
-        .list li { padding: 10px 0; border-top: 1px solid var(--line); }
-        .list li b { font-weight: 500; }
-        .list li p { color: var(--ink-soft); margin-top: 2px; }
-        .list .none { color: var(--ink-faint); font-size: 15px; }
-
-        /* ---------- guest list ---------- */
-        .guests { margin-top: 28px; }
-        .guests-head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
-        .guests-head h2 { font: 400 26px var(--f-display); margin-right: auto; }
-        .search { font: inherit; font-size: 15px; height: 40px; padding: 0 14px; width: min(280px, 100%); border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
-        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-        .chip { font-size: 14px; padding: 7px 14px; }
-        .chip span { color: var(--ink-faint); margin-left: 4px; font-variant-numeric: tabular-nums; }
-        .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
-        .chip[aria-pressed="true"] span { color: rgba(255, 255, 255, 0.7); }
-        .table { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 15px; }
-        th { text-align: left; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); padding: 14px 14px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-        td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
-        tbody tr:last-child td { border-bottom: 0; }
-        tr.hh-start td { border-top: 1px solid rgba(43, 39, 36, 0.22); }
-        tbody tr:first-child td { border-top: 0; }
+        .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        th { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; position: sticky; top: 0; background: var(--card); }
+        tr.hh-start td { border-top: 2px solid var(--line); }
         td.name { font-weight: 500; white-space: nowrap; }
-        td.msg { max-width: 30ch; color: var(--ink-soft); }
-        td.when { white-space: nowrap; color: var(--ink-soft); font-size: 14px; font-variant-numeric: tabular-nums; }
-        .pill { display: inline-block; font-size: 13px; font-weight: 500; padding: 2px 10px; border-radius: 999px; }
-        .pill.y { color: var(--yes); background: var(--yes-bg); }
-        .pill.n { color: var(--no); background: var(--no-bg); }
-        .dash { color: #cfc8bf; }
-        tr.fresh td { animation: fresh 4s ease-out; }
-        @keyframes fresh { from { background: var(--fresh); } to { background: transparent; } }
+        td.when { white-space: nowrap; color: var(--ink-soft); font-size: 13px; }
+        td.msg { max-width: 32ch; color: var(--ink-soft); }
+        .y { color: var(--yes); font-weight: 500; }
+        .n { color: var(--no); font-weight: 500; }
+        .dash { color: #b9b4a8; }
+        tr.fresh td { animation: fresh 3s ease-out; }
+        @keyframes fresh { from { background: #fff3c8; } to { background: transparent; } }
+        .empty { padding: 40px; text-align: center; color: var(--ink-soft); }
+
         /* paid: a button for anyone staying over */
-        .paid-btn { font: inherit; padding: 0; border: 0; background: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; }
-        .paid-btn .pill { border: 1px solid transparent; }
-        .paid-btn:hover .pill { border-color: currentColor; }
-        .paid-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-        .checked { font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
+        .paid-btn { font: inherit; padding: 2px 8px; margin: -2px -8px; border: 1px solid transparent; background: none; color: inherit; border-radius: 999px; cursor: pointer; }
+        .paid-btn:hover { border-color: var(--line); background: #fff; }
+        .checked { font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
 
         /* confirm dialog */
-        dialog { width: min(440px, calc(100% - 32px)); border: 0; border-radius: 16px; padding: 26px 24px 22px; color: var(--ink); box-shadow: 0 30px 80px -30px rgba(43, 39, 36, 0.5); }
-        dialog::backdrop { background: rgba(43, 39, 36, 0.35); }
-        dialog h2 { font: 400 24px var(--f-display); margin-bottom: 8px; }
-        dialog p { color: var(--ink-soft); }
-        .who { list-style: none; margin: 16px 0 6px; padding: 0; border-top: 1px solid var(--line); }
-        .who li { border-bottom: 1px solid var(--line); }
-        .who label { display: flex; align-items: center; gap: 12px; padding: 12px 2px; cursor: pointer; font-size: 16px; }
-        .who input { width: 20px; height: 20px; accent-color: var(--ink); flex: none; }
-        .who .now { margin-left: auto; }
-        .sum { margin-top: 10px; font-size: 15px; color: var(--ink); }
-        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; flex-wrap: wrap; }
-        .dialog-actions .confirm { background: var(--ink); border-color: var(--ink); color: #fff; }
-        .dialog-actions .confirm.no { background: var(--no); border-color: var(--no); }
-        .dialog-err { color: var(--no); margin-top: 10px; font-size: 14px; }
-        @media (max-width: 760px) { .dialog-actions button { flex: 1 1 0; height: 46px; } }
+        dialog { width: min(420px, calc(100% - 32px)); border: 1px solid var(--line); border-radius: 8px; padding: 24px 22px 20px; color: var(--ink); background: var(--card); }
+        dialog::backdrop { background: rgba(28, 35, 71, 0.3); }
+        dialog h2 { margin: 0 0 6px; font: 400 24px var(--f-display); }
+        dialog p { margin: 0; color: var(--ink-soft); }
+        .who-list { list-style: none; margin: 14px 0 6px; padding: 0; border-top: 1px solid var(--line); }
+        .who-list li { border-bottom: 1px solid var(--line); }
+        .who-list label { display: flex; align-items: center; gap: 10px; padding: 10px 2px; cursor: pointer; }
+        .who-list input { width: 18px; height: 18px; accent-color: var(--ink); }
+        .who-list .now { margin-left: auto; font-size: 13px; }
+        .sum { margin-top: 8px !important; color: var(--ink) !important; }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+        .dialog-err { color: var(--no) !important; margin-top: 8px !important; font-size: 14px; }
 
-        .empty { padding: 48px 20px; text-align: center; color: var(--ink-soft); }
-        .empty b { display: block; font: 400 22px var(--f-display); color: var(--ink); margin-bottom: 6px; }
-
-        /* ---------- phone ---------- */
-        @media (max-width: 760px) {
-            .wrap { padding: 20px 14px 56px; }
-            header h1 { font-size: 22px; }
-            .tools-top { margin-left: 0; width: 100%; }
-            .hero { grid-template-columns: 1fr; padding: 22px; }
-            .hero-num { font-size: 60px; }
-            .deadline { text-align: left; }
-            .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-            .tile { padding: 16px; }
-            .tile b { font-size: 30px; }
-            .lists { grid-template-columns: 1fr; gap: 10px; }
-            .search { width: 100%; }
-            /* the table becomes one card per guest */
-            table, tbody, tr, td { display: block; }
-            thead { display: none; }
-            .table.card { background: none; border: 0; }
-            tbody tr { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 10px; }
-            tr.hh-start td { border-top: 0; }
-            td { padding: 0; border: 0; }
-            td.name { grid-column: 1 / -1; font-size: 17px; white-space: normal; }
-            td[data-k]::before { content: attr(data-k); display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 2px; }
-            td.wide { grid-column: 1 / -1; }
-            td.wide:empty, td.wide.blank { display: none; }
-            td.when { grid-column: 1 / -1; font-size: 13px; }
-        }
+        .diet { margin-top: 28px; }
+        .diet h2 { font: 400 22px var(--f-display); margin: 0 0 10px; }
+        .diet ul { margin: 0; padding-left: 18px; columns: 2 280px; }
+        @media (max-width: 640px) { header .who { margin-left: 0; width: 100%; } }
     </style>
 </head>
 <body>
-    <form class="login card" id="login" hidden>
-        <svg class="mono" viewBox="0 0 355 378" aria-hidden="true"><use href="../assets/monogram.svg#kh" /></svg>
+    <form class="login" id="login" hidden>
+        <svg viewBox="0 0 355 378" aria-hidden="true"><use href="../assets/monogram.svg#kh" /></svg>
         <h1>Gjesteoversikt</h1>
         <label for="email">E-post</label>
         <input id="email" type="email" autocomplete="username" value="kjerstioghakon@gmail.com" required />
@@ -196,76 +115,58 @@
         <p class="err" id="login-err" role="alert" hidden></p>
     </form>
 
-    <main class="wrap" id="app" hidden>
+    <div class="wrap" id="app" hidden>
         <header>
-            <svg class="mono" viewBox="0 0 355 378" aria-hidden="true"><use href="../assets/monogram.svg#kh" /></svg>
+            <svg viewBox="0 0 355 378" aria-hidden="true"><use href="../assets/monogram.svg#kh" /></svg>
             <h1>Gjesteoversikt</h1>
-            <div class="tools-top">
+            <div class="who">
                 <span class="live" id="live">Kobler til…</span>
-                <button type="button" id="csv">Last ned til Excel</button>
-                <button type="button" id="logout">Logg ut</button>
+                <button class="ghost" id="csv" type="button">Last ned CSV</button>
+                <button class="ghost" id="logout" type="button">Logg ut</button>
             </div>
         </header>
 
-        <section class="hero card" aria-label="Kommer">
-            <div>
-                <p class="label">Kommer</p>
-                <p class="hero-num" id="h-coming">0<span>gjester</span></p>
-                <p class="hero-sub" id="h-sub"></p>
-            </div>
-            <div class="deadline">
-                <p class="label">Svarfrist 1. februar 2027</p>
-                <b id="h-days"></b>
-            </div>
-        </section>
+        <section class="stats" id="stats" aria-label="Tall"></section>
 
-        <section class="tiles" aria-label="Tall">
-            <div class="tile card"><p class="label">Overnatter</p><b id="t-stay">0</b><small id="t-stay-sub"></small></div>
-            <div class="tile card">
-                <p class="label">Betalt overnatting</p><b id="t-paid">0</b><small id="t-paid-sub"></small>
-                <div class="meter" role="img" id="t-paid-meter"><i id="t-paid-bar" style="width:0"></i></div>
-            </div>
-            <div class="tile card"><p class="label">Allergier</p><b id="t-diet">0</b><small>gjester har skrevet noe</small></div>
-            <div class="tile card"><p class="label">Kommer ikke</p><b id="t-not">0</b><small id="t-not-sub"></small></div>
-        </section>
+        <div class="tools">
+            <input type="search" id="q" placeholder="Søk etter navn, e-post, allergi…" aria-label="Søk" />
+            <select id="filter" aria-label="Vis">
+                <option value="all">Alle</option>
+                <option value="coming">Kommer</option>
+                <option value="not">Kommer ikke</option>
+                <option value="stay">Overnatter</option>
+                <option value="unpaid">Overnatter, ikke betalt</option>
+                <option value="diet">Har allergier</option>
+            </select>
+            <span class="count" id="count"></span>
+        </div>
 
-        <section class="trend card" id="trend" aria-label="Svar over tid" hidden>
-            <div class="trend-head"><p class="label">Gjester som kommer, over tid</p><small id="trend-sub"></small></div>
-            <div class="chart" id="chart"></div>
-        </section>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Navn</th><th>Kommer</th><th>Overnatter</th><th>Betalt</th><th>Allergier og mat</th><th>Kommentar</th><th>E-post</th><th>Svart</th></tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+            <p class="empty" id="empty" hidden>Ingen svar ennå.</p>
+        </div>
 
-        <section class="lists">
-            <div class="list card"><h2>Allergier og mat <span id="diet-n"></span></h2><ul id="diet-list"></ul></div>
-            <div class="list card"><h2>Kommentarer <span id="msg-n"></span></h2><ul id="msg-list"></ul></div>
+        <section class="diet" id="diet" hidden>
+            <h2>Allergier og matpreferanser</h2>
+            <ul id="diet-list"></ul>
         </section>
-
-        <section class="guests" aria-label="Gjester">
-            <div class="guests-head">
-                <h2>Alle gjester</h2>
-                <input class="search" type="search" id="q" placeholder="Søk etter navn eller allergi" aria-label="Søk" />
-            </div>
-            <div class="chips" id="chips" role="group" aria-label="Vis"></div>
-            <div class="table card">
-                <table>
-                    <thead><tr><th>Navn</th><th>Kommer</th><th>Overnatter</th><th>Betalt</th><th>Mat</th><th>Kommentar</th><th>Svart</th></tr></thead>
-                    <tbody id="rows"></tbody>
-                </table>
-                <div class="empty" id="empty" hidden><b>Ingen svar ennå</b>Når gjestene svarer, dukker de opp her med en gang.</div>
-                <div class="empty" id="nomatch" hidden>Ingen gjester passer søket.</div>
-            </div>
-        </section>
-    </main>
+    </div>
 
     <dialog id="pay-dialog" aria-labelledby="pay-title">
         <form method="dialog" id="pay-form">
             <h2 id="pay-title"></h2>
             <p id="pay-text"></p>
-            <ul class="who" id="pay-who"></ul>
+            <ul class="who-list" id="pay-who"></ul>
             <p class="sum" id="pay-sum"></p>
             <p class="dialog-err" id="pay-err" role="alert" hidden></p>
             <div class="dialog-actions">
-                <button type="button" id="pay-cancel">Avbryt</button>
-                <button type="submit" class="confirm" id="pay-ok"></button>
+                <button type="button" class="ghost" id="pay-cancel">Avbryt</button>
+                <button type="submit" id="pay-ok"></button>
             </div>
         </form>
     </dialog>
@@ -278,7 +179,6 @@
     const SUPABASE_URL = 'https://bevrttmvumfodpkauiio.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldnJ0dG12dW1mb2Rwa2F1aWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTE4NjksImV4cCI6MjA2NjE4Nzg2OX0.DEZl36UgcM_KOlnbVlxfIdW_ZRdmkAMbbdHfF3KLCyk';
     const PRICE_PER_PERSON = 1600;
-    const DEADLINE = new Date('2027-02-01T23:59:59+01:00');
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: 'kh-oversikt' } });
 
     const $ = (id) => document.getElementById(id);
@@ -289,7 +189,6 @@
     let fresh = new Set();
     let channel = null;
     let started = false;
-    let filter = 'all';
 
     /* ---------- auth ---------- */
     $('login').addEventListener('submit', async (e) => {
@@ -348,162 +247,88 @@
         rows = [];
     }
 
-    /* ---------- numbers ---------- */
-    const FILTERS = [
-        ['all', 'Alle', () => true],
-        ['coming', 'Kommer', (r) => r.attending],
-        ['not', 'Kommer ikke', (r) => !r.attending],
-        ['stay', 'Overnatter', (r) => r.stay],
-        ['unpaid', 'Ikke betalt', (r) => r.stay && r.paid_lodging !== true],
-        ['diet', 'Allergier', (r) => r.attending && r.allergies],
-        ['msg', 'Kommentar', (r) => r.message],
-    ];
+    /* ---------- render ---------- */
+    const yn = (v) => (v === true ? '<span class="y">Ja</span>' : v === false ? '<span class="n">Nei</span>' : '<span class="dash">–</span>');
+    const when = (iso) => new Date(iso).toLocaleString('nb-NO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const paidCell = (r) => `<button type="button" class="paid-btn" data-paid="${esc(r.id)}" title="Endre betalt">${yn(r.paid_lodging === true)}</button>${r.paid_checked_at ? ' <span class="checked" title="Endret av dere">✓ sjekket</span>' : ''}`;
 
-    function renderNumbers() {
+    function matches(r, q, f) {
+        if (f === 'coming' && !r.attending) return false;
+        if (f === 'not' && r.attending) return false;
+        if (f === 'stay' && !r.stay) return false;
+        if (f === 'unpaid' && !(r.stay && r.paid_lodging !== true)) return false;
+        if (f === 'diet' && !r.allergies) return false;
+        if (!q) return true;
+        return [r.first_name, r.last_name, r.email, r.allergies, r.message].join(' ').toLowerCase().includes(q);
+    }
+
+    function render() {
         const coming = rows.filter((r) => r.attending);
         const staying = coming.filter((r) => r.stay);
         const paid = staying.filter((r) => r.paid_lodging === true);
-        const unpaid = staying.length - paid.length;
-        const replies = new Set(rows.map((r) => r.household_id)).size;
-        const declined = rows.length - coming.length;
-        const days = Math.ceil((DEADLINE - Date.now()) / 86400000);
+        const households = new Set(rows.map((r) => r.household_id)).size;
+        const stat = (n, label, sub = '') => `<div class="stat"><b>${n}</b><span>${label}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
+        $('stats').innerHTML = [
+            stat(coming.length, 'kommer', `av ${rows.length} gjester i ${households} svar`),
+            stat(rows.length - coming.length, 'kommer ikke'),
+            stat(staying.length, 'overnatter', kr(staying.length * PRICE_PER_PERSON)),
+            stat(paid.length, 'har betalt', staying.length - paid.length ? `${staying.length - paid.length} har ikke betalt ennå` : ''),
+            stat(coming.filter((r) => r.allergies).length, 'med allergier'),
+        ].join('');
 
-        $('h-coming').innerHTML = `${coming.length}<span>${coming.length === 1 ? 'gjest' : 'gjester'}</span>`;
-        $('h-sub').textContent = rows.length
-            ? `${plural(replies, 'svar', 'svar')} fra ${plural(rows.length, 'person', 'personer')}`
-            : 'Ingen har svart ennå';
-        $('h-days').textContent = days > 1 ? `${days} dager igjen` : days === 1 ? 'I morgen' : days === 0 ? 'I dag' : 'Fristen er ute';
-
-        $('t-stay').textContent = staying.length;
-        $('t-stay-sub').textContent = `${kr(staying.length * PRICE_PER_PERSON)} totalt`;
-        $('t-paid').innerHTML = `${paid.length}<small style="font:500 18px var(--f-sans);color:var(--ink-soft)"> av ${staying.length}</small>`;
-        $('t-paid-sub').textContent = staying.length ? (unpaid ? `${kr(unpaid * PRICE_PER_PERSON)} gjenstår` : 'Alle har betalt') : 'Ingen overnatter ennå';
-        const pct = staying.length ? Math.round((paid.length / staying.length) * 100) : 0;
-        $('t-paid-bar').style.width = `${pct}%`;
-        $('t-paid-meter').setAttribute('aria-label', `${pct} prosent har betalt`);
-        $('t-diet').textContent = coming.filter((r) => r.allergies).length;
-        $('t-not').textContent = declined;
-        $('t-not-sub').textContent = rows.length ? `${Math.round((declined / rows.length) * 100)} % av alle som har svart` : '';
-    }
-
-    /* ---------- people coming, day by day ---------- */
-    function renderTrend() {
-        const byDay = new Map();
-        for (const r of rows) {
-            if (!r.attending) continue;
-            const d = new Date(r.created_at); d.setHours(0, 0, 0, 0);
-            byDay.set(+d, (byDay.get(+d) || 0) + 1);
-        }
-        const days = [...byDay.keys()].sort((a, b) => a - b);
-        $('trend').hidden = days.length < 2;
-        if (days.length < 2) return;
-        let sum = 0;
-        const pts = days.map((d) => ({ d, n: (sum += byDay.get(d)) }));
-        // drawn at the real pixel width so the labels never stretch
-        const W = Math.max(280, $('chart').clientWidth), H = 160, P = { l: 30, r: 14, t: 14, b: 26 };
-        const x = (d) => P.l + ((d - pts[0].d) / (pts.at(-1).d - pts[0].d)) * (W - P.l - P.r);
-        const top = Math.max(4, Math.ceil(sum / 4) * 4);
-        const y = (n) => H - P.b - (n / top) * (H - P.t - P.b);
-        const fmt = (d) => new Date(d).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
-        const ticks = [0, top / 2, top];
-        $('chart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Antall som kommer, fra ${fmt(pts[0].d)} til ${fmt(pts.at(-1).d)}: ${sum}">
-            ${ticks.map((t) => `<line class="grid" x1="${P.l}" x2="${W - P.r}" y1="${y(t)}" y2="${y(t)}"/><text class="axis" x="${P.l - 8}" y="${y(t) + 4}" text-anchor="end">${t}</text>`).join('')}
-            <text class="axis" x="${P.l}" y="${H - 6}">${fmt(pts[0].d)}</text>
-            <text class="axis" x="${W - P.r}" y="${H - 6}" text-anchor="end">${fmt(pts.at(-1).d)}</text>
-            <line class="cross" id="cross" y1="${P.t}" y2="${H - P.b}" visibility="hidden"/>
-            <polyline class="line" points="${pts.map((p) => `${x(p.d)},${y(p.n)}`).join(' ')}"/>
-            ${pts.map((p) => `<circle class="dot" cx="${x(p.d)}" cy="${y(p.n)}" r="5"/>`).join('')}
-        </svg><div class="tip" id="tip" hidden></div>`;
-        $('trend-sub').textContent = `${sum} totalt`;
-        // hover / touch: nearest day, crosshair and a small label
-        const chart = $('chart');
-        const show = (clientX) => {
-            const box = chart.getBoundingClientRect();
-            const fx = clientX - box.left;
-            const p = pts.reduce((a, b) => (Math.abs(x(b.d) - fx) < Math.abs(x(a.d) - fx) ? b : a));
-            const cross = $('cross');
-            cross.setAttribute('x1', x(p.d)); cross.setAttribute('x2', x(p.d)); cross.setAttribute('visibility', 'visible');
-            const tip = $('tip');
-            tip.hidden = false;
-            tip.style.left = `${x(p.d)}px`;
-            tip.style.top = `${y(p.n)}px`;
-            tip.innerHTML = `${fmt(p.d)}: <b>${p.n}</b> kommer`;
-        };
-        chart.onpointermove = (e) => show(e.clientX);
-        chart.onpointerdown = (e) => show(e.clientX);
-        chart.onpointerleave = () => { $('tip').hidden = true; $('cross').setAttribute('visibility', 'hidden'); };
-    }
-
-    /* ---------- allergies and comments ---------- */
-    function renderLists() {
-        const name = (r) => `${esc(r.first_name)} ${esc(r.last_name)}`;
-        const diet = rows.filter((r) => r.attending && r.allergies);
-        $('diet-n').textContent = diet.length || '';
-        $('diet-list').innerHTML = diet.length ? diet.map((r) => `<li><b>${name(r)}</b><p>${esc(r.allergies)}</p></li>`).join('') : '<li class="none">Ingen har skrevet noe ennå.</li>';
-        const msgs = rows.filter((r) => r.message);
-        $('msg-n').textContent = msgs.length || '';
-        $('msg-list').innerHTML = msgs.length ? msgs.map((r) => `<li><b>${name(r)}</b><p>${esc(r.message)}</p></li>`).join('') : '<li class="none">Ingen kommentarer ennå.</li>';
-    }
-
-    /* ---------- the guest list ---------- */
-    const pill = (v) => (v === true ? '<span class="pill y">Ja</span>' : v === false ? '<span class="pill n">Nei</span>' : '<span class="dash">–</span>');
-    const when = (iso) => new Date(iso).toLocaleString('nb-NO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-
-    const paidCell = (r) => `<button type="button" class="paid-btn" data-paid="${esc(r.id)}" aria-label="Endre betalt for ${esc(r.first_name)} ${esc(r.last_name)}">${pill(r.paid_lodging === true)}</button>${r.paid_checked_at ? ' <span class="checked" title="Endret av dere">✓ sjekket</span>' : ''}`;
-
-    function renderGuests() {
-        $('chips').innerHTML = FILTERS.map(([key, label, fn]) =>
-            `<button type="button" class="chip" data-f="${key}" aria-pressed="${key === filter}">${label}<span>${rows.filter(fn).length}</span></button>`).join('');
-        const test = FILTERS.find(([key]) => key === filter)[2];
         const q = $('q').value.trim().toLowerCase();
-        const shown = rows.filter((r) => test(r) && (!q || [r.first_name, r.last_name, r.allergies, r.message, r.email].join(' ').toLowerCase().includes(q)));
+        const f = $('filter').value;
+        const shown = rows.filter((r) => matches(r, q, f));
+        $('count').textContent = shown.length === rows.length ? `${rows.length} gjester` : `${shown.length} av ${rows.length} gjester`;
         $('empty').hidden = rows.length > 0;
-        $('nomatch').hidden = !rows.length || shown.length > 0;
-        let prev = null;
+        let prevHh = null;
         $('rows').innerHTML = shown.map((r) => {
-            const first = r.household_id !== prev;
-            prev = r.household_id;
-            const cls = [first ? 'hh-start' : '', fresh.has(r.id) ? 'fresh' : ''].join(' ').trim();
+            const start = r.household_id !== prevHh;
+            prevHh = r.household_id;
+            const cls = [start ? 'hh-start' : '', fresh.has(r.id) ? 'fresh' : ''].join(' ').trim();
             return `<tr class="${cls}">
                 <td class="name">${esc(r.first_name)} ${esc(r.last_name)}</td>
-                <td data-k="Kommer">${pill(r.attending)}</td>
-                <td data-k="Overnatter">${r.attending ? pill(r.stay) : pill(null)}</td>
-                <td data-k="Betalt">${r.stay ? paidCell(r) : pill(null)}</td>
-                <td data-k="Mat" class="wide${r.allergies ? '' : ' blank'}">${esc(r.allergies) || '<span class="dash">–</span>'}</td>
-                <td data-k="Kommentar" class="msg wide${r.message ? '' : ' blank'}">${esc(r.message) || '<span class="dash">–</span>'}</td>
-                <td class="when">${when(r.created_at)}${first && r.email ? ` · <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ''}</td>
+                <td>${yn(r.attending)}</td>
+                <td>${r.attending ? yn(r.stay) : yn(null)}</td>
+                <td>${r.stay ? paidCell(r) : yn(null)}</td>
+                <td>${esc(r.allergies) || '<span class="dash">–</span>'}</td>
+                <td class="msg">${esc(r.message)}</td>
+                <td>${start && r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ''}</td>
+                <td class="when">${start ? when(r.created_at) : ''}</td>
             </tr>`;
         }).join('');
+
+        const diet = coming.filter((r) => r.allergies);
+        $('diet').hidden = diet.length === 0;
+        $('diet-list').innerHTML = diet.map((r) => `<li><b>${esc(r.first_name)} ${esc(r.last_name)}:</b> ${esc(r.allergies)}</li>`).join('');
     }
+    $('q').addEventListener('input', render);
+    $('filter').addEventListener('change', render);
+
     /* ---------- correcting who has paid ----------
-       Tapping a guest's "Betalt" opens a confirmation. One transfer often
+       Clicking a guest's "Betalt" opens a confirmation. One transfer often
        covers a whole reply, so everyone else in it who is staying over is
-       listed too, ticked, and can be changed in the same step. */
+       listed too, ticked where the change applies. */
     const dialog = $('pay-dialog');
-    let payTarget = null;
+    let payMark = null;
     $('rows').addEventListener('click', (e) => {
         const b = e.target.closest('[data-paid]');
         if (!b) return;
         const r = rows.find((x) => x.id === b.dataset.paid);
         if (!r) return;
-        const mark = r.paid_lodging !== true; // the change being made
-        payTarget = { mark };
+        payMark = r.paid_lodging !== true;
         const fam = rows.filter((x) => x.household_id === r.household_id && x.stay && x.id !== r.id);
-        const people = [r, ...fam];
         const name = (x) => `${esc(x.first_name)} ${esc(x.last_name)}`;
-        $('pay-title').textContent = mark ? 'Marker som betalt?' : 'Marker som ikke betalt?';
-        $('pay-text').textContent = fam.length
-            ? `Huk av alle i dette svaret som ${mark ? 'har betalt' : 'ikke har betalt'}.`
-            : `Sjekk at overføringen gjelder riktig person.`;
-        $('pay-who').innerHTML = people.map((x) => `<li><label><input type="checkbox" value="${esc(x.id)}" ${x.id === r.id || (x.paid_lodging === true) !== mark ? 'checked' : ''} /> ${name(x)} <span class="now">${pill(x.paid_lodging === true)}</span></label></li>`).join('');
+        $('pay-title').textContent = payMark ? 'Marker som betalt?' : 'Marker som ikke betalt?';
+        $('pay-text').textContent = fam.length ? `Huk av alle i dette svaret som ${payMark ? 'har betalt' : 'ikke har betalt'}.` : 'Sjekk at overføringen gjelder riktig person.';
+        $('pay-who').innerHTML = [r, ...fam].map((x) => `<li><label><input type="checkbox" value="${esc(x.id)}" ${x.id === r.id || (x.paid_lodging === true) !== payMark ? 'checked' : ''} /> ${name(x)} <span class="now">${yn(x.paid_lodging === true)}</span></label></li>`).join('');
         const sum = () => {
             const n = $('pay-who').querySelectorAll('input:checked').length;
             $('pay-sum').textContent = n ? `${plural(n, 'person', 'personer')} · ${kr(n * PRICE_PER_PERSON)}` : 'Ingen valgt';
             $('pay-ok').disabled = n === 0;
-            $('pay-ok').textContent = mark ? 'Ja, har betalt' : 'Ja, ikke betalt';
+            $('pay-ok').textContent = payMark ? 'Ja, har betalt' : 'Ja, ikke betalt';
         };
         $('pay-who').onchange = sum;
-        $('pay-ok').classList.toggle('no', !mark);
         $('pay-err').hidden = true;
         sum();
         dialog.showModal();
@@ -512,10 +337,10 @@
     $('pay-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const ids = [...$('pay-who').querySelectorAll('input:checked')].map((i) => i.value);
-        if (!ids.length || !payTarget) return;
+        if (!ids.length || payMark === null) return;
         $('pay-ok').disabled = true;
         const { data, error } = await sb.from('kh_responses')
-            .update({ paid_lodging: payTarget.mark, paid_checked_at: new Date().toISOString() })
+            .update({ paid_lodging: payMark, paid_checked_at: new Date().toISOString() })
             .in('id', ids).select('id, paid_lodging, paid_checked_at');
         $('pay-ok').disabled = false;
         if (error || !data || data.length !== ids.length) {
@@ -529,21 +354,7 @@
         render();
     });
 
-    $('chips').addEventListener('click', (e) => {
-        const b = e.target.closest('[data-f]');
-        if (b) { filter = b.dataset.f; renderGuests(); }
-    });
-    $('q').addEventListener('input', renderGuests);
-    addEventListener('resize', () => { if (rows.length) renderTrend(); });
-
-    function render() {
-        renderNumbers();
-        renderTrend();
-        renderLists();
-        renderGuests();
-    }
-
-    /* ---------- spreadsheet for Excel ---------- */
+    /* ---------- CSV for Excel ---------- */
     $('csv').addEventListener('click', () => {
         const cols = ['first_name', 'last_name', 'attending', 'stay', 'paid_lodging', 'allergies', 'message', 'email', 'created_at', 'household_id'];
         const head = ['Fornavn', 'Etternavn', 'Kommer', 'Overnatter', 'Betalt', 'Allergier', 'Kommentar', 'E-post', 'Svart', 'Husstand'];
