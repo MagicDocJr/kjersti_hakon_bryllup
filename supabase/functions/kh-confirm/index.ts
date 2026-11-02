@@ -32,31 +32,42 @@ type Row = {
     allergies: string | null; message: string | null; created_at: string;
 };
 
+const SUBJECT = 'Tusen takk for registreringen din';
+
+// Readable on a phone: large text, one person per block with a thin line
+// between, payment details on their own lines, signed by the couple.
 function emailHtml(rows: Row[]) {
-    const people = rows.map((r) => {
-        const lines: string[] = [];
-        if (!r.attending) lines.push('Kommer ikke');
-        else {
-            lines.push(r.stay ? 'Kommer og sover over' : 'Kommer, sover ikke over');
-            if (r.allergies) lines.push(`Mat: ${esc(r.allergies)}`);
-        }
-        if (r.message) lines.push(`Kommentar: ${esc(r.message)}`);
-        return `<p style="margin:0 0 14px"><strong>${esc(`${r.first_name} ${r.last_name}`)}</strong><br>${lines.join('<br>')}</p>`;
+    const label = 'font-family:Arial,sans-serif;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#5a534d';
+    const people = rows.map((r, i) => {
+        const status = !r.attending ? 'Kommer ikke' : r.stay ? 'Kommer · Sover over' : 'Kommer · Sover ikke over';
+        const extra = [
+            r.attending && r.allergies ? `Mat: ${esc(r.allergies)}` : '',
+            r.message ? `Kommentar: ${esc(r.message)}` : '',
+        ].filter(Boolean).map((t) => `<br><span style="color:#5a534d">${t}</span>`).join('');
+        const top = i ? 'border-top:1px solid #ece6dc;' : '';
+        return `<p style="margin:0;padding:14px 0;${top}"><strong style="font-size:18px">${esc(`${r.first_name} ${r.last_name}`)}</strong><br>${status}${extra}</p>`;
     }).join('');
     const staying = rows.filter((r) => r.attending && r.stay).length;
     const paid = rows.some((r) => r.paid_lodging === true);
     const pay = !staying ? ''
-        : paid ? '<p style="margin:18px 0 0">Takk for at dere har betalt for overnatting.</p>'
-        : `<p style="margin:18px 0 0;padding:12px 14px;background:#eef4fc;border-left:3px solid #b5442f">Husk å betale <strong>${kr(staying * PRICE_PER_PERSON)}</strong> for overnatting til kontonummer <strong>${ACCOUNT}</strong>.<br><strong>VIKTIG:</strong> Dere må legge inn navnet på hver enkelt når dere overfører for overnatting.</p>`;
-    const name = esc(rows[0].first_name);
+        : paid ? '<p style="margin:20px 0 0">Takk for at dere har betalt for overnatting.</p>'
+        : `<div style="margin:20px 0 0;padding:16px 18px;background:#eef4fc;border-radius:8px">
+        <p style="margin:0 0 10px;${label}">Husk å betale for overnatting</p>
+        <p style="margin:0">Beløp: <strong>${kr(staying * PRICE_PER_PERSON)}</strong><br>Kontonummer: <strong>${ACCOUNT}</strong></p>
+        <p style="margin:10px 0 0"><strong>VIKTIG:</strong> Dere må legge inn navnet på hver enkelt når dere overfører for overnatting.</p>
+      </div>`;
     return `<div style="background:#f3efe6;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;color:#2b2724">
-  <div style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:10px;padding:32px 28px">
-    <p style="margin:0 0 4px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#5a534d;font-family:Arial,sans-serif">Kjersti &amp; Håkon · 25.–27. juni 2027</p>
-    <h1 style="margin:0 0 24px;font-size:26px;font-weight:normal">Takk for svaret, ${name}!</h1>
-    <p style="margin:0 0 12px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#5a534d;font-family:Arial,sans-serif">Svaret ditt</p>
-    <div style="font-size:16px;line-height:1.5;padding:16px 0 4px;border-top:1px solid #e4ddd2">${people}${pay}</div>
-    <p style="margin:24px 0 0"><a href="${SITE}/" style="display:inline-block;background:#2b2724;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:12px 22px;border-radius:4px">Til nettsiden</a></p>
-    <p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#5a534d;font-family:Arial,sans-serif">Endringer eller spørsmål? Svar på denne e-posten.</p>
+  <div style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:10px;padding:34px 28px;font-size:17px;line-height:1.6">
+    <p style="margin:0 0 6px;${label}">Kjersti &amp; Håkon · 25.–27. juni 2027</p>
+    <h1 style="margin:0 0 26px;font-size:28px;line-height:1.2;font-weight:normal">${SUBJECT}</h1>
+    <p style="margin:0 0 4px;${label}">Svaret ditt</p>
+    <div style="border-top:1px solid #e4ddd2;border-bottom:1px solid #e4ddd2">${people}</div>
+    ${pay}
+    <p style="margin:26px 0 0"><a href="${SITE}/" style="display:inline-block;background:#2b2724;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:13px 24px;border-radius:4px">Til nettsiden</a></p>
+    <p style="margin:26px 0 0;font-size:15px;color:#5a534d;font-family:Arial,sans-serif">Endringer eller spørsmål? Svar på denne e-posten.</p>
+    <p style="margin:30px 0 0">Vi gleder oss til å feire med dere!</p>
+    <p style="margin:6px 0 0">Hilsen Kjersti og Håkon</p>
+    <img src="${SITE}/assets/monogram-mail.png" width="44" height="47" alt="KH" style="display:block;margin:16px 0 0;border:0">
   </div>
 </div>`;
 }
@@ -88,7 +99,7 @@ Deno.serve(async (req) => {
             to: [to],
             bcc: [COUPLE],
             reply_to: COUPLE,
-            subject: 'Vi har fått svaret ditt – Kjersti og Håkon',
+            subject: SUBJECT,
             html: emailHtml(rows as Row[]),
         }),
     });
