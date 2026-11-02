@@ -73,7 +73,7 @@ function measure() {
 }
 
 function targetTime() {
-    const probe = scrollY + innerHeight * 0.55;
+    const probe = scrollY + innerHeight * 0.65;
     if (probe <= anchors[0].y) return anchors[0].t;
     for (let i = 1; i < anchors.length; i++) {
         if (probe < anchors[i].y) {

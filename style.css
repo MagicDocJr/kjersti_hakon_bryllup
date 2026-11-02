@@ -813,12 +813,12 @@ fieldset.field { border: 0; margin: 0; padding: 0; }
 /* Open sky between the days: dusk, the light summer night and sunrise
    play out here, with nothing to read, so every line of the programme
    sits under the light that suits it. */
-.program .night { position: relative; height: clamp(320px, 70vh, 640px); }
+.program .night { position: relative; height: clamp(170px, 32vh, 300px); }
 .program .night span { position: absolute; left: 0; }
 .program .night span:nth-child(1) { top: 0; }
-.program .night span:nth-child(2) { top: 22%; }
-.program .night span:nth-child(3) { top: 44%; }
-.program .night span:nth-child(4) { top: 62%; }
-.program .night span:nth-child(3):last-child { top: 62%; }
+.program .night span:nth-child(2) { top: 12%; }
+.program .night span:nth-child(3) { top: 24%; }
+.program .night span:nth-child(4) { top: 36%; }
+.program .night span:nth-child(3):last-child { top: 36%; }
 .program .event { min-height: clamp(84px, 14vh, 140px); }
 .program-inner { text-shadow: var(--sky-shadow, none); }
