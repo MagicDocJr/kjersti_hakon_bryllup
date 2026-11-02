@@ -78,3 +78,9 @@ create policy "kh couple update paid" on public.kh_responses
   using ((select auth.jwt() ->> 'email') = 'kjerstioghakon@gmail.com')
   with check ((select auth.jwt() ->> 'email') = 'kjerstioghakon@gmail.com');
 notify pgrst, 'reload schema';
+
+-- 2026-11-03: reply confirmations by e-mail (supabase/functions/kh-confirm,
+-- sent through Resend). The function sets this when it has mailed a reply,
+-- so every reply gets exactly one confirmation.
+alter table public.kh_responses add column if not exists confirmation_sent_at timestamptz;
+notify pgrst, 'reload schema';

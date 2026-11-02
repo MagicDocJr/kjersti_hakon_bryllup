@@ -12,16 +12,6 @@ const ACCOUNT = '9492 08 35907';
 const SUPABASE_URL = 'https://bevrttmvumfodpkauiio.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldnJ0dG12dW1mb2Rwa2F1aWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTE4NjksImV4cCI6MjA2NjE4Nzg2OX0.DEZl36UgcM_KOlnbVlxfIdW_ZRdmkAMbbdHfF3KLCyk';
 
-// Confirmation e-mail via EmailJS (emailjs.com), sent from the couple's
-// Gmail with a copy to them. The three values come from their EmailJS
-// account; while they are empty, no e-mail is sent and nothing else changes.
-// The template to paste into EmailJS is in emails/bekreftelse.html.
-const EMAILJS = {
-    publicKey: '',
-    serviceId: '',
-    templateId: '',
-};
-
 const form = document.getElementById('rsvp');
 const guestsEl = document.getElementById('guests');
 const errorEl = document.getElementById('rsvp-error');
@@ -174,50 +164,20 @@ async function send(data) {
         body: JSON.stringify(rows),
     });
     if (!res.ok) throw new Error(`RSVP failed ${res.status}: ${await res.text()}`);
+    return household_id;
 }
 
-// One HTML block with everyone in the reply, for the e-mail
-function emailSummary(data) {
-    const rows = data.guests.map((g) => {
-        const name = esc(`${g.first_name} ${g.last_name}`);
-        const lines = [];
-        if (g.attending !== 'yes') lines.push('Kommer ikke');
-        else {
-            lines.push(g.stay === 'yes' ? 'Kommer og sover over' : 'Kommer, sover ikke over');
-            if (g.allergies) lines.push(`Mat: ${esc(g.allergies)}`);
-        }
-        if (g.comment) lines.push(`Kommentar: ${esc(g.comment)}`);
-        return `<p style="margin:0 0 14px"><strong>${name}</strong><br>${lines.join('<br>')}</p>`;
-    }).join('');
-    const staying = stayingCount(data);
-    const pay = !staying ? ''
-        : data.paid === 'yes'
-            ? `<p style="margin:18px 0 0">Takk for at dere har betalt for overnatting.</p>`
-            : `<p style="margin:18px 0 0;padding:12px 14px;background:#eef4fc;border-left:3px solid #b5442f">Husk å betale <strong>${kr(staying * PRICE_PER_PERSON)}</strong> for overnatting til kontonummer <strong>${ACCOUNT}</strong>.<br><strong>VIKTIG:</strong> Dere må legge inn navnet på hver enkelt når dere overfører for overnatting.</p>`;
-    return rows + pay;
-}
-
-// Sends the confirmation. Returns true when EmailJS accepted it; a failure
-// never undoes the reply, which is already saved.
-async function sendConfirmation(data) {
-    if (!EMAILJS.publicKey || !EMAILJS.serviceId || !EMAILJS.templateId || !data.email) return false;
-    const first = data.guests[0];
-    const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+// Asks the kh-confirm function (supabase/functions) to e-mail the guest a
+// confirmation. It sends at most one per reply; a failure never undoes the
+// reply, which is already saved.
+async function sendConfirmation(household_id) {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/kh-confirm`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            service_id: EMAILJS.serviceId,
-            template_id: EMAILJS.templateId,
-            user_id: EMAILJS.publicKey,
-            template_params: {
-                to_email: data.email,
-                to_name: first.first_name,
-                summary_html: emailSummary(data),
-            },
-        }),
+        headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ household_id }),
     });
-    if (!res.ok) throw new Error(`EmailJS ${res.status}: ${await res.text()}`);
-    return true;
+    if (!res.ok) throw new Error(`kh-confirm ${res.status}: ${await res.text()}`);
+    return (await res.json()).sent === true;
 }
 
 function summary(data) {
@@ -255,10 +215,10 @@ form.addEventListener('submit', async (e) => {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sender…';
     try {
-        await send(data);
+        const household_id = await send(data);
         summary(data);
         let mailed = false;
-        try { mailed = await sendConfirmation(data); } catch (err) { console.error(err); }
+        try { mailed = await sendConfirmation(household_id); } catch (err) { console.error(err); }
         if (mailed) summaryEl.insertAdjacentHTML('beforeend', `<p>Vi har sendt en bekreftelse til <strong>${esc(data.email)}</strong>. Finner du den ikke, sjekk søppelposten.</p>`);
         form.hidden = true;
         doneEl.hidden = false;
