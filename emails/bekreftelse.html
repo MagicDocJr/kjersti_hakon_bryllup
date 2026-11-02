@@ -1,0 +1,31 @@
+<!--
+  Bekreftelse på svar, sendt med EmailJS (emailjs.com) fra svarskjemaet.
+
+  Lim inn i EmailJS: Email Templates → Create New Template.
+    Subject:    Vi har fått svaret ditt – Kjersti og Håkon
+    Content:    alt under denne kommentaren (velg «Edit Content» → «Code Editor»)
+    To Email:   {{to_email}}
+    From Name:  Kjersti og Håkon
+    Reply To:   kjerstioghakon@gmail.com
+    Bcc:        kjerstioghakon@gmail.com   (paret får en kopi av hvert svar)
+
+  Verdier fra skjemaet (assets/svar.js):
+    {{to_name}}          fornavnet til den første personen i svaret
+    {{{summary_html}}}   hvem som kommer, overnatting, mat, kommentar og
+                         eventuell påminnelse om betaling (tre klammer = HTML)
+-->
+<div style="background:#f3efe6;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;color:#2b2724">
+  <div style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:10px;padding:32px 28px">
+    <p style="margin:0 0 4px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#5a534d;font-family:Arial,sans-serif">Kjersti &amp; Håkon · 25.–27. juni 2027</p>
+    <h1 style="margin:0 0 20px;font-size:26px;font-weight:normal">Takk for svaret, {{to_name}}!</h1>
+    <p style="margin:0 0 20px;font-size:16px;line-height:1.5">Vi har fått svaret ditt. Dette er det vi har registrert:</p>
+    <div style="font-size:16px;line-height:1.5;padding:18px 0;border-top:1px solid #e4ddd2;border-bottom:1px solid #e4ddd2">
+      {{{summary_html}}}
+    </div>
+    <p style="margin:20px 0 0;font-size:16px;line-height:1.5">Vi gifter oss på Malungen gjestegård, Odalsvegen 1601, 2330 Vallset. Innsjekk fredag er fra kl. 17.</p>
+    <p style="margin:24px 0 0">
+      <a href="https://www.kjerstioghakon.no/" style="display:inline-block;background:#2b2724;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:12px 22px;border-radius:4px">Til nettsiden</a>
+    </p>
+    <p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#5a534d;font-family:Arial,sans-serif">Vil du endre svaret, eller har du spørsmål? Svar på denne e-posten, eller skriv til kjerstioghakon@gmail.com.</p>
+  </div>
+</div>
