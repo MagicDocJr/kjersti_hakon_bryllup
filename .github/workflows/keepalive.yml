@@ -1,0 +1,33 @@
+# Keeps the free Supabase project awake. It pauses after about a week without
+# traffic, and then the RSVP form can't save replies. kh_ping() only returns
+# the time; see supabase/kh_responses.sql.
+name: Supabase keep-alive
+
+on:
+  schedule:
+    - cron: '17 6 */3 * *' # every third day, 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  actions: write # to re-enable this workflow, below
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping the database
+        env:
+          # the public anon key, the same one the site uses
+          KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldnJ0dG12dW1mb2Rwa2F1aWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTE4NjksImV4cCI6MjA2NjE4Nzg2OX0.DEZl36UgcM_KOlnbVlxfIdW_ZRdmkAMbbdHfF3KLCyk
+        run: |
+          curl --fail-with-body -sS --retry 3 --retry-delay 20 -X POST \
+            https://bevrttmvumfodpkauiio.supabase.co/rest/v1/rpc/kh_ping \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY" \
+            -H "Content-Type: application/json" -d '{}'
+
+      # GitHub switches off scheduled workflows after 60 days without commits.
+      # Enabling it again resets that clock.
+      - name: Keep this schedule alive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/keepalive.yml/enable"

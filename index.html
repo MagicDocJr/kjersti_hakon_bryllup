@@ -3,299 +3,228 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Kjersti og Håkon, 25.–27. juni 2027</title>
-    <!-- placeholder until the real site has the couple's photos and details -->
+    <title>Kjersti og Håkon gifter seg</title>
+    <!-- kept out of search results: the page lists account and phone numbers -->
     <meta name="robots" content="noindex" />
-    <meta name="description" content="Kjersti og Håkon gifter seg helgen 25.–27. juni 2027 på Malungen gjestegård. Sett av datoen – nettside med registrering og mer informasjon kommer snart." />
-    <meta name="theme-color" content="#0b1030" />
-    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <meta name="description" content="Kjersti og Håkon gifter seg helgen 25.–27. juni 2027 på Malungen gjestegård i Vallset. Her finner du program, overnatting, kleskode og svarskjema." />
+    <meta name="theme-color" content="#a9caf3" />
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Kjersti og Håkon gifter seg" />
-    <meta property="og:description" content="Sett av helgen 25.–27. juni 2027. Nettside med registrering og mer informasjon kommer snart." />
+    <meta property="og:description" content="Helgen 25.–27. juni 2027 på Malungen gjestegård. Program, overnatting og svarskjema." />
+    <meta property="og:image" content="https://www.kjerstioghakon.no/img/og-image.jpg" />
     <meta property="og:url" content="https://www.kjerstioghakon.no/" />
-    <meta property="og:image" content="https://www.kjerstioghakon.no/assets/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="nb_NO" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500&family=Pinyon+Script&display=swap" />
-    <link rel="modulepreload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.186.1/three.module.min.js" crossorigin />
-    <style>
-        /* Save the date. A midsummer night: the countdown is made of light,
-           everything around it stays quiet. */
-        :root {
-            --night: #0b1030;
-            --night-2: #131b46;
-            --ivory: #f3efe6;
-            --ivory-soft: rgba(243, 239, 230, 0.68);
-            --cornflower: #8ea5ff;
-            --line: rgba(243, 239, 230, 0.16);
-            --f-display: 'Bodoni Moda', 'Didot', Georgia, serif;
-            --f-text: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
-            --f-script: 'Pinyon Script', 'Snell Roundhand', cursive;
-            color-scheme: dark;
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-        [hidden] { display: none !important; }
-        html { -webkit-text-size-adjust: 100%; }
-        body {
-            margin: 0;
-            min-height: 100svh;
-            display: grid;
-            place-items: center;
-            padding: max(28px, env(safe-area-inset-top, 0px)) 20px max(28px, env(safe-area-inset-bottom, 0px));
-            /* the sky never goes fully dark in late June: a low glow on the horizon */
-            background:
-                radial-gradient(90% 38% at 50% 108%, rgba(242, 185, 143, 0.22), rgba(242, 185, 143, 0) 70%),
-                radial-gradient(70% 50% at 50% 0%, rgba(80, 104, 214, 0.18), rgba(80, 104, 214, 0) 70%),
-                linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
-            background-attachment: fixed;
-            color: var(--ivory);
-            font-family: var(--f-text);
-            font-size: 16px;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            text-align: center;
-        }
-        p, h1, dl, dd { margin: 0; }
-        a { color: inherit; }
-        :focus-visible { outline: 2px solid var(--cornflower); outline-offset: 3px; }
-
-        main { width: min(1000px, 100%); display: grid; justify-items: center; }
-
-        .kicker { font-family: var(--f-display); font-style: italic; font-size: clamp(16px, 2vw, 19px); color: var(--ivory-soft); }
-
-        h1 {
-            margin-top: 14px;
-            font-family: var(--f-display);
-            font-variation-settings: "opsz" 30;
-            font-weight: 450;
-            font-size: clamp(48px, 7.2vw, 88px);
-            line-height: 0.95;
-            letter-spacing: -0.025em;
-            display: flex;
-            justify-content: center;
-            align-items: baseline;
-            gap: 0.16em;
-        }
-        h1 .amp { font-family: var(--f-script); font-variation-settings: normal; color: var(--cornflower); font-size: 0.82em; letter-spacing: 0; }
-
-        .when { margin-top: 18px; font-family: var(--f-display); font-variation-settings: "opsz" 24; font-weight: 500; font-size: clamp(19px, 2.4vw, 24px); }
-        .where { margin-top: 2px; color: var(--ivory-soft); }
-
-        /* the two threads live on a full-screen canvas behind everything */
-        .threads { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
-        main { position: relative; z-index: 1; }
-        h1, .when, .count { text-shadow: 0 0 40px rgba(11, 16, 48, 0.85), 0 0 12px rgba(11, 16, 48, 0.6); }
-
-        .count {
-            margin-top: clamp(30px, 6vh, 64px);
-            display: grid;
-            justify-items: center;
-            font-variant-numeric: lining-nums tabular-nums;
-        }
-        .days {
-            font-family: var(--f-display);
-            font-variation-settings: "opsz" 30;
-            font-weight: 400;
-            font-size: clamp(96px, 17vw, 196px);
-            line-height: 0.85;
-            letter-spacing: -0.03em;
-        }
-        .days-wrap { display: grid; justify-items: center; padding: 0 0.4em; }
-        /* when the ring closes, the number warms to gold */
-        .days { transition: color 1.6s, text-shadow 1.6s; }
-        /* words ("I dag", "Gift!") sit smaller than numbers */
-        .days.word { font-size: clamp(64px, 11vw, 128px); line-height: 1; font-style: italic; }
-        .clock { transition: margin-top 1.6s cubic-bezier(.16, .8, .2, 1); }
-        .count { transition: padding-bottom 1.6s cubic-bezier(.16, .8, .2, 1); }
-        .count.tied .clock { margin-top: 66px; }
-        .count.tied { padding-bottom: 34px; }
-        .count.tied .days { color: #fff3dc; text-shadow: 0 0 36px rgba(236, 200, 140, 0.55), 0 0 90px rgba(236, 200, 140, 0.3); }
-        .days-label { margin-top: 6px; font-family: var(--f-display); font-style: italic; font-size: clamp(19px, 2.4vw, 24px); }
-        .clock { margin-top: 18px; display: flex; gap: 28px; justify-content: center; color: var(--ivory-soft); }
-        /* the digit windows have no text baseline, so align bottoms and lift the label to the numerals' baseline */
-        .clock > span { display: inline-flex; align-items: flex-end; gap: 6px; }
-        .clock b { font-family: var(--f-display); font-weight: 400; font-size: clamp(28px, 3.8vw, 38px); color: var(--ivory); display: inline-flex; margin-bottom: -0.17em; }
-        /* odometer digits: each sits in its own window and rolls when it changes */
-        .dg {
-            position: relative;
-            display: inline-block;
-            width: 0.62em;
-            height: 1.2em;
-            overflow: hidden;
-            text-align: center;
-            -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 24%, #000 76%, transparent 100%);
-            mask-image: linear-gradient(180deg, transparent 0%, #000 24%, #000 76%, transparent 100%);
-        }
-        .dg > span { position: absolute; inset: 0; line-height: 1.2em; will-change: transform; }
-        /* a slow cross-fade when a number changes */
-        .swap { animation: swap 1.6s cubic-bezier(.16, .8, .2, 1); }
-        @keyframes swap { 0% { opacity: 0.15; filter: blur(8px); } 100% { opacity: 1; filter: blur(0); } }
-
-
-        .until { margin-top: 14px; font-size: 14px; color: var(--ivory-soft); }
-        .soon { margin-top: 30px; max-width: 30ch; font-family: var(--f-display); font-style: italic; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.35; text-wrap: balance; }
-
-        .cal { margin-top: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-        .btn {
-            display: inline-block;
-            padding: 12px 22px;
-            border-radius: 999px;
-            border: 1px solid rgba(243, 239, 230, 0.55);
-            font-weight: 500;
-            font-size: 15px;
-            text-decoration: none;
-            transition: background .2s, color .2s, border-color .2s;
-        }
-        .btn-solid { background: var(--ivory); color: var(--night); border-color: var(--ivory); }
-        .btn-solid:hover { background: #fff; }
-        .btn:not(.btn-solid):hover { background: rgba(243, 239, 230, 0.1); border-color: var(--ivory); }
-
-        footer { margin-top: 34px; font-size: 13px; color: var(--ivory-soft); letter-spacing: 0.04em; }
-
-        .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-
-        /* the entrance is a sequence: names, then the light rises, then the details */
-        @media (prefers-reduced-motion: no-preference) {
-            .kicker, h1, .when, .where, .count, .until, .soon, .cal, footer { animation: rise 2.2s cubic-bezier(.16, .8, .2, 1) both; }
-            .threads { animation: fade 4s ease both .6s; }
-            .kicker { animation-delay: .2s; }
-            h1 { animation-delay: .5s; }
-            .when, .where { animation-delay: 1.1s; }
-            .count, .until { animation-delay: 1.8s; }
-            .soon, .cal, footer { animation-delay: 3s; }
-            @keyframes rise { from { opacity: 0; transform: translateY(16px); filter: blur(4px); } }
-            @keyframes fade { from { opacity: 0; } }
-        }
-
-        @media (max-width: 600px) {
-            h1 { flex-direction: column; align-items: center; gap: 0; font-size: clamp(52px, 16vw, 76px); }
-            h1 .amp { font-size: 0.6em; line-height: 1; }
-            .clock { gap: 16px; font-size: 14px; }
-            .clock b { font-size: 26px; }
-        }
-    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gilda+Display&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<canvas class="threads" id="threads" aria-hidden="true"></canvas>
-<main>
-    <p class="kicker">Sett av datoen</p>
-    <h1><span>Kjersti</span> <span class="amp" aria-label="og">&amp;</span> <span>Håkon</span></h1>
-    <p class="when">25.–27. juni 2027</p>
-    <p class="where">Malungen gjestegård, Vallset</p>
 
-    <div class="count" aria-hidden="true">
-        <span class="days-wrap">
-            <span class="days" id="c-d">–</span>
-            <span class="days-label" id="c-dl">dager</span>
-        </span>
-        <span class="clock"><span><b id="c-h"></b>timer</span><span><b id="c-m"></b>minutter</span><span><b id="c-s"></b>sekunder</span></span>
+<a class="skip" href="#innhold">Hopp til innholdet</a>
+
+<nav class="tabbar" aria-label="Hovedmeny">
+    <ul>
+        <li><a href="#forside">Forside</a></li>
+        <li><a href="#program">Program</a></li>
+        <li><a href="svar/" class="tab-svar">Svar</a></li>
+    </ul>
+</nav>
+
+
+<main id="innhold">
+
+<!-- ============ FORSIDE ============ -->
+<header class="hero" id="forside">
+    <div class="hero-inner">
+        <figure class="hero-photo">
+            <img src="assets/foto/forlovet-sm.webp" srcset="assets/foto/forlovet-sm.webp 700w, assets/foto/forlovet.webp 1200w" sizes="(max-width: 760px) 70vw, 340px" alt="Håkon kysser Kjersti på kinnet mens hun viser frem forlovelsesringen" width="700" height="875" fetchpriority="high" />
+        </figure>
+
+        <div class="hero-title">
+            <svg class="hero-mono" viewBox="0 0 355 378" aria-hidden="true"><use href="assets/monogram.svg#kh" /></svg>
+            <h1>
+                <span class="script">Kjersti <span class="amp">&amp;</span> Håkon</span>
+                <span class="caps">gifter seg</span>
+            </h1>
+            <p class="hero-meta">
+                <span>Malungen gjestegård</span>
+                <span>Helgen 25.–27. juni 2027</span>
+            </p>
+        </div>
     </div>
-    <p class="until" id="until">til vielsen lørdag 26. juni kl. 13.00</p>
-    <p class="sr" id="sr-count" aria-live="off"></p>
+</header>
 
-    <p class="soon" id="soon">Nettside med registrering og mer informasjon kommer snart</p>
+<section class="band band-blue intro" aria-labelledby="intro-title">
+    <h2 class="visually-hidden" id="intro-title">Velkommen</h2>
+    <div class="intro-row">
+        <figure class="intro-photo">
+            <img src="assets/foto/baat-sm.webp" srcset="assets/foto/baat-sm.webp 700w, assets/foto/baat.webp 1200w" sizes="(max-width: 760px) 64vw, 300px" alt="Kjersti og Håkon i en båt på fjorden en sommerkveld" width="700" height="875" loading="lazy" />
+        </figure>
+    </div>
+    <p class="intro-lede">Vi gifter oss på Malungen gjestegård helgen 25.–27. juni 2027. Det er ønskelig at så mange som mulig blir med fra fredag til søndag for å feire. Innsjekk fredag er fra kl. 17.</p>
+    <p class="countdown" id="countdown" aria-live="off"></p>
+    <a class="btn btn-big" href="svar/">Svar nå</a>
+</section>
 
-    <div class="cal">
-        <a class="btn btn-solid" href="/assets/kjersti-og-hakon.ics" download="kjersti-og-hakon.ics">Legg til i kalenderen</a>
-        <a class="btn" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Kjersti+og+H%C3%A5kon+gifter+seg&amp;dates=20270625/20270628&amp;location=Malungen+gjesteg%C3%A5rd%2C+Odalsvegen+1601%2C+2330+Vallset&amp;details=Invitasjon+og+svarskjema+kommer+p%C3%A5+https%3A%2F%2Fwww.kjerstioghakon.no" target="_blank" rel="noopener">Google Kalender</a>
+
+<!-- ============ PRAKTISK ============ -->
+<section class="band band-white sted" id="praktisk" aria-labelledby="sted-title">
+    <div class="wrap sted-grid">
+        <figure class="sted-photo akvarell">
+            <img src="assets/foto/malungen-akvarell-sm.webp" srcset="assets/foto/malungen-akvarell-sm.webp 1000w, assets/foto/malungen-akvarell.webp 2000w" sizes="(max-width: 860px) 92vw, 52vw" alt="Akvarell av Malungen gjestegård med hyttene ved tjernet" width="1000" height="562" loading="lazy" />
+            <figcaption>Malungen gjestegård, Vallset</figcaption>
+        </figure>
+
+        <div class="sted-text">
+            <h2 class="h-caps" id="sted-title">Sted og overnatting</h2>
+
+            <h3>Overnatting</h3>
+            <p>I forbindelse med bryllupet har vi fått booket hele gjestegården med tilhørende hytter og soveplasser slik at alle har muligheten til å overnatte og bli med på festlighetene helgen gjennom uten pendling eller hotell andre steder.</p>
+            <p>Kostnaden per gjest er <strong>1 600 kr</strong> og dekker blant annet overnatting i to dager – hvor sengetøy/håndklær og all mat og drikke selvfølgelig er inkludert.</p>
+            <dl class="pay">
+                <div><dt>Kontonummer for overnatting</dt><dd>9492 08 35907</dd></div>
+                <div><dt>Innsjekk</dt><dd>Fredag fra 17.00 – mingling starter 19.00.</dd></div>
+                <div><dt>Utsjekk</dt><dd>Søndag kl. 12.00 (kanskje senere, men dette er ikke helt avklart)</dd></div>
+            </dl>
+            <p class="important"><strong>VIKTIG:</strong> Dere må legge inn navnet på hver enkelt når dere overfører for overnatting.</p>
+
+            <h3>Veibeskrivelse og adresse</h3>
+            <p>Adresse: <strong>Odalsvegen 1601, 2330 Vallset</strong></p>
+            <p>Det er lite kollektivt eller andre måter å komme seg dit uten bil. Anbefaler derfor å avtale seg imellom om man ikke har tilgjengelig bil den helgen.</p>
+            <p>Parkeringsmuligheter er det nok av på eiendommen.</p>
+            <p><a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Malungen+gjesteg%C3%A5rd+Odalsvegen+1601+Vallset" target="_blank" rel="noopener">Åpne i Google Maps</a></p>
+        </div>
+    </div>
+</section>
+
+<section class="band band-tint praktisk" aria-label="Kleskode og pakkeliste">
+    <div class="wrap praktisk-grid">
+
+        <div class="praktisk-info">
+            <h2 class="h-caps">Kleskode</h2>
+            <p>Fredag til grilling og mingling: Sommerlig pent.</p>
+            <p>Lørdag til vielse og fest: Mørk dress / smoking.</p>
+            <p>Obs: Mye av opplegget denne helgen skjer på tunet/gress, så vi anbefaler å unngå stiletter og tynne hæler på sko.</p>
+
+            <h3>Pakkeliste</h3>
+            <ul class="checklist" id="pakkeliste">
+                <li><label><input type="checkbox" id="pakk-tann" /> <span>Tannbørste</span></label></li>
+                <li><label><input type="checkbox" id="pakk-bad" /> <span>Badetøy</span></label></li>
+                <li><label><input type="checkbox" id="pakk-handkle" /> <span>Håndkle til bading</span></label></li>
+                <li><label><input type="checkbox" id="pakk-pent" /> <span>Pentøy</span></label></li>
+                <li><label><input type="checkbox" id="pakk-allergi" /> <span>Allergitabletter</span></label></li>
+            </ul>
+            <p class="drinks">På Malungen gjestegård er det lov å ha med medbrakt drikke: Har du lyst kan du gjerne ta med en flaske vin til fellesskapet.</p>
+        </div>
+    </div>
+</section>
+
+<section class="band band-white toast" aria-label="Toastmastere">
+    <div class="wrap toast-wrap">
+
+        <div class="bidrag">
+            <h2 class="h-caps">Toastmastere</h2>
+            <p>Vi har kapret oss to dyktige mennesker som skal lose oss gjennom bryllupet vårt. Har du lyst til å holde en tale eller noe annet sprell i løpet av helgen, ta kontakt med Håkon eller Thea.</p>
+            <ul class="contacts">
+                <li><span class="name">Thea von Hirsch</span> <a href="tel:+4791542460">915 42 460</a> <a href="mailto:Thea.vhirsch@gmail.com">Thea.vhirsch@gmail.com</a></li>
+                <li><span class="name">Håkon Kjersem</span> <a href="tel:+4797190193">971 90 193</a> <a href="mailto:Haakonkjersem@gmail.com">Haakonkjersem@gmail.com</a></li>
+            </ul>
+            <h3>Spørsmål</h3>
+            <p>Bryllupsspørsmål til brudeparet kan rettes til: <a href="mailto:kjerstioghakon@gmail.com">kjerstioghakon@gmail.com</a></p>
+        </div>
+    </div>
+</section>
+
+<!-- ============ GAVE ============ -->
+<section class="band band-cream gave" id="onskeliste" aria-labelledby="gave-title">
+    <div class="wrap gave-grid">
+        <figure class="gave-art photo"><img src="assets/foto/paris-sm.webp" srcset="assets/foto/paris-sm.webp 700w, assets/foto/paris.webp 1200w" sizes="(max-width: 860px) 70vw, 400px" alt="Kjersti og Håkon foran Sacré-Cœur i Paris" width="700" height="875" loading="lazy" /></figure>
+        <div class="gave-text">
+            <h2 class="gave-title" id="gave-title">Det viktigste for oss er at dere kommer denne helgen!</h2>
+            <p>For de som ønsker å gi en gave, ønsker vi oss bidrag til en større reise.</p>
+            <p>Kontonr: <strong>1440 47 84154</strong></p>
+            <div class="wishlist">
+                <img src="img/qr-onskeliste.svg" alt="QR-kode til ønskelisten" width="96" height="96" />
+                <div>
+                    <p class="wishlist-label">Andre ønsker</p>
+                    <a class="text-link" href="https://onsk.no/lister/opw-8ey?s=810511" target="_blank" rel="noopener">Åpne ønskelisten</a>
+                    <p class="wishlist-note">(Denne listen skal oppdateres nærmere)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ PROGRAM ============ -->
+<section class="program" id="program" aria-labelledby="program-title">
+    <div class="layer layer-sky" aria-hidden="true">
+        <div class="sky" id="sky">
+            <div class="sky-fill"></div>
+            <div class="sun" id="sun"></div>
+        </div>
     </div>
 
-    <footer>kjerstioghakon.no</footer>
+    <div class="program-inner">
+        <header class="program-head">
+            <h2 class="h-caps" id="program-title">Program</h2>
+            <p>Tentativt program (fredag–søndag)</p>
+        </header>
+
+        <div class="day">
+            <h3 class="day-title">Fredag <em>25. juni</em></h3>
+            <ol class="events">
+                <li class="event" data-at="2027-06-25T17:00"><time>Fra kl. 17.00</time><div><h4>Innsjekk</h4></div></li>
+                <li class="event" data-at="2027-06-25T20:30"><time>Fra kl. 19.00</time><div><h4>Grilling og lek</h4></div></li>
+            </ol>
+        </div>
+
+        <div class="night" aria-hidden="true"><span data-at="2027-06-25T23:30"></span><span data-at="2027-06-26T01:30"></span><span data-at="2027-06-26T04:30"></span><span data-at="2027-06-26T07:00"></span></div>
+
+        <div class="day">
+            <h3 class="day-title">Lørdag <em>26. juni</em></h3>
+            <ol class="events">
+                <li class="event" data-at="2027-06-26T08:00"><time></time><div><h4>Morgenbad og kaffe</h4></div><figure class="art"><img src="assets/foto/bading-sm.webp" alt="Kjersti med et stripete badehåndkle på stranden" width="700" height="875" loading="lazy" /></figure></li>
+                <li class="event" data-at="2027-06-26T09:00"><time></time><div><h4>Frokost</h4></div><figure class="art"><img src="assets/foto/frokost-sm.webp" alt="Kjersti og Håkon i morgenkåper med frokost på senga" width="800" height="535" loading="lazy" /></figure></li>
+                <li class="event is-key" data-at="2027-06-26T13:00"><time></time><div><h4>Vi gifter oss!!!</h4></div></li>
+                <li class="event" data-at="2027-06-26T14:00"><time></time><div><h4>Sabling og lunsj</h4></div></li>
+                <li class="event" data-at="2027-06-26T15:30"><time></time><div><h4>Leker / underholdning</h4></div></li>
+                <li class="event" data-at="2027-06-26T18:30"><time></time><div><h4>Middag</h4></div></li>
+                <li class="event" data-at="2027-06-26T21:00"><time></time><div><h4>Fest</h4></div></li>
+                <li class="event" data-at="2027-06-26T22:30"><time></time><div><h4>Nattmat</h4></div></li>
+                <li class="event" data-at="2027-06-26T23:15"><time></time><div><h4>Mer fest</h4></div></li>
+            </ol>
+        </div>
+
+        <div class="night" aria-hidden="true"><span data-at="2027-06-27T01:30"></span><span data-at="2027-06-27T04:30"></span><span data-at="2027-06-27T07:30"></span></div>
+
+        <div class="day">
+            <h3 class="day-title">Søndag <em>27. juni</em></h3>
+            <ol class="events">
+                <li class="event" data-at="2027-06-27T09:30"><time></time><div><h4>Frokost</h4></div><figure class="art"><img src="assets/foto/baguett-sm.webp" alt="Håkon med en baguett under armen" width="700" height="875" loading="lazy" /></figure></li>
+                <li class="event" data-at="2027-06-27T12:00"><time></time><div><h4>Utsjekk</h4><p>(kommer tilbake til dette)</p></div></li>
+            </ol>
+        </div>
+        <p class="program-end">Utfyllende tidspunkt til hele programmet kommer senere.</p>
+    </div>
+
+    <div class="layer layer-horizon" aria-hidden="true">
+        <div class="horizon">
+            <svg class="trees" id="trees" viewBox="0 0 1600 120" preserveAspectRatio="none"></svg>
+            </div>
+    </div>
+</section>
+
 </main>
 
-<script>
-    // Countdown in plain type. Numbers cross-fade when they change.
-    // ?now=2027-06-26T10:00 previews the page at another moment (for testing).
-    window.KH_CLOCK = (() => {
-        const q = new URLSearchParams(location.search).get('now');
-        const off = q && !isNaN(Date.parse(q)) ? Date.parse(q) - Date.now() : 0;
-        return () => Date.now() + off;
-    })();
-    (function () {
-        const WEDDING = new Date('2027-06-26T13:00:00+02:00').getTime();
-        const $ = (id) => document.getElementById(id);
-        const el = { d: $('c-d'), dl: $('c-dl'), h: $('c-h'), m: $('c-m'), s: $('c-s') };
-        const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const EASE = 'cubic-bezier(.22, .8, .2, 1)';
-        // roll each changed digit: the old one slides up and blurs away, the new one glides in
-        function roll(node, text) {
-            while (node.children.length < text.length) {
-                const box = document.createElement('span');
-                box.className = 'dg';
-                box.appendChild(document.createElement('span'));
-                node.appendChild(box);
-            }
-            [...node.children].forEach((box, i) => {
-                const ch = text[i];
-                if (box.dataset.v === ch) return;
-                const first = box.dataset.v === undefined;
-                box.dataset.v = ch;
-                const next = document.createElement('span');
-                next.textContent = ch;
-                const prev = box.lastElementChild;
-                box.appendChild(next);
-                if (first || still) { prev.remove(); return; }
-                const opts = { duration: 820, easing: EASE, fill: 'forwards' };
-                prev.animate([{ transform: 'translateY(0)', opacity: 1, filter: 'blur(0)' }, { transform: 'translateY(-90%)', opacity: 0, filter: 'blur(3px)' }], opts).finished.then(() => prev.remove());
-                next.animate([{ transform: 'translateY(90%)', opacity: 0, filter: 'blur(3px)' }, { transform: 'translateY(0)', opacity: 1, filter: 'blur(0)' }], opts);
-            });
-        }
-        const clockRow = document.querySelector('.clock');
-        const sr = $('sr-count');
-        const two = (n) => String(n).padStart(2, '0');
-        const set = (node, text) => {
-            if (node.textContent === text) return;
-            node.textContent = text;
-            node.classList.remove('swap'); void node.offsetWidth; node.classList.add('swap');
-        };
-        let mode = '';
-        function tick() {
-            const now = window.KH_CLOCK();
-            let ms = WEDDING - now;
-            if (ms <= 0) {
-                if (mode === 'after') return;
-                mode = 'after';
-                set(el.d, 'Gift!'); el.d.classList.add('word'); el.dl.textContent = '26. juni 2027';
-                clockRow.hidden = true; $('until').hidden = true;
-                $('soon').textContent = 'Takk for at dere feiret med oss!';
-                document.querySelector('.cal').hidden = true;
-                sr.textContent = 'Kjersti og Håkon er gift.';
-                return;
-            }
-            const d = Math.floor(ms / 86400000); ms -= d * 86400000;
-            const h = Math.floor(ms / 3600000); ms -= h * 3600000;
-            const m = Math.floor(ms / 60000);
-            const sameDay = new Date(now).toLocaleDateString('nb-NO', { timeZone: 'Europe/Oslo' }) === new Date(WEDDING).toLocaleDateString('nb-NO', { timeZone: 'Europe/Oslo' });
-            el.d.classList.toggle('word', sameDay);
-            if (sameDay) { set(el.d, 'I dag'); el.dl.textContent = 'vielsen er kl. 13.00'; }
-            else { set(el.d, String(d)); el.dl.textContent = d === 1 ? 'dag' : 'dager'; }
-            const sec = Math.floor((ms - m * 60000) / 1000);
-            roll(el.h, two(h)); roll(el.m, two(m)); roll(el.s, two(sec));
-            sr.textContent = `${d} dager, ${h} timer og ${m} minutter igjen.`;
-        }
-        // tick right on the second, so the roll lands in time with the clock
-        (function loop() { tick(); setTimeout(loop, 1000 - (window.KH_CLOCK() % 1000) + 5); })();
-    })();
-</script>
-<script type="module">
-    const canvas = document.getElementById('threads');
-    const gl = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; } })();
-    if (!gl) canvas.remove();
-    else {
-        const count = document.querySelector('.count');
-        import('/assets/threads.js?v=10').then(({ startThreads }) => {
-            startThreads(canvas, {
-                reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-                ringAround: document.querySelector('.days-wrap'),
-                clock: window.KH_CLOCK,
-                onFrame(p, knot) { count.classList.toggle('tied', knot > 0.85); },
-            });
-        }).catch((err) => { console.error(err); canvas.remove(); });
-    }
-</script>
+<footer class="site-footer">
+    <svg class="monogram footer-mono" viewBox="0 0 355 378" aria-hidden="true"><use href="assets/monogram.svg#kh" /></svg>
+</footer>
+
+<script src="main.js" type="module"></script>
 </body>
 </html>

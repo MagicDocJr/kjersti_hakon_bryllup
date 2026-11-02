@@ -1,56 +1,60 @@
 # Kjersti og Håkon — bryllupsside
 
-To versjoner av samme side for bryllupet 25.–27. juni 2027 på Malungen gjestegård:
+Nettsiden for bryllupet 25.–27. juni 2027 på Malungen gjestegård, på https://www.kjerstioghakon.no. Den følger brudens skisse (himmelblå topp, lyseblå/hvite bånd, skrivemaskintekst), bare med parets egne bilder, og har et program der himmelen følger sola over Malungen mens man ruller.
 
-| Mappe | Hva |
-|---|---|
-| `klassisk/` | Brudeparets skisse, strammet opp: himmelblå hero med blomstereng, lyseblå/hvite bånd, program med strektegninger, bildestripe, gave og QR. |
-| `kreativ/` | Renere tolkning: store navn og et kornblomstfoto øverst, og et program der himmelen følger sola over Malungen time for time (regnet ut for 25.–27. juni 2027). |
+Ren HTML/CSS/JS uten byggesteg, som Ragnhild & Vetle-siden.
 
-Begge er ren HTML/CSS/JS uten byggesteg, som Ragnhild & Vetle-siden.
+| Adresse | Fil | Hva |
+|---|---|---|
+| `/` | `index.html`, `style.css`, `main.js`, `img/` | Én side som rulles. Menyen er **Forside · Program · Svar**: Forside er alt det praktiske i rekkefølgen fra parets dokument, deretter programmet. |
+| `/svar/` | `svar/index.html` + `assets/svar.js` | Svarskjemaet. Samme adresse som QR-koden på invitasjonen. Gamle lenker til `#svar` sendes hit. |
+| `/oversikt/` | `oversikt/index.html` | Parets gjesteoversikt, med innlogging (se under). |
+| `/onskeliste/` | `onskeliste/index.html` | Sender videre til ønskelisten på onsk.no (QR-koden peker hit). |
 
-Begge har samme fanerad øverst: **Forside · Program · Praktisk · Svar · Gave**. Forsiden er én lang side med alt, mens de andre fanene viser bare sin egen del. Hver fane er sin egen visning, styrt av adressen (`#program`, `#svar` osv.), så lenker kan deles direkte og tilbakeknappen virker. Svar-fanen er uthevet, og forsiden har «Svar nå»-knapp og en kort oversikt over når, hvor og svarfrist.
+Sidene er merket `noindex` med vilje: de viser kontonumre og telefonnumre, og skal bare nås via invitasjonen.
 
-## Hva som ligger ute nå
-
-Forsiden på kjerstioghakon.no er en midlertidig «sett av datoen»-side (`index.html` + `assets/`) med to silkebånd i three.js (`assets/threads.js`) som flettes tettere jo nærmere dagen kommer, nedtelling og kalenderfil, til paret har sendt bilder og detaljer. Designene ligger fortsatt på `/klassisk/` og `/kreativ/` (lenket fra `/utkast/`), men lenkes ikke fra forsiden og er merket noindex.
-
-For å lansere: erstatt `index.html` med valgt versjon (eller la den sende videre dit).
+Tidligere utkast (`klassisk/`, `kreativ/`, `samlet/`) og «sett av datoen»-siden ligger i git-historikken.
 
 ## Kjøre lokalt
 
 ```sh
 python3 -m http.server 5317
-# http://127.0.0.1:5317/            «sett av datoen»-siden
-# http://127.0.0.1:5317/utkast/     velg versjon
-# http://127.0.0.1:5317/klassisk/
-# http://127.0.0.1:5317/kreativ/
-# http://127.0.0.1:5317/klassisk/#svar   rett til svarskjemaet
+# http://127.0.0.1:5317/            nettsiden
+# http://127.0.0.1:5317/svar/       svarskjemaet
+# http://127.0.0.1:5317/oversikt/   gjesteoversikten
 ```
 
-## Må fylles inn før lansering
+## Innhold fra paret (2026-11-02)
 
-Plassholdere vises som røde, stiplede felt på siden (`.fyll`):
+Parets dokument «Nettside bryllup» er fasit for all tekst. Tekstene er lagt inn ordrett; bare tydelige skrivefeil er rettet (kokkeltivt, stillett, losje, Brullups-). Ikke legg til egne formuleringer uten at paret har godkjent dem.
 
-- **Kontonummer** for overnatting (1500 kr per person) og for gavebidrag
-- **Toastmastere**: e-post og telefon. Navnene (Thea von Hirsch, Håkon Kjernæs) er lest av en lavoppløst skisse og må sjekkes.
-- **Ønskeliste-lenke**: peker nå til `https://onskeskyen.no/`. Bytt URL i `index.html` og lag ny QR (`img/qr-onskeliste.svg`).
-- **Svarfrist**: satt til 1. mars 2027.
-- **Bekreftelse på e-post**: svar lagres, men det sendes ingen e-post ennå. Kan kobles på med EmailJS slik som i `Rag_vetl_bryllup`.
-- **Bilder av paret**: `couple-1/2/3` er stand-in-bilder fra Unsplash. Bytt med parets egne (4:5 stående, ca. 1200 px bredde, webp).
-- Tekstene «Endelig / sier vi ja» (klassisk) og kveldsprogrammet fredag 21.00 er forslag.
+Tekstene for overnatting (1 600 kr per gjest, kontonr. 9492 08 35907), kleskode, pakkeliste, toastmastere, gave (kontonr. 1440 47 84154, ønskeliste på onsk.no) og det tentative programmet er lagt inn i begge versjoner. Svarfristen er 1. februar 2027. Nedtellingen går til innsjekk fredag 25. juni kl. 17.00.
+
+- **Monogram**: `assets/monogram.svg` er tegnet om til vektor fra parets PDF. Bruk det med `<svg viewBox="0 0 355 378"><use href="../assets/monogram.svg#kh"/></svg>`, så tar det fargen fra `color`.
+- **QR til invitasjonen**: `assets/qr-invitasjon.svg` (til trykk) og `assets/qr-invitasjon.png` peker til https://www.kjerstioghakon.no/.
+- **QR til svar og ønskeliste**: `assets/qr-svar.svg|png` peker til https://www.kjerstioghakon.no/svar/ og `assets/qr-onskeliste.svg|png` til https://www.kjerstioghakon.no/onskeliste/. `/svar/` er selve skjemaet. `/onskeliste/` er en liten side som sender videre; bytt målet der hvis ønskelisten får ny lenke, så virker den trykte koden fortsatt.
+- **Svarskjemaet** ligger i `assets/svar.js` og brukes av alle versjonene. Hver person: navn, kommer (ja/nei), sove over (ja/nei), mat du ikke tåler (fritekst) og kommentar. «Har du husket å betale for overnatting?» (ja/nei) vises når noen sover over. E-post er valgfri.
+- **Programmet** mangler tidspunkter utenom fredag og utsjekk. `data-at` på hvert punkt styrer likevel himmelen; de tidene vises ikke.
+
+## Fortsatt åpent
+
+- **Svar på e-post**: svar lagres, men det sendes ingen kopi til kjerstioghakon@gmail.com ennå. Kan kobles på med EmailJS slik som i `Rag_vetl_bryllup`.
+
+## Gjesteoversikt (`/oversikt/`)
+
+Privat side der paret ser svarene live: hvor mange som kommer, overnatter og har betalt, svarfrist, utvikling over tid, allergier, kommentarer og hele gjestelisten med filtre. Fungerer på mobil. De logger inn med kjerstioghakon@gmail.com og passord (en bruker i Supabase Auth, opprettet av admin). RLS lar bare den adressen lese `kh_responses`. Siden viser tall, søk og filter (f.eks. «overnatter, ikke betalt»), allergiliste og CSV-eksport. Nye svar dukker opp uten omlasting via Supabase Realtime.
 
 ## Bildekilder
 
-Kreditering er fjernet fra sidene fordi bildene skal byttes. Gjestegård-fotoet (CC BY-SA) krever kreditering så lenge det brukes.
+Parets egne bilder ligger i `assets/foto/` og deles av begge versjoner: forlovelsen, båt, Paris, fotoboks, pizza, frokost på senga, baguett, bading og akvarellen av Malungen. De er hentet fra .docx-eksporten av «Nettside bryllup» (skarpere enn HTML-eksporten), beskåret til 4:5 der det trengs og lagret som webp i 700 og 1200 px bredde.
 
-- Malungen gjestegård: Bene Riobó, [CC BY-SA 4.0](https://commons.wikimedia.org/wiki/File:Malungen_Gjesteg%C3%A5rd.jpg) (krever kreditering, står i footer)
-- Prestekrage-plansje: Fitschen og Schmeil, *Pflanzen der Heimat*, 1913, offentlig eie
-- Kornblomsteng: Gerda Arendt, [CC0](https://commons.wikimedia.org/wiki/File:Cornflower_field,_Eschenhahn.jpg)
-- Stand-in parbilder og prestekrager i vase: Unsplash-lisens
+Gjestegård-fotoet fra Wikimedia er byttet ut med parets akvarell, så ingen bilder krever kreditering på siden lenger.
+
+Siden bruker bare parets egne bilder.
+
 - Strektegningene (grill, vin, frokost, hjerte, brudepar) og QR-koden er laget for prosjektet
 
-## Teknisk, kreativ versjon
+## Teknisk: programhimmelen
 
 - Programhimmelen: `sunPosition()` i `main.js` regner solhøyde og asimut for Malungen (60,77° N, 11,45° Ø). Scrollposisjonen mellom to programpunkter gjøres om til et klokkeslett, så natta mellom fredag og lørdag går gjennom skumring og soloppgang. En smal linje under menyen viser klokkeslett og solhøyde.
 - `prefers-reduced-motion` slår av overgangene.
@@ -60,10 +64,12 @@ Kreditering er fjernet fra sidene fordi bildene skal byttes. Gjestegård-fotoet 
 Svarene lagres i tabellen `kh_responses` i samme Supabase-prosjekt som Ragnhild & Vetle (`bevrttmvumfodpkauiio`). Oppsettet ligger i `supabase/kh_responses.sql`.
 
 - Én rad per gjest. Gjester sendt i samme skjema deler `household_id`.
+- `paid_lodging`: gjestens eget svar på «Har du husket å betale for overnatting?», bare satt for de som overnatter.
 - `allergies` inneholder avkryssede valg (gluten, laktose, nøtter, skalldyr, fisk, egg, vegetar, vegan) og fritekst, kommaseparert.
 - Den offentlige nøkkelen i `main.js` kan bare legge til rader, ikke lese, endre eller slette, verken her eller i R&V sin `responses`. Testet mot live-databasen 2026-10-06.
 - Les svarene i Supabase-dashbordet (Table Editor → `kh_responses`) eller med service_role-nøkkelen fra et lokalt skript. Den nøkkelen skal aldri inn i repoet.
 - Alle med tilgang til prosjektets organisasjon i Supabase ser begge bryllupenes gjestelister.
+- Gratisprosjektet sover etter ca. en uke uten trafikk, og da virker ikke svarskjemaet. `.github/workflows/keepalive.yml` kaller `kh_ping()` hver tredje dag. Feiler pingen, sender GitHub e-post til eieren av repoet. Våkn prosjektet da i Supabase-dashbordet.
 
 ## Publisering
 

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Svar · Kjersti og Håkon</title>
+    <!-- kept out of search results: the page lists account and phone numbers -->
+    <meta name="robots" content="noindex" />
+    <meta name="description" content="Kjersti og Håkon gifter seg helgen 25.–27. juni 2027 på Malungen gjestegård i Vallset. Her finner du program, overnatting, kleskode og svarskjema." />
+    <meta name="theme-color" content="#a9caf3" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kjersti og Håkon gifter seg" />
+    <meta property="og:description" content="Helgen 25.–27. juni 2027 på Malungen gjestegård. Program, overnatting og svarskjema." />
+    <meta property="og:image" content="https://www.kjerstioghakon.no/img/og-image.jpg" />
+    <meta property="og:url" content="https://www.kjerstioghakon.no/svar/" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="nb_NO" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Gilda+Display&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap" />
+    <link rel="stylesheet" href="../style.css" />
+</head>
+<body class="page-svar">
+
+<a class="skip" href="#innhold">Hopp til skjemaet</a>
+
+<nav class="tabbar" aria-label="Hovedmeny">
+    <ul>
+        <li><a href="../">Forside</a></li>
+        <li><a href="../#program">Program</a></li>
+        <li><a href="./" class="tab-svar" aria-current="page">Svar</a></li>
+    </ul>
+</nav>
+
+<main id="innhold">
+<section class="band svar-page" aria-labelledby="svar-title">
+    <div class="wrap svar-wrap">
+        <div class="svar">
+            <h1 class="h-caps" id="svar-title">Svar.</h1>
+            <p>Hver person må skrive seg inn med info om de skal sove over, hva de tåler av mat og evt. en valgfri kommentar.</p>
+            <p>Frist for svar er: <strong>1. februar 2027</strong></p>
+
+            <form class="rsvp" id="rsvp" novalidate>
+                <div id="guests"></div>
+
+                <button type="button" class="btn-ghost" id="add-guest">+ Legg til en person til</button>
+
+                <fieldset class="field paid-field" id="paid-field" hidden>
+                    <legend>Har du husket å betale for overnatting?</legend>
+                    <p class="hint"><span id="paid-sum">1 600 kr</span> til kontonummer <strong>9492 08 35907</strong>. Dere må legge inn navnet på hver enkelt når dere overfører for overnatting.</p>
+                    <div class="choices" data-group="paid">
+                        <label class="choice"><input type="radio" name="paid" value="yes" /><span>Ja</span></label>
+                        <label class="choice"><input type="radio" name="paid" value="no" /><span>Nei</span></label>
+                    </div>
+                </fieldset>
+
+                <div class="field">
+                    <label for="rsvp-email">E-post</label>
+                    <p class="hint">Så vi kan gi beskjed når det kommer mer informasjon.</p>
+                    <input type="email" id="rsvp-email" name="email" autocomplete="email" inputmode="email" />
+                </div>
+
+                <p class="form-error" id="rsvp-error" role="alert" hidden></p>
+                <button type="submit" class="btn" id="rsvp-submit">Send svar</button>
+            </form>
+
+            <div class="rsvp-done" id="rsvp-done" hidden tabindex="-1">
+                <h3>Takk, vi har fått svaret ditt!</h3>
+                <div id="rsvp-summary"></div>
+                <button type="button" class="btn-ghost" id="rsvp-again">Send et nytt svar</button>
+            </div>
+
+            <div class="betaling">
+                <h3>Betaling for overnatting</h3>
+                <p>Kontonummer for overnatting: <strong>9492 08 35907</strong></p>
+                <p><strong>Viktig:</strong> Dere må legge inn navnet på hver enkelt når dere overfører for overnatting.</p>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+
+<footer class="site-footer">
+    <svg class="monogram footer-mono" viewBox="0 0 355 378" aria-hidden="true"><use href="../assets/monogram.svg#kh" /></svg>
+</footer>
+
+<script src="../assets/svar.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gjesteoversikt · Kjersti og Håkon</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="../img/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Jost:wght@400;500;600&display=swap" />
+    <style>
+        /* Private overview for the couple. Reads kh_responses as the logged-in
+           kjerstioghakon@gmail.com user; RLS lets only that address SELECT.
+           Same paper, ink and blue as the wedding site. */
+        :root {
+            --paper: #f6f3ee;
+            --card: #ffffff;
+            --ink: #2b2724;
+            --ink-soft: #5a534d;
+            --ink-faint: #8a827a;
+            --line: rgba(43, 39, 36, 0.12);
+            --blue: #2f5a9a;
+            --blue-track: #dbe6f5;
+            --yes: #2f6b45;
+            --yes-bg: #e6f1ea;
+            --no: #a63f2b;
+            --no-bg: #f8e9e5;
+            --fresh: #fff4cc;
+            --f-display: 'Gilda Display', 'Didot', Georgia, serif;
+            --f-sans: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+            color-scheme: light;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        [hidden] { display: none !important; }
+        body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 var(--f-sans); -webkit-font-smoothing: antialiased; }
+        a { color: var(--blue); }
+        h1, h2, h3, p { margin: 0; }
+        .wrap { width: min(1120px, 100%); margin-inline: auto; padding: 28px 20px 72px; }
+        .mono { display: block; width: 34px; height: 36px; color: var(--ink); flex: none; }
+        button, .btn { font: 500 14px var(--f-sans); padding: 9px 16px; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; cursor: pointer; }
+        button:hover { border-color: var(--ink-faint); }
+        button:disabled { opacity: 0.5; cursor: default; }
+        .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+        .label { font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); }
+
+        /* ---------- login ---------- */
+        .login { width: min(380px, calc(100% - 32px)); margin: 14vh auto 0; padding: 36px 28px 30px; display: grid; gap: 6px; }
+        .login .mono { width: 52px; height: 56px; margin: 0 auto 10px; }
+        .login h1 { font: 400 30px var(--f-display); text-align: center; margin-bottom: 18px; }
+        .login label { font-size: 14px; font-weight: 500; margin-top: 10px; }
+        .login input { font: inherit; font-size: 17px; height: 48px; padding: 0 14px; border: 1px solid rgba(43, 39, 36, 0.25); border-radius: 8px; background: #fff; }
+        .login input:focus { outline: 2px solid var(--blue-track); border-color: var(--blue); }
+        .login button { margin-top: 18px; height: 48px; background: var(--ink); border-color: var(--ink); color: #fff; font-size: 15px; }
+        .err { color: var(--no); font-size: 14px; margin-top: 8px; text-align: center; }
+
+        /* ---------- header ---------- */
+        header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 28px; }
+        header h1 { font: 400 26px var(--f-display); }
+        .tools-top { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .live { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-soft); margin-right: 4px; }
+        .live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #c9c2b8; }
+        .live.on::before { background: #3aa365; box-shadow: 0 0 0 3px rgba(58, 163, 101, 0.18); }
+
+        /* ---------- headline ---------- */
+        .hero { padding: 28px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px 32px; align-items: end; }
+        .hero-num { font: 600 72px/0.95 var(--f-sans); letter-spacing: -0.02em; font-variant-numeric: lining-nums; }
+        .hero-num span { font: 400 22px var(--f-display); letter-spacing: 0; margin-left: 10px; color: var(--ink-soft); }
+        .hero-sub { margin-top: 10px; color: var(--ink-soft); }
+        .deadline { text-align: right; }
+        .deadline b { display: block; font: 600 28px/1.1 var(--f-sans); margin-top: 4px; }
+        .deadline small { color: var(--ink-soft); font-size: 14px; }
+
+        /* ---------- stat tiles ---------- */
+        .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+        .tile { padding: 18px 20px 20px; display: grid; gap: 4px; align-content: start; }
+        .tile b { font: 600 36px/1.1 var(--f-sans); font-variant-numeric: lining-nums; }
+        .tile small { color: var(--ink-soft); font-size: 14px; }
+        .meter { height: 8px; border-radius: 4px; background: var(--blue-track); overflow: hidden; margin-top: 8px; }
+        .meter i { display: block; height: 100%; border-radius: 4px; background: var(--blue); transition: width .4s; }
+
+        /* ---------- replies over time ---------- */
+        .trend { margin-top: 14px; padding: 20px 20px 14px; }
+        .trend-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+        .trend-head small { color: var(--ink-soft); font-size: 14px; }
+        .chart { position: relative; }
+        .chart svg { display: block; overflow: visible; }
+        .chart .grid { stroke: var(--line); stroke-width: 1; }
+        .chart .axis { fill: var(--ink-faint); font: 12px var(--f-sans); }
+        .chart .line { fill: none; stroke: var(--blue); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+        .chart .dot { fill: var(--blue); stroke: #fff; stroke-width: 2; }
+        .chart .cross { stroke: var(--ink-faint); stroke-width: 1; stroke-dasharray: 3 3; }
+        .tip { position: absolute; pointer-events: none; transform: translate(-50%, -100%); margin-top: -12px; background: var(--ink); color: #fff; font-size: 13px; line-height: 1.35; padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+
+        /* ---------- lists ---------- */
+        .lists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+        .list { padding: 20px; }
+        .list h2 { font: 400 22px var(--f-display); margin-bottom: 12px; display: flex; align-items: baseline; gap: 10px; }
+        .list h2 span { font: 500 14px var(--f-sans); color: var(--ink-soft); }
+        .list ul { list-style: none; margin: 0; padding: 0; }
+        .list li { padding: 10px 0; border-top: 1px solid var(--line); }
+        .list li b { font-weight: 500; }
+        .list li p { color: var(--ink-soft); margin-top: 2px; }
+        .list .none { color: var(--ink-faint); font-size: 15px; }
+
+        /* ---------- guest list ---------- */
+        .guests { margin-top: 28px; }
+        .guests-head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .guests-head h2 { font: 400 26px var(--f-display); margin-right: auto; }
+        .search { font: inherit; font-size: 15px; height: 40px; padding: 0 14px; width: min(280px, 100%); border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .chip { font-size: 14px; padding: 7px 14px; }
+        .chip span { color: var(--ink-faint); margin-left: 4px; font-variant-numeric: tabular-nums; }
+        .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+        .chip[aria-pressed="true"] span { color: rgba(255, 255, 255, 0.7); }
+        .table { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 15px; }
+        th { text-align: left; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); padding: 14px 14px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+        td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+        tbody tr:last-child td { border-bottom: 0; }
+        tr.hh-start td { border-top: 1px solid rgba(43, 39, 36, 0.22); }
+        tbody tr:first-child td { border-top: 0; }
+        td.name { font-weight: 500; white-space: nowrap; }
+        td.msg { max-width: 30ch; color: var(--ink-soft); }
+        td.when { white-space: nowrap; color: var(--ink-soft); font-size: 14px; font-variant-numeric: tabular-nums; }
+        .pill { display: inline-block; font-size: 13px; font-weight: 500; padding: 2px 10px; border-radius: 999px; }
+        .pill.y { color: var(--yes); background: var(--yes-bg); }
+        .pill.n { color: var(--no); background: var(--no-bg); }
+        .dash { color: #cfc8bf; }
+        tr.fresh td { animation: fresh 4s ease-out; }
+        @keyframes fresh { from { background: var(--fresh); } to { background: transparent; } }
+        .empty { padding: 48px 20px; text-align: center; color: var(--ink-soft); }
+        .empty b { display: block; font: 400 22px var(--f-display); color: var(--ink); margin-bottom: 6px; }
+
+        /* ---------- phone ---------- */
+        @media (max-width: 760px) {
+            .wrap { padding: 20px 14px 56px; }
+            header h1 { font-size: 22px; }
+            .tools-top { margin-left: 0; width: 100%; }
+            .hero { grid-template-columns: 1fr; padding: 22px; }
+            .hero-num { font-size: 60px; }
+            .deadline { text-align: left; }
+            .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+            .tile { padding: 16px; }
+            .tile b { font-size: 30px; }
+            .lists { grid-template-columns: 1fr; gap: 10px; }
+            .search { width: 100%; }
+            /* the table becomes one card per guest */
+            table, tbody, tr, td { display: block; }
+            thead { display: none; }
+            .table.card { background: none; border: 0; }
+            tbody tr { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 10px; }
+            tr.hh-start td { border-top: 0; }
+            td { padding: 0; border: 0; }
+            td.name { grid-column: 1 / -1; font-size: 17px; white-space: normal; }
+            td[data-k]::before { content: attr(data-k); display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 2px; }
+            td.wide { grid-column: 1 / -1; }
+            td.wide:empty, td.wide.blank { display: none; }
+            td.when { grid-column: 1 / -1; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <form class="login card" id="login" hidden>
+        <svg class="mono" viewBox="0 0 355 378" aria-hidden="true"><use href="../assets/monogram.svg#kh" /></svg>
+        <h1>Gjesteoversikt</h1>
+        <label for="email">E-post</label>
+        <input id="email" type="email" autocomplete="username" value="kjerstioghakon@gmail.com" required />
+        <label for="password">Passord</label>
+        <input id="password" type="password" autocomplete="current-password" required />
+        <button type="submit" id="login-btn">Logg inn</button>
+        <p class="err" id="login-err" role="alert" hidden></p>
+    </form>
+
+    <main class="wrap" id="app" hidden>
+        <header>
+            <svg class="mono" viewBox="0 0 355 378" aria-hidden="true"><use href="../assets/monogram.svg#kh" /></svg>
+            <h1>Gjesteoversikt</h1>
+            <div class="tools-top">
+                <span class="live" id="live">Kobler til…</span>
+                <button type="button" id="csv">Last ned til Excel</button>
+                <button type="button" id="logout">Logg ut</button>
+            </div>
+        </header>
+
+        <section class="hero card" aria-label="Kommer">
+            <div>
+                <p class="label">Kommer</p>
+                <p class="hero-num" id="h-coming">0<span>gjester</span></p>
+                <p class="hero-sub" id="h-sub"></p>
+            </div>
+            <div class="deadline">
+                <p class="label">Svarfrist 1. februar 2027</p>
+                <b id="h-days"></b>
+            </div>
+        </section>
+
+        <section class="tiles" aria-label="Tall">
+            <div class="tile card"><p class="label">Overnatter</p><b id="t-stay">0</b><small id="t-stay-sub"></small></div>
+            <div class="tile card">
+                <p class="label">Betalt overnatting</p><b id="t-paid">0</b><small id="t-paid-sub"></small>
+                <div class="meter" role="img" id="t-paid-meter"><i id="t-paid-bar" style="width:0"></i></div>
+            </div>
+            <div class="tile card"><p class="label">Allergier</p><b id="t-diet">0</b><small>gjester har skrevet noe</small></div>
+            <div class="tile card"><p class="label">Kommer ikke</p><b id="t-not">0</b><small id="t-not-sub"></small></div>
+        </section>
+
+        <section class="trend card" id="trend" aria-label="Svar over tid" hidden>
+            <div class="trend-head"><p class="label">Gjester som kommer, over tid</p><small id="trend-sub"></small></div>
+            <div class="chart" id="chart"></div>
+        </section>
+
+        <section class="lists">
+            <div class="list card"><h2>Allergier og mat <span id="diet-n"></span></h2><ul id="diet-list"></ul></div>
+            <div class="list card"><h2>Kommentarer <span id="msg-n"></span></h2><ul id="msg-list"></ul></div>
+        </section>
+
+        <section class="guests" aria-label="Gjester">
+            <div class="guests-head">
+                <h2>Alle gjester</h2>
+                <input class="search" type="search" id="q" placeholder="Søk etter navn eller allergi" aria-label="Søk" />
+            </div>
+            <div class="chips" id="chips" role="group" aria-label="Vis"></div>
+            <div class="table card">
+                <table>
+                    <thead><tr><th>Navn</th><th>Kommer</th><th>Overnatter</th><th>Betalt</th><th>Mat</th><th>Kommentar</th><th>Svart</th></tr></thead>
+                    <tbody id="rows"></tbody>
+                </table>
+                <div class="empty" id="empty" hidden><b>Ingen svar ennå</b>Når gjestene svarer, dukker de opp her med en gang.</div>
+                <div class="empty" id="nomatch" hidden>Ingen gjester passer søket.</div>
+            </div>
+        </section>
+    </main>
+
+<script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+
+    // Same project and public key as the RSVP form. The key alone can only
+    // insert; reading needs the couple's login (see supabase/kh_responses.sql).
+    const SUPABASE_URL = 'https://bevrttmvumfodpkauiio.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJldnJ0dG12dW1mb2Rwa2F1aWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2MTE4NjksImV4cCI6MjA2NjE4Nzg2OX0.DEZl36UgcM_KOlnbVlxfIdW_ZRdmkAMbbdHfF3KLCyk';
+    const PRICE_PER_PERSON = 1600;
+    const DEADLINE = new Date('2027-02-01T23:59:59+01:00');
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: 'kh-oversikt' } });
+
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const kr = (n) => `${n.toLocaleString('nb-NO')} kr`;
+    const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+    let rows = [];
+    let fresh = new Set();
+    let channel = null;
+    let started = false;
+    let filter = 'all';
+
+    /* ---------- auth ---------- */
+    $('login').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        $('login-btn').disabled = true;
+        $('login-err').hidden = true;
+        const { error } = await sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value });
+        $('login-btn').disabled = false;
+        if (error) { $('login-err').textContent = 'Feil e-post eller passord.'; $('login-err').hidden = false; }
+    });
+    $('logout').addEventListener('click', () => sb.auth.signOut());
+
+    sb.auth.onAuthStateChange((_event, session) => {
+        $('login').hidden = !!session;
+        $('app').hidden = !session;
+        // supabase-js deadlocks if its own calls are awaited inside this callback
+        setTimeout(() => (session ? start() : stop()));
+    });
+
+    /* ---------- data ---------- */
+    async function start() {
+        if (started) return;
+        started = true;
+        if (!(await refresh())) { started = false; return; }
+        // new replies stream in as they are sent
+        channel = sb.channel('kh-responses')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'kh_responses' }, (msg) => {
+                if (msg.eventType === 'INSERT') { rows.unshift(msg.new); fresh.add(msg.new.id); }
+                else if (msg.eventType === 'UPDATE') rows = rows.map((r) => (r.id === msg.new.id ? msg.new : r));
+                else if (msg.eventType === 'DELETE') rows = rows.filter((r) => r.id !== msg.old.id);
+                render();
+                fresh = new Set();
+            })
+            .subscribe((status) => {
+                const on = status === 'SUBSCRIBED';
+                $('live').classList.toggle('on', on);
+                $('live').textContent = on ? 'Live' : 'Kobler til…';
+                // the live feed takes a few seconds to start after connecting
+                // (and after every reconnect), so catch up on anything sent meanwhile
+                if (on) setTimeout(refresh, 5000);
+            });
+    }
+    async function refresh() {
+        const { data, error } = await sb.from('kh_responses').select('*').order('created_at', { ascending: false });
+        if (error) { console.error(error); $('live').textContent = 'Kunne ikke hente svar'; return false; }
+        rows = data;
+        render();
+        return true;
+    }
+    // a laptop that slept or a phone tab in the background can miss events
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && started) refresh(); });
+    function stop() {
+        if (channel) sb.removeChannel(channel);
+        channel = null;
+        started = false;
+        rows = [];
+    }
+
+    /* ---------- numbers ---------- */
+    const FILTERS = [
+        ['all', 'Alle', () => true],
+        ['coming', 'Kommer', (r) => r.attending],
+        ['not', 'Kommer ikke', (r) => !r.attending],
+        ['stay', 'Overnatter', (r) => r.stay],
+        ['unpaid', 'Ikke betalt', (r) => r.stay && r.paid_lodging !== true],
+        ['diet', 'Allergier', (r) => r.attending && r.allergies],
+        ['msg', 'Kommentar', (r) => r.message],
+    ];
+
+    function renderNumbers() {
+        const coming = rows.filter((r) => r.attending);
+        const staying = coming.filter((r) => r.stay);
+        const paid = staying.filter((r) => r.paid_lodging === true);
+        const unpaid = staying.length - paid.length;
+        const replies = new Set(rows.map((r) => r.household_id)).size;
+        const declined = rows.length - coming.length;
+        const days = Math.ceil((DEADLINE - Date.now()) / 86400000);
+
+        $('h-coming').innerHTML = `${coming.length}<span>${coming.length === 1 ? 'gjest' : 'gjester'}</span>`;
+        $('h-sub').textContent = rows.length
+            ? `${plural(replies, 'svar', 'svar')} fra ${plural(rows.length, 'person', 'personer')}`
+            : 'Ingen har svart ennå';
+        $('h-days').textContent = days > 1 ? `${days} dager igjen` : days === 1 ? 'I morgen' : days === 0 ? 'I dag' : 'Fristen er ute';
+
+        $('t-stay').textContent = staying.length;
+        $('t-stay-sub').textContent = `${kr(staying.length * PRICE_PER_PERSON)} totalt`;
+        $('t-paid').innerHTML = `${paid.length}<small style="font:500 18px var(--f-sans);color:var(--ink-soft)"> av ${staying.length}</small>`;
+        $('t-paid-sub').textContent = staying.length ? (unpaid ? `${kr(unpaid * PRICE_PER_PERSON)} gjenstår` : 'Alle har betalt') : 'Ingen overnatter ennå';
+        const pct = staying.length ? Math.round((paid.length / staying.length) * 100) : 0;
+        $('t-paid-bar').style.width = `${pct}%`;
+        $('t-paid-meter').setAttribute('aria-label', `${pct} prosent har betalt`);
+        $('t-diet').textContent = coming.filter((r) => r.allergies).length;
+        $('t-not').textContent = declined;
+        $('t-not-sub').textContent = rows.length ? `${Math.round((declined / rows.length) * 100)} % av alle som har svart` : '';
+    }
+
+    /* ---------- people coming, day by day ---------- */
+    function renderTrend() {
+        const byDay = new Map();
+        for (const r of rows) {
+            if (!r.attending) continue;
+            const d = new Date(r.created_at); d.setHours(0, 0, 0, 0);
+            byDay.set(+d, (byDay.get(+d) || 0) + 1);
+        }
+        const days = [...byDay.keys()].sort((a, b) => a - b);
+        $('trend').hidden = days.length < 2;
+        if (days.length < 2) return;
+        let sum = 0;
+        const pts = days.map((d) => ({ d, n: (sum += byDay.get(d)) }));
+        // drawn at the real pixel width so the labels never stretch
+        const W = Math.max(280, $('chart').clientWidth), H = 160, P = { l: 30, r: 14, t: 14, b: 26 };
+        const x = (d) => P.l + ((d - pts[0].d) / (pts.at(-1).d - pts[0].d)) * (W - P.l - P.r);
+        const top = Math.max(4, Math.ceil(sum / 4) * 4);
+        const y = (n) => H - P.b - (n / top) * (H - P.t - P.b);
+        const fmt = (d) => new Date(d).toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
+        const ticks = [0, top / 2, top];
+        $('chart').innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Antall som kommer, fra ${fmt(pts[0].d)} til ${fmt(pts.at(-1).d)}: ${sum}">
+            ${ticks.map((t) => `<line class="grid" x1="${P.l}" x2="${W - P.r}" y1="${y(t)}" y2="${y(t)}"/><text class="axis" x="${P.l - 8}" y="${y(t) + 4}" text-anchor="end">${t}</text>`).join('')}
+            <text class="axis" x="${P.l}" y="${H - 6}">${fmt(pts[0].d)}</text>
+            <text class="axis" x="${W - P.r}" y="${H - 6}" text-anchor="end">${fmt(pts.at(-1).d)}</text>
+            <line class="cross" id="cross" y1="${P.t}" y2="${H - P.b}" visibility="hidden"/>
+            <polyline class="line" points="${pts.map((p) => `${x(p.d)},${y(p.n)}`).join(' ')}"/>
+            ${pts.map((p) => `<circle class="dot" cx="${x(p.d)}" cy="${y(p.n)}" r="5"/>`).join('')}
+        </svg><div class="tip" id="tip" hidden></div>`;
+        $('trend-sub').textContent = `${sum} totalt`;
+        // hover / touch: nearest day, crosshair and a small label
+        const chart = $('chart');
+        const show = (clientX) => {
+            const box = chart.getBoundingClientRect();
+            const fx = clientX - box.left;
+            const p = pts.reduce((a, b) => (Math.abs(x(b.d) - fx) < Math.abs(x(a.d) - fx) ? b : a));
+            const cross = $('cross');
+            cross.setAttribute('x1', x(p.d)); cross.setAttribute('x2', x(p.d)); cross.setAttribute('visibility', 'visible');
+            const tip = $('tip');
+            tip.hidden = false;
+            tip.style.left = `${x(p.d)}px`;
+            tip.style.top = `${y(p.n)}px`;
+            tip.innerHTML = `${fmt(p.d)}: <b>${p.n}</b> kommer`;
+        };
+        chart.onpointermove = (e) => show(e.clientX);
+        chart.onpointerdown = (e) => show(e.clientX);
+        chart.onpointerleave = () => { $('tip').hidden = true; $('cross').setAttribute('visibility', 'hidden'); };
+    }
+
+    /* ---------- allergies and comments ---------- */
+    function renderLists() {
+        const name = (r) => `${esc(r.first_name)} ${esc(r.last_name)}`;
+        const diet = rows.filter((r) => r.attending && r.allergies);
+        $('diet-n').textContent = diet.length || '';
+        $('diet-list').innerHTML = diet.length ? diet.map((r) => `<li><b>${name(r)}</b><p>${esc(r.allergies)}</p></li>`).join('') : '<li class="none">Ingen har skrevet noe ennå.</li>';
+        const msgs = rows.filter((r) => r.message);
+        $('msg-n').textContent = msgs.length || '';
+        $('msg-list').innerHTML = msgs.length ? msgs.map((r) => `<li><b>${name(r)}</b><p>${esc(r.message)}</p></li>`).join('') : '<li class="none">Ingen kommentarer ennå.</li>';
+    }
+
+    /* ---------- the guest list ---------- */
+    const pill = (v) => (v === true ? '<span class="pill y">Ja</span>' : v === false ? '<span class="pill n">Nei</span>' : '<span class="dash">–</span>');
+    const when = (iso) => new Date(iso).toLocaleString('nb-NO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+
+    function renderGuests() {
+        $('chips').innerHTML = FILTERS.map(([key, label, fn]) =>
+            `<button type="button" class="chip" data-f="${key}" aria-pressed="${key === filter}">${label}<span>${rows.filter(fn).length}</span></button>`).join('');
+        const test = FILTERS.find(([key]) => key === filter)[2];
+        const q = $('q').value.trim().toLowerCase();
+        const shown = rows.filter((r) => test(r) && (!q || [r.first_name, r.last_name, r.allergies, r.message, r.email].join(' ').toLowerCase().includes(q)));
+        $('empty').hidden = rows.length > 0;
+        $('nomatch').hidden = !rows.length || shown.length > 0;
+        let prev = null;
+        $('rows').innerHTML = shown.map((r) => {
+            const first = r.household_id !== prev;
+            prev = r.household_id;
+            const cls = [first ? 'hh-start' : '', fresh.has(r.id) ? 'fresh' : ''].join(' ').trim();
+            return `<tr class="${cls}">
+                <td class="name">${esc(r.first_name)} ${esc(r.last_name)}</td>
+                <td data-k="Kommer">${pill(r.attending)}</td>
+                <td data-k="Overnatter">${r.attending ? pill(r.stay) : pill(null)}</td>
+                <td data-k="Betalt">${r.stay ? pill(r.paid_lodging) : pill(null)}</td>
+                <td data-k="Mat" class="wide${r.allergies ? '' : ' blank'}">${esc(r.allergies) || '<span class="dash">–</span>'}</td>
+                <td data-k="Kommentar" class="msg wide${r.message ? '' : ' blank'}">${esc(r.message) || '<span class="dash">–</span>'}</td>
+                <td class="when">${when(r.created_at)}${first && r.email ? ` · <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ''}</td>
+            </tr>`;
+        }).join('');
+    }
+    $('chips').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-f]');
+        if (b) { filter = b.dataset.f; renderGuests(); }
+    });
+    $('q').addEventListener('input', renderGuests);
+    addEventListener('resize', () => { if (rows.length) renderTrend(); });
+
+    function render() {
+        renderNumbers();
+        renderTrend();
+        renderLists();
+        renderGuests();
+    }
+
+    /* ---------- spreadsheet for Excel ---------- */
+    $('csv').addEventListener('click', () => {
+        const cols = ['first_name', 'last_name', 'attending', 'stay', 'paid_lodging', 'allergies', 'message', 'email', 'created_at', 'household_id'];
+        const head = ['Fornavn', 'Etternavn', 'Kommer', 'Overnatter', 'Betalt', 'Allergier', 'Kommentar', 'E-post', 'Svart', 'Husstand'];
+        const cell = (v) => {
+            const s = v === true ? 'Ja' : v === false ? 'Nei' : String(v ?? '');
+            return /[";\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+        };
+        const csv = '﻿' + [head, ...rows.map((r) => cols.map((c) => r[c]))].map((line) => line.map(cell).join(';')).join('\r\n');
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        a.download = `gjester-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    });
+</script>
+</body>
+</html>
