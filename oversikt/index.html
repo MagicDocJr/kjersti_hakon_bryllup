@@ -129,6 +129,30 @@
         .dash { color: #cfc8bf; }
         tr.fresh td { animation: fresh 4s ease-out; }
         @keyframes fresh { from { background: var(--fresh); } to { background: transparent; } }
+        /* paid: a button for anyone staying over */
+        .paid-btn { font: inherit; padding: 0; border: 0; background: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; }
+        .paid-btn .pill { border: 1px solid transparent; }
+        .paid-btn:hover .pill { border-color: currentColor; }
+        .paid-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+        .checked { font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
+
+        /* confirm dialog */
+        dialog { width: min(440px, calc(100% - 32px)); border: 0; border-radius: 16px; padding: 26px 24px 22px; color: var(--ink); box-shadow: 0 30px 80px -30px rgba(43, 39, 36, 0.5); }
+        dialog::backdrop { background: rgba(43, 39, 36, 0.35); }
+        dialog h2 { font: 400 24px var(--f-display); margin-bottom: 8px; }
+        dialog p { color: var(--ink-soft); }
+        .who { list-style: none; margin: 16px 0 6px; padding: 0; border-top: 1px solid var(--line); }
+        .who li { border-bottom: 1px solid var(--line); }
+        .who label { display: flex; align-items: center; gap: 12px; padding: 12px 2px; cursor: pointer; font-size: 16px; }
+        .who input { width: 20px; height: 20px; accent-color: var(--ink); flex: none; }
+        .who .now { margin-left: auto; }
+        .sum { margin-top: 10px; font-size: 15px; color: var(--ink); }
+        .dialog-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; flex-wrap: wrap; }
+        .dialog-actions .confirm { background: var(--ink); border-color: var(--ink); color: #fff; }
+        .dialog-actions .confirm.no { background: var(--no); border-color: var(--no); }
+        .dialog-err { color: var(--no); margin-top: 10px; font-size: 14px; }
+        @media (max-width: 760px) { .dialog-actions button { flex: 1 1 0; height: 46px; } }
+
         .empty { padding: 48px 20px; text-align: center; color: var(--ink-soft); }
         .empty b { display: block; font: 400 22px var(--f-display); color: var(--ink); margin-bottom: 6px; }
 
@@ -231,6 +255,20 @@
             </div>
         </section>
     </main>
+
+    <dialog id="pay-dialog" aria-labelledby="pay-title">
+        <form method="dialog" id="pay-form">
+            <h2 id="pay-title"></h2>
+            <p id="pay-text"></p>
+            <ul class="who" id="pay-who"></ul>
+            <p class="sum" id="pay-sum"></p>
+            <p class="dialog-err" id="pay-err" role="alert" hidden></p>
+            <div class="dialog-actions">
+                <button type="button" id="pay-cancel">Avbryt</button>
+                <button type="submit" class="confirm" id="pay-ok"></button>
+            </div>
+        </form>
+    </dialog>
 
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
@@ -411,6 +449,8 @@
     const pill = (v) => (v === true ? '<span class="pill y">Ja</span>' : v === false ? '<span class="pill n">Nei</span>' : '<span class="dash">–</span>');
     const when = (iso) => new Date(iso).toLocaleString('nb-NO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
+    const paidCell = (r) => `<button type="button" class="paid-btn" data-paid="${esc(r.id)}" aria-label="Endre betalt for ${esc(r.first_name)} ${esc(r.last_name)}">${pill(r.paid_lodging === true)}</button>${r.paid_checked_at ? ' <span class="checked" title="Endret av dere">✓ sjekket</span>' : ''}`;
+
     function renderGuests() {
         $('chips').innerHTML = FILTERS.map(([key, label, fn]) =>
             `<button type="button" class="chip" data-f="${key}" aria-pressed="${key === filter}">${label}<span>${rows.filter(fn).length}</span></button>`).join('');
@@ -428,13 +468,67 @@
                 <td class="name">${esc(r.first_name)} ${esc(r.last_name)}</td>
                 <td data-k="Kommer">${pill(r.attending)}</td>
                 <td data-k="Overnatter">${r.attending ? pill(r.stay) : pill(null)}</td>
-                <td data-k="Betalt">${r.stay ? pill(r.paid_lodging) : pill(null)}</td>
+                <td data-k="Betalt">${r.stay ? paidCell(r) : pill(null)}</td>
                 <td data-k="Mat" class="wide${r.allergies ? '' : ' blank'}">${esc(r.allergies) || '<span class="dash">–</span>'}</td>
                 <td data-k="Kommentar" class="msg wide${r.message ? '' : ' blank'}">${esc(r.message) || '<span class="dash">–</span>'}</td>
                 <td class="when">${when(r.created_at)}${first && r.email ? ` · <a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ''}</td>
             </tr>`;
         }).join('');
     }
+    /* ---------- correcting who has paid ----------
+       Tapping a guest's "Betalt" opens a confirmation. One transfer often
+       covers a whole reply, so everyone else in it who is staying over is
+       listed too, ticked, and can be changed in the same step. */
+    const dialog = $('pay-dialog');
+    let payTarget = null;
+    $('rows').addEventListener('click', (e) => {
+        const b = e.target.closest('[data-paid]');
+        if (!b) return;
+        const r = rows.find((x) => x.id === b.dataset.paid);
+        if (!r) return;
+        const mark = r.paid_lodging !== true; // the change being made
+        payTarget = { mark };
+        const fam = rows.filter((x) => x.household_id === r.household_id && x.stay && x.id !== r.id);
+        const people = [r, ...fam];
+        const name = (x) => `${esc(x.first_name)} ${esc(x.last_name)}`;
+        $('pay-title').textContent = mark ? 'Marker som betalt?' : 'Marker som ikke betalt?';
+        $('pay-text').textContent = fam.length
+            ? `Huk av alle i dette svaret som ${mark ? 'har betalt' : 'ikke har betalt'}.`
+            : `Sjekk at overføringen gjelder riktig person.`;
+        $('pay-who').innerHTML = people.map((x) => `<li><label><input type="checkbox" value="${esc(x.id)}" ${x.id === r.id || (x.paid_lodging === true) !== mark ? 'checked' : ''} /> ${name(x)} <span class="now">${pill(x.paid_lodging === true)}</span></label></li>`).join('');
+        const sum = () => {
+            const n = $('pay-who').querySelectorAll('input:checked').length;
+            $('pay-sum').textContent = n ? `${plural(n, 'person', 'personer')} · ${kr(n * PRICE_PER_PERSON)}` : 'Ingen valgt';
+            $('pay-ok').disabled = n === 0;
+            $('pay-ok').textContent = mark ? 'Ja, har betalt' : 'Ja, ikke betalt';
+        };
+        $('pay-who').onchange = sum;
+        $('pay-ok').classList.toggle('no', !mark);
+        $('pay-err').hidden = true;
+        sum();
+        dialog.showModal();
+    });
+    $('pay-cancel').addEventListener('click', () => dialog.close());
+    $('pay-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const ids = [...$('pay-who').querySelectorAll('input:checked')].map((i) => i.value);
+        if (!ids.length || !payTarget) return;
+        $('pay-ok').disabled = true;
+        const { data, error } = await sb.from('kh_responses')
+            .update({ paid_lodging: payTarget.mark, paid_checked_at: new Date().toISOString() })
+            .in('id', ids).select('id, paid_lodging, paid_checked_at');
+        $('pay-ok').disabled = false;
+        if (error || !data || data.length !== ids.length) {
+            console.error(error);
+            $('pay-err').textContent = 'Kunne ikke lagre. Prøv igjen, eller last siden på nytt.';
+            $('pay-err').hidden = false;
+            return;
+        }
+        for (const u of data) rows = rows.map((r) => (r.id === u.id ? { ...r, ...u } : r));
+        dialog.close();
+        render();
+    });
+
     $('chips').addEventListener('click', (e) => {
         const b = e.target.closest('[data-f]');
         if (b) { filter = b.dataset.f; renderGuests(); }

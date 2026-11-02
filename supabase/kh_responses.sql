@@ -66,3 +66,15 @@ grant execute on function public.kh_ping() to anon;
 
 -- 2026-11-02: e-post er valgfri i skjemaet (parets dokument ber ikke om den).
 alter table public.kh_responses alter column email drop not null;
+
+-- 2026-11-03: the couple can correct who has paid for lodging from
+-- /oversikt/. Only the logged-in kjerstioghakon@gmail.com user, and only
+-- these two columns; paid_checked_at records when they confirmed it.
+alter table public.kh_responses add column if not exists paid_checked_at timestamptz;
+grant update (paid_lodging, paid_checked_at) on public.kh_responses to authenticated;
+drop policy if exists "kh couple update paid" on public.kh_responses;
+create policy "kh couple update paid" on public.kh_responses
+  for update to authenticated
+  using ((select auth.jwt() ->> 'email') = 'kjerstioghakon@gmail.com')
+  with check ((select auth.jwt() ->> 'email') = 'kjerstioghakon@gmail.com');
+notify pgrst, 'reload schema';
