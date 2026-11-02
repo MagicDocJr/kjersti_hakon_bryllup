@@ -52,12 +52,11 @@ function emailHtml(rows: Row[]) {
     return `<div style="background:#f3efe6;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;color:#2b2724">
   <div style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:10px;padding:32px 28px">
     <p style="margin:0 0 4px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#5a534d;font-family:Arial,sans-serif">Kjersti &amp; Håkon · 25.–27. juni 2027</p>
-    <h1 style="margin:0 0 20px;font-size:26px;font-weight:normal">Takk for svaret, ${name}!</h1>
-    <p style="margin:0 0 20px;font-size:16px;line-height:1.5">Vi har fått svaret ditt. Dette er det vi har registrert:</p>
-    <div style="font-size:16px;line-height:1.5;padding:18px 0;border-top:1px solid #e4ddd2;border-bottom:1px solid #e4ddd2">${people}${pay}</div>
-    <p style="margin:20px 0 0;font-size:16px;line-height:1.5">Vi gifter oss på Malungen gjestegård, Odalsvegen 1601, 2330 Vallset. Innsjekk fredag er fra kl. 17.</p>
+    <h1 style="margin:0 0 24px;font-size:26px;font-weight:normal">Takk for svaret, ${name}!</h1>
+    <p style="margin:0 0 12px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#5a534d;font-family:Arial,sans-serif">Svaret ditt</p>
+    <div style="font-size:16px;line-height:1.5;padding:16px 0 4px;border-top:1px solid #e4ddd2">${people}${pay}</div>
     <p style="margin:24px 0 0"><a href="${SITE}/" style="display:inline-block;background:#2b2724;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:12px 22px;border-radius:4px">Til nettsiden</a></p>
-    <p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#5a534d;font-family:Arial,sans-serif">Vil du endre svaret, eller har du spørsmål? Svar på denne e-posten, eller skriv til ${COUPLE}.</p>
+    <p style="margin:24px 0 0;font-size:14px;line-height:1.5;color:#5a534d;font-family:Arial,sans-serif">Endringer eller spørsmål? Svar på denne e-posten.</p>
   </div>
 </div>`;
 }
