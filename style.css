@@ -822,3 +822,8 @@ fieldset.field { border: 0; margin: 0; padding: 0; }
 .program .night span:nth-child(3):last-child { top: 36%; }
 .program .event { min-height: clamp(84px, 14vh, 140px); }
 .program-inner { text-shadow: var(--sky-shadow, none); }
+
+/* after sending: an obvious way back to the site */
+.done-actions { margin: 6px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; }
+.done-actions .btn { display: inline-block; text-decoration: none; text-align: center; }
+@media (max-width: 760px) { .done-actions .btn { flex: 1 1 100%; padding-block: 16px; } }
