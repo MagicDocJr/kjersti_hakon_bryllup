@@ -115,7 +115,9 @@ function sync() {
     });
     const staying = stayingCount(readForm());
     paidField.hidden = staying === 0;
+    // only the total here: account number and the name reminder are in the box above the form
     document.getElementById('paid-sum').textContent = kr(Math.max(staying, 1) * PRICE_PER_PERSON);
+    document.getElementById('paid-count').textContent = staying > 1 ? `${staying} personer` : '1 person';
 }
 
 function addGuest() {
