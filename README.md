@@ -36,6 +36,22 @@ Tekstene for overnatting (1 600 kr per gjest, kontonr. 9492 08 35907), kleskode,
 - **Svarskjemaet** ligger i `assets/svar.js` og brukes av alle versjonene. Hver person: navn, kommer (ja/nei), overnatte (ja/nei), matallergier/preferanser (ja/nei, og fritekst som må fylles ut ved ja) og kommentar. Boksen om betaling står over skjemaet. «Har du husket å betale for overnatting?» (ja/nei) vises når noen sover over. E-post er valgfri.
 - **Programmet** (2026-11-04, etter innspill fra paret): fredag innsjekk 17.00 og «Grilling og Aperol» fra 19.00, lørdag bare «Nærmere info kommer», søndag som før. Bildene i programmet er fjernet; bare sola er igjen. Programmet mangler tidspunkter utenom fredag og utsjekk. `data-at` på hvert punkt styrer likevel himmelen; de tidene vises ikke.
 
+## Fakta som står flere steder
+
+Når en av disse endres, oppdater **alle** stedene i samme omgang. Programmet er nyeste kilde for tidspunkter.
+
+| Fakta | Hvor |
+|---|---|
+| Innsjekk fredag kl. 17 | `index.html`: velkomsttekst, Overnatting (Innsjekk), Program · `main.js`: `CHECK_IN` (nedtelling) |
+| Mingling / grilling kl. 19 | `index.html`: Overnatting (Innsjekk), Program |
+| Utsjekk søndag | `index.html`: bare i Program (fjernet fra Overnatting 2026-11-04 for å unngå to versjoner) |
+| Svarfrist 1. februar 2027 | `index.html`: ved «Svar nå», Overnatting (Frist for betaling) · `svar/index.html`: innledning, betalingsboksen |
+| Pris 1 600 kr per gjest | `index.html`: Overnatting · `svar/index.html`: hint · `assets/svar.js`, `oversikt/index.html`, `supabase/functions/kh-confirm/index.ts`: `PRICE_PER_PERSON` |
+| Kontonr. overnatting 9492 08 35907 | `index.html`: Overnatting · `svar/index.html`: betalingsboksen · `assets/svar.js`, `kh-confirm/index.ts`: `ACCOUNT` (kvittering og e-post) |
+| Gavekontonr. 1440 47 84154 | `index.html`: Ønskeliste |
+
+Endres `kh-confirm`, må funksjonen deployes på nytt i Supabase.
+
 ## Fortsatt åpent
 
 - **Svar på e-post**: svar lagres, men det sendes ingen kopi til kjerstioghakon@gmail.com ennå. Kan kobles på med EmailJS slik som i `Rag_vetl_bryllup`.
