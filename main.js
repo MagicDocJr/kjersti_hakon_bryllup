@@ -57,6 +57,54 @@ const parseLocal = (s) => new Date(`${s}:00+02:00`);
 
 
 /* ======================================================================
+   Blomsterenga bak forsiden: WebGL meadow, photo when WebGL is missing.
+   It only renders while on screen.
+   ====================================================================== */
+const eng = document.getElementById('forside');
+const ground = document.getElementById('hero-ground');
+// horizon sits on the top edge of .hero-ground, so names and photo stay in the sky
+let horizon = 0.7;
+const measureHorizon = () => { horizon = ground.offsetTop / Math.max(1, eng.clientHeight); };
+measureHorizon();
+new ResizeObserver(measureHorizon).observe(eng);
+const engHint = document.getElementById('eng-hint');
+function engFallback() {
+    const img = document.getElementById('meadow-fallback');
+    img.srcset = img.dataset.srcset;
+    img.src = img.dataset.src;
+    eng.classList.add('no-webgl');
+}
+function webglOk() {
+    try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; }
+}
+if (webglOk()) {
+    const lowPower = matchMedia('(max-width: 760px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
+    import('./meadow.js').then(({ createMeadow }) => {
+        // same blues as the hero's CSS sky, warming to the horizon
+        const meadow = createMeadow(document.getElementById('meadow'), {
+            lowPower, reducedMotion: reduceMotion,
+            sky: { top: '#7aa9e8', mid: '#b9d5f6', horizon: '#f1cf9f' },
+            horizonAt: () => horizon,
+        });
+        if (location.search.includes('debug')) window.meadow = meadow;
+        if (location.search.includes('still')) { meadow.renderOnce(); return; } // for screenshots
+        let visible = false;
+        new IntersectionObserver(([e]) => {
+            visible = e.isIntersecting;
+            if (visible && !document.hidden) meadow.start(); else meadow.stop();
+        }).observe(eng);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) meadow.stop(); else if (visible) meadow.start();
+        });
+        if (reduceMotion) meadow.renderOnce();
+    }).catch((err) => { console.error(err); engFallback(); });
+} else {
+    engFallback();
+}
+eng.addEventListener('pointermove', () => setTimeout(() => engHint.classList.add('is-gone'), 3000), { passive: true, once: true });
+
+
+/* ======================================================================
    Scroll: top bar, programme sky
    ====================================================================== */
 const program = document.querySelector('.program');

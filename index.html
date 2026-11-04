@@ -40,9 +40,12 @@
 
 <!-- ============ FORSIDE ============ -->
 <header class="hero" id="forside">
+    <!-- the meadow from the invitation era fills the hero: names and photo
+         sit in its sky, flowers along the bottom (WebGL, photo fallback) -->
+    <canvas class="meadow" id="meadow" aria-hidden="true"></canvas>
     <div class="hero-inner">
-        <figure class="hero-photo">
-            <img src="assets/foto/forlovet-sm.webp" srcset="assets/foto/forlovet-sm.webp 700w, assets/foto/forlovet.webp 1200w" sizes="(max-width: 760px) 70vw, 340px" alt="Håkon kysser Kjersti på kinnet mens hun viser frem forlovelsesringen" width="700" height="875" fetchpriority="high" />
+        <figure class="hero-photo hero-strip">
+            <img src="assets/foto/fotoboks.webp" alt="Fotoboks-stripe med fire svart-hvitt-bilder av Kjersti og Håkon: hun viser frem ringen, hun holder for øynene hans, han kysser henne på kinnet, og de smiler mot hverandre" width="352" height="1800" fetchpriority="high" />
         </figure>
 
         <div class="hero-title">
@@ -57,6 +60,13 @@
             </p>
         </div>
     </div>
+    <div class="hero-ground" id="hero-ground">
+        <img class="meadow-fallback" id="meadow-fallback" data-src="img/eng-sm.webp" data-srcset="img/eng-sm.webp 1200w, img/eng.webp 2400w" sizes="100vw" alt="" aria-hidden="true" />
+        <p class="eng-hint" id="eng-hint" aria-hidden="true">
+            <span class="hint-mouse">Beveg musepekeren gjennom enga</span>
+            <span class="hint-touch">Dra fingeren sidelengs gjennom enga</span>
+        </p>
+    </div>
 </header>
 
 <section class="band band-blue intro" aria-labelledby="intro-title">
@@ -67,7 +77,9 @@
         </figure>
     </div>
     <p class="intro-lede">Vi gifter oss på Malungen gjestegård helgen 25.–27. juni 2027. Det er ønskelig at så mange som mulig blir med fra fredag til søndag for å feire. Innsjekk fredag er fra kl. 17.</p>
+    <p class="intro-note">Vi ønsker oss en god fest og har derfor satt aldersgrensen til 18 år denne helgen. Dette betyr at bryllupet er barnefritt.</p>
     <p class="countdown" id="countdown" aria-live="off"></p>
+    <p class="deadline">Frist for svar: <strong>1. februar 2027</strong></p>
     <a class="btn btn-big" href="svar/">Svar nå</a>
 </section>
 
@@ -84,10 +96,12 @@
             <h2 class="h-caps" id="sted-title">Sted og overnatting</h2>
 
             <h3>Overnatting</h3>
-            <p>I forbindelse med bryllupet har vi fått booket hele gjestegården med tilhørende hytter og soveplasser slik at alle har muligheten til å overnatte og bli med på festlighetene helgen gjennom uten pendling eller hotell andre steder.</p>
+            <p>I forbindelse med bryllupet har vi fått booket hele gjestegården med tilhørende hytter og soveplasser. Slik har alle muligheten til å overnatte og bli med på festlighetene helgen gjennom, uten pendling eller hotell andre steder.</p>
+            <p>Brudeparet vil fordele gjestene på ulike rom og hytter på gården.</p>
             <p>Kostnaden per gjest er <strong>1 600 kr</strong> og dekker blant annet overnatting i to dager – hvor sengetøy/håndklær og all mat og drikke selvfølgelig er inkludert.</p>
             <dl class="pay">
                 <div><dt>Kontonummer for overnatting</dt><dd>9492 08 35907</dd></div>
+                <div><dt>Frist for betaling</dt><dd>1. februar 2027 – samme som fristen for å svare</dd></div>
                 <div><dt>Innsjekk</dt><dd>Fredag fra 17.00 – mingling starter 19.00.</dd></div>
                 <div><dt>Utsjekk</dt><dd>Søndag kl. 12.00 (kanskje senere, men dette er ikke helt avklart)</dd></div>
             </dl>
@@ -107,9 +121,11 @@
 
         <div class="praktisk-info">
             <h2 class="h-caps">Kleskode</h2>
-            <p>Fredag til grilling og mingling: Sommerlig pent.</p>
-            <p>Lørdag til vielse og fest: Mørk dress / smoking.</p>
-            <p>Obs: Mye av opplegget denne helgen skjer på tunet/gress, så vi anbefaler å unngå stiletter og tynne hæler på sko.</p>
+            <ul class="dress">
+                <li><strong>Fredag til grilling og mingling:</strong> Sommerlig pent.</li>
+                <li><strong>Lørdag til vielse og fest:</strong> Mørk dress / smoking.</li>
+            </ul>
+            <p><strong>Obs:</strong> Mye av opplegget denne helgen skjer på tunet/gress, så vi anbefaler å unngå stiletter og tynne hæler på sko.</p>
 
             <h3>Pakkeliste</h3>
             <ul class="checklist" id="pakkeliste">
@@ -129,7 +145,7 @@
 
         <div class="bidrag">
             <h2 class="h-caps">Toastmastere</h2>
-            <p>Vi har kapret oss to dyktige mennesker som skal lose oss gjennom bryllupet vårt. Har du lyst til å holde en tale eller noe annet sprell i løpet av helgen, ta kontakt med Håkon eller Thea.</p>
+            <p>Vi har kapret oss to dyktige mennesker som skal lose oss gjennom bryllupet vårt. Har du lyst til å holde en tale eller noe annet sprell i løpet av helgen, ta kontakt med Håkon eller Thea. Brudeparet hadde satt stor pris på det.</p>
             <ul class="contacts">
                 <li><span class="name">Thea von Hirsch</span> <a href="tel:+4791542460">915 42 460</a> <a href="mailto:Thea.vhirsch@gmail.com">Thea.vhirsch@gmail.com</a></li>
                 <li><span class="name">Håkon Kjersem</span> <a href="tel:+4797190193">971 90 193</a> <a href="mailto:Haakonkjersem@gmail.com">Haakonkjersem@gmail.com</a></li>
@@ -179,7 +195,7 @@
             <h3 class="day-title">Fredag <em>25. juni</em></h3>
             <ol class="events">
                 <li class="event" data-at="2027-06-25T17:00"><time>Fra kl. 17.00</time><div><h4>Innsjekk</h4></div></li>
-                <li class="event" data-at="2027-06-25T20:30"><time>Fra kl. 19.00</time><div><h4>Grilling og lek</h4></div></li>
+                <li class="event" data-at="2027-06-25T20:30"><time>Fra kl. 19.00</time><div><h4>Grilling og Aperol</h4></div></li>
             </ol>
         </div>
 
@@ -188,15 +204,7 @@
         <div class="day">
             <h3 class="day-title">Lørdag <em>26. juni</em></h3>
             <ol class="events">
-                <li class="event" data-at="2027-06-26T08:00"><time></time><div><h4>Morgenbad og kaffe</h4></div><figure class="art"><img src="assets/foto/bading-sm.webp" alt="Kjersti med et stripete badehåndkle på stranden" width="700" height="875" loading="lazy" /></figure></li>
-                <li class="event" data-at="2027-06-26T09:00"><time></time><div><h4>Frokost</h4></div><figure class="art"><img src="assets/foto/frokost-sm.webp" alt="Kjersti og Håkon i morgenkåper med frokost på senga" width="800" height="535" loading="lazy" /></figure></li>
-                <li class="event is-key" data-at="2027-06-26T13:00"><time></time><div><h4>Vi gifter oss!!!</h4></div></li>
-                <li class="event" data-at="2027-06-26T14:00"><time></time><div><h4>Sabling og lunsj</h4></div></li>
-                <li class="event" data-at="2027-06-26T15:30"><time></time><div><h4>Leker / underholdning</h4></div></li>
-                <li class="event" data-at="2027-06-26T18:30"><time></time><div><h4>Middag</h4></div></li>
-                <li class="event" data-at="2027-06-26T20:15"><time></time><div><h4>Fest</h4></div></li>
-                <li class="event" data-at="2027-06-26T21:45"><time></time><div><h4>Nattmat</h4></div></li>
-                <li class="event" data-at="2027-06-26T22:40"><time></time><div><h4>Mer fest</h4></div></li>
+                <li class="event" data-at="2027-06-26T13:00"><time></time><div><h4>Nærmere info kommer</h4></div></li>
             </ol>
         </div>
 
@@ -205,7 +213,7 @@
         <div class="day">
             <h3 class="day-title">Søndag <em>27. juni</em></h3>
             <ol class="events">
-                <li class="event" data-at="2027-06-27T09:30"><time></time><div><h4>Frokost</h4></div><figure class="art"><img src="assets/foto/baguett-sm.webp" alt="Håkon med en baguett under armen" width="700" height="875" loading="lazy" /></figure></li>
+                <li class="event" data-at="2027-06-27T09:30"><time></time><div><h4>Frokost</h4></div></li>
                 <li class="event" data-at="2027-06-27T12:00"><time></time><div><h4>Utsjekk</h4><p>(kommer tilbake til dette)</p></div></li>
             </ol>
         </div>

@@ -61,15 +61,22 @@ function guestHTML(n) {
             </div>
         </fieldset>
         <fieldset class="field" data-when="yes">
-            <legend>Skal du sove over?</legend>
+            <legend>Skal du overnatte?</legend>
             <p class="hint">Fredag til søndag, ${kr(PRICE_PER_PERSON)} per gjest.</p>
             <div class="choices" data-group="stay">
                 <label class="choice"><input type="radio" name="${id}-stay" value="yes" /><span>Ja</span></label>
                 <label class="choice"><input type="radio" name="${id}-stay" value="no" /><span>Nei</span></label>
             </div>
         </fieldset>
-        <div class="field" data-when="yes">
-            <label for="${id}-allergies">Er det mat du ikke tåler? <span class="opt">(valgfritt)</span></label>
+        <fieldset class="field" data-when="yes">
+            <legend>Har du noen matallergier eller preferanser?</legend>
+            <div class="choices" data-group="diet">
+                <label class="choice"><input type="radio" name="${id}-diet" value="yes" /><span>Ja</span></label>
+                <label class="choice"><input type="radio" name="${id}-diet" value="no" /><span>Nei</span></label>
+            </div>
+        </fieldset>
+        <div class="field" data-when="diet">
+            <label for="${id}-allergies">Hva er du allergisk mot, eller hva foretrekker du?</label>
             <input type="text" id="${id}-allergies" name="allergies" autocomplete="off" />
         </div>
         <div class="field">
@@ -88,6 +95,7 @@ function readForm() {
             last_name: g.querySelector('[name="last_name"]').value.trim(),
             attending: g.querySelector('[data-group="attending"] input:checked')?.value ?? null,
             stay: g.querySelector('[data-group="stay"] input:checked')?.value ?? null,
+            diet: g.querySelector('[data-group="diet"] input:checked')?.value ?? null,
             allergies: g.querySelector('[name="allergies"]').value.trim(),
             comment: g.querySelector('[name="comment"]').value.trim(),
         })),
@@ -100,7 +108,9 @@ const stayingCount = (data) => data.guests.filter((g) => g.attending === 'yes' &
 function sync() {
     guestsEl.querySelectorAll('.guest').forEach((g, i, all) => {
         const attending = g.querySelector('[data-group="attending"] input:checked')?.value;
+        const diet = g.querySelector('[data-group="diet"] input:checked')?.value;
         g.querySelectorAll('[data-when="yes"]').forEach((el) => { el.hidden = attending !== 'yes'; });
+        g.querySelectorAll('[data-when="diet"]').forEach((el) => { el.hidden = attending !== 'yes' || diet !== 'yes'; });
         g.querySelector('h3').textContent = all.length > 1 ? `Person ${i + 1}` : 'Deg';
     });
     const staying = stayingCount(readForm());
@@ -129,6 +139,8 @@ function validate(data) {
         flag(g.querySelector('[name="last_name"]'), !d.last_name);
         flag(g.querySelector('[data-group="attending"]'), !d.attending);
         flag(g.querySelector('[data-group="stay"]'), d.attending === 'yes' && !d.stay);
+        flag(g.querySelector('[data-group="diet"]'), d.attending === 'yes' && !d.diet);
+        flag(g.querySelector('[name="allergies"]'), d.attending === 'yes' && d.diet === 'yes' && !d.allergies);
     });
     flag(paidField.querySelector('.choices'), !paidField.hidden && !data.paid);
     // one address per reply, so the couple can reach everyone with updates
@@ -149,7 +161,7 @@ async function send(data) {
             attending,
             stay: attending ? stay : null,
             paid_lodging: stay ? data.paid === 'yes' : null,
-            allergies: attending && g.allergies ? g.allergies : null,
+            allergies: attending && g.diet === 'yes' && g.allergies ? g.allergies : null,
             message: g.comment || null,
         };
     });
@@ -206,7 +218,7 @@ form.addEventListener('submit', async (e) => {
     const data = readForm();
     const bad = validate(data);
     if (bad) {
-        errorEl.textContent = 'Noe mangler. Fyll inn navn og svar for hver person, og e-posten din.';
+        errorEl.textContent = 'Noe mangler. Fyll inn navn og svar på spørsmålene for hver person, og e-posten din.';
         errorEl.hidden = false;
         bad.focus();
         return;

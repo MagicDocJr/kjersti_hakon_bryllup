@@ -164,7 +164,7 @@ h3 {
     background: linear-gradient(180deg, var(--sky-top) 0%, #94bdf0 38%, #b9d5f6 62%, var(--sky-low) 80%, #e9f1f8 100%);
     color: var(--white);
     padding-top: clamp(16px, 3vw, 32px);
-    padding-bottom: clamp(64px, 8vw, 112px);
+    padding-bottom: 0;
     display: flex;
     flex-direction: column;
 }
@@ -176,7 +176,7 @@ h3 {
     max-width: var(--wrap);
     margin-inline: auto;
     padding-inline: var(--gutter);
-    padding-top: clamp(28px, 5vw, 56px);
+    padding-top: clamp(20px, 3vw, 36px);
     display: grid;
     grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
     gap: clamp(32px, 6vw, 96px);
@@ -188,6 +188,25 @@ h3 {
     aspect-ratio: 4 / 5;
     object-fit: cover;
     box-shadow: 0 24px 48px -24px rgba(31, 62, 110, 0.45);
+}
+
+/* the photo-booth strip from the invitation: tall and narrow, so it is
+   sized by height and the grid column shrinks to fit it */
+.hero-strip { justify-self: center; margin: 0; }
+.hero-strip img {
+    display: block;
+    height: min(46vh, 500px);
+    width: auto;
+    aspect-ratio: 352 / 1800;
+    object-fit: contain;
+    box-shadow: 0 24px 48px -24px rgba(31, 62, 110, 0.45);
+}
+/* desktop: names on the page's centre line (same as the menu and the
+   text below), the strip centred in the free space to their left */
+@media (min-width: 901px) {
+    .hero-inner:has(.hero-strip) { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: clamp(24px, 3vw, 48px); }
+    .hero-strip { grid-column: 1; }
+    .hero-strip + .hero-title { grid-column: 2; }
 }
 
 .hero-title { text-align: center; padding-top: clamp(8px, 3vw, 40px); }
@@ -222,6 +241,61 @@ h3 {
 }
 
 
+/* ============ ENG ============ */
+/* The meadow is the hero's backdrop: the canvas covers the whole hero,
+   and main.js tilts its camera so the horizon lands on top of
+   .hero-ground. pan-y keeps the page scrolling on phones; a sideways
+   drag moves through the flowers. */
+.hero { touch-action: pan-y; }
+.hero .meadow { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.hero-ground { position: relative; z-index: 1; height: clamp(280px, 42vh, 460px); margin-top: clamp(32px, 6vw, 84px); } /* room for the treetops under the date line */
+.meadow-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 70%; opacity: 0; transition: opacity .6s; }
+.hero.no-webgl .meadow-fallback { opacity: 1; }
+.hero.no-webgl .meadow { display: none; }
+.eng-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 7px 14px;
+    font-family: var(--f-label);
+    font-size: 13px;
+    color: #fffaf0;
+    background: rgba(28, 35, 71, 0.32);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border-radius: 999px;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity .8s;
+}
+.eng-hint.is-gone { opacity: 0; }
+.hero.no-webgl .eng-hint { display: none; }
+.eng-hint { z-index: 2; bottom: calc(clamp(64px, 9vh, 110px) + 10px); } /* just above the fade */
+
+/* No hard edge between meadow and the blue band below: the nearest
+   flowers dissolve into the band colour like a haze over the grass
+   (eased stops, so there is no visible line where the fade starts),
+   The fade is on top of the canvas but ignores the pointer, so dragging
+   still works. */
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 1;
+    height: clamp(64px, 9vh, 110px);
+    pointer-events: none;
+    background: linear-gradient(180deg,
+        rgb(188 213 245 / 0) 0%,
+        rgb(188 213 245 / 0.08) 35%,
+        rgb(188 213 245 / 0.3) 60%,
+        rgb(188 213 245 / 0.7) 85%,
+        rgb(188 213 245 / 1) 100%);
+}
+.hint-touch { display: none; }
+@media (hover: none) { .hint-touch { display: inline; } .hint-mouse { display: none; } }
+
 /* ============ INTRO ============ */
 .intro { text-align: center; padding-inline: var(--gutter); padding-bottom: clamp(56px, 7vw, 96px); }
 .intro-row {
@@ -250,6 +324,13 @@ h3 {
     line-height: 1.45;
     text-wrap: balance;
 }
+.intro-note {
+    margin: 20px auto 0;
+    max-width: 44ch;
+    text-wrap: balance;
+}
+.deadline { margin-top: 18px; }
+.deadline + .btn-big { margin-top: 14px; }
 .countdown {
     margin-top: 14px;
     font-family: var(--f-label);
@@ -337,6 +418,8 @@ h3 {
 .praktisk-info { grid-area: info; max-width: 54ch; }
 .praktisk-info h3:first-child { margin-top: 0; }
 .praktisk-info p + p { margin-top: 4px; }
+.dress { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 6px; }
+.dress strong { font-weight: 700; }
 .daisy { grid-area: daisy; justify-self: center; align-self: center; width: min(380px, 100%); }
 .daisy img { mix-blend-mode: multiply; }
 .svar { min-width: 0; }
@@ -377,6 +460,7 @@ h3 {
     background: #fbfcfe;
 }
 .betaling h3 { margin-top: 0; }
+.betaling p + p { margin-top: 6px; }
 
 .pay { margin: 18px 0; display: grid; gap: 0; border-block: 1px solid var(--line); }
 .pay div { display: grid; grid-template-columns: 200px 1fr; gap: 12px; padding: 10px 0; }
@@ -567,6 +651,8 @@ fieldset.field { border: 0; margin: 0; padding: 0; }
     .hero-title { order: -1; padding-top: 0; }
     .hero-title .script { font-size: clamp(54px, 13vw, 104px); }
     .hero-photo { width: min(320px, 70vw); }
+    .hero-photo.hero-strip { width: auto; }
+    .hero-strip img { height: min(42vh, 440px); }
 }
 
 @media (max-width: 760px) {
@@ -577,6 +663,10 @@ fieldset.field { border: 0; margin: 0; padding: 0; }
     .hero-title .script { font-size: clamp(54px, 15vw, 76px); }
     .hero-meta { flex-direction: column; gap: 4px; margin-top: 22px; font-size: 12px; }
     .hero-photo { width: min(270px, 70vw); }
+    .hero-photo.hero-strip { width: auto; }
+    .hero-strip img { height: min(36vh, 320px); }
+    .hero-inner { gap: 20px; padding-top: 16px; }
+    .hero-ground { height: clamp(220px, 32vh, 300px); margin-top: 32px; }
 
     .intro-row { grid-template-columns: 1fr; gap: 18px; }
     .intro-row .intro-side:first-child, .intro-row .intro-side:last-child { text-align: center; }
@@ -793,21 +883,14 @@ fieldset.field { border: 0; margin: 0; padding: 0; }
 .day-title { margin-bottom: clamp(24px, 5vh, 48px); }
 .event p { margin-bottom: 0; }
 .program-end { margin-top: 48px; font-family: var(--f-display); font-size: 19px; color: var(--sky-ink-soft); }
-/* the doc's morning photos, as small framed prints at the end of their line */
-.event .art { justify-self: end; width: clamp(120px, 14vw, 180px); margin: 0; padding: 8px; background: var(--white); box-shadow: 0 18px 40px -28px rgba(31, 62, 110, 0.5); }
-.event .art img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 
 @media (max-width: 640px) {
     .event {
-        grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-areas: "time art" "text art";
-        grid-template-rows: auto 1fr;
+        grid-template-columns: minmax(0, 1fr);
         min-height: 0;
         padding-block: 16px 30px;
     }
-    .event time { grid-area: time; font-size: 18px; }
-    .event > div { grid-area: text; }
-    .event .art { grid-area: art; width: 96px; padding: 6px; align-self: start; }
+    .event time { font-size: 18px; }
 }
 
 /* Open sky between the days: dusk, the light summer night and sunrise

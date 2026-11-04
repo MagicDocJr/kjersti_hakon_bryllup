@@ -33,8 +33,8 @@ Tekstene for overnatting (1 600 kr per gjest, kontonr. 9492 08 35907), kleskode,
 - **Monogram**: `assets/monogram.svg` er tegnet om til vektor fra parets PDF. Bruk det med `<svg viewBox="0 0 355 378"><use href="../assets/monogram.svg#kh"/></svg>`, så tar det fargen fra `color`.
 - **QR til invitasjonen**: `assets/qr-invitasjon.svg` (til trykk) og `assets/qr-invitasjon.png` peker til https://www.kjerstioghakon.no/.
 - **QR til svar og ønskeliste**: `assets/qr-svar.svg|png` peker til https://www.kjerstioghakon.no/svar/ og `assets/qr-onskeliste.svg|png` til https://www.kjerstioghakon.no/onskeliste/. `/svar/` er selve skjemaet. `/onskeliste/` er en liten side som sender videre; bytt målet der hvis ønskelisten får ny lenke, så virker den trykte koden fortsatt.
-- **Svarskjemaet** ligger i `assets/svar.js` og brukes av alle versjonene. Hver person: navn, kommer (ja/nei), sove over (ja/nei), mat du ikke tåler (fritekst) og kommentar. «Har du husket å betale for overnatting?» (ja/nei) vises når noen sover over. E-post er valgfri.
-- **Programmet** mangler tidspunkter utenom fredag og utsjekk. `data-at` på hvert punkt styrer likevel himmelen; de tidene vises ikke.
+- **Svarskjemaet** ligger i `assets/svar.js` og brukes av alle versjonene. Hver person: navn, kommer (ja/nei), overnatte (ja/nei), matallergier/preferanser (ja/nei, og fritekst som må fylles ut ved ja) og kommentar. Boksen om betaling står over skjemaet. «Har du husket å betale for overnatting?» (ja/nei) vises når noen sover over. E-post er valgfri.
+- **Programmet** (2026-11-04, etter innspill fra paret): fredag innsjekk 17.00 og «Grilling og Aperol» fra 19.00, lørdag bare «Nærmere info kommer», søndag som før. Bildene i programmet er fjernet; bare sola er igjen. Programmet mangler tidspunkter utenom fredag og utsjekk. `data-at` på hvert punkt styrer likevel himmelen; de tidene vises ikke.
 
 ## Fortsatt åpent
 
@@ -53,6 +53,11 @@ Gjestegård-fotoet fra Wikimedia er byttet ut med parets akvarell, så ingen bil
 Siden bruker bare parets egne bilder.
 
 - Strektegningene (grill, vin, frokost, hjerte, brudepar) og QR-koden er laget for prosjektet
+
+## Teknisk: forsiden og blomsterenga
+
+- Forsidebildet er fotoboks-stripen (`assets/foto/fotoboks.webp`), samme som på invitasjonen (parets ønske 2026-11-04).
+- Forsiden står i blomsterenga man kan dra gjennom: `meadow.js` (three.js fra cdnjs, WebGL), hentet tilbake fra `kreativ-eng/` i git-historikken. Navn og fotostripe står i himmelen; `main.js` vipper kameraet så horisonten havner på toppen av `.hero-ground`, uansett skjermstørrelse. Blomstene skilles i en myk bølge rundt pekeren. Bevegelsen er som originalen (myk, litt etter pekeren); eneste endring er at treffpunktet regnes en tredjedel opp på stilkene i stedet for på bakken, så bølgen havner nærmere det som er under musa/fingeren. Kameraet svaier litt sidelengs med musa (en tredjedel av originalen, aldri opp/ned), og over himmelen skilles ingenting. `?debug` i adressen gir `meadow.state()` i konsollen. Enga tegnes bare mens den er synlig. Uten WebGL vises bildet `img/eng-sm.webp` nederst. På mobil scroller siden som vanlig; enga reagerer på at man drar sidelengs.
 
 ## Teknisk: programhimmelen
 
