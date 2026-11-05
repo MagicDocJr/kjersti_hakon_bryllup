@@ -52,10 +52,6 @@ Når en av disse endres, oppdater **alle** stedene i samme omgang. Programmet er
 
 Endres `kh-confirm`, må funksjonen deployes på nytt i Supabase.
 
-## Fortsatt åpent
-
-- **Svar på e-post**: svar lagres, men det sendes ingen kopi til kjerstioghakon@gmail.com ennå. Kan kobles på med EmailJS slik som i `Rag_vetl_bryllup`.
-
 ## Gjesteoversikt (`/oversikt/`)
 
 Privat side der paret ser svarene live: hvor mange som kommer, overnatter og har betalt, svarfrist, utvikling over tid, allergier, kommentarer og hele gjestelisten med filtre. Fungerer på mobil. De logger inn med kjerstioghakon@gmail.com og passord (en bruker i Supabase Auth, opprettet av admin). RLS lar bare den adressen lese `kh_responses`. Siden viser tall, søk og filter (f.eks. «overnatter, ikke betalt»), allergiliste og CSV-eksport. Nye svar dukker opp uten omlasting via Supabase Realtime.
