@@ -79,7 +79,7 @@ function webglOk() {
 }
 if (webglOk()) {
     const lowPower = matchMedia('(max-width: 760px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
-    import('./meadow.js').then(({ createMeadow }) => {
+    import('./meadow.js?v=20261105').then(({ createMeadow }) => {
         // same blues as the hero's CSS sky, warming to the horizon
         const meadow = createMeadow(document.getElementById('meadow'), {
             lowPower, reducedMotion: reduceMotion,

@@ -98,4 +98,6 @@ GitHub Pages fra `main` (rotmappen), med eget domene `www.kjerstioghakon.no` (fi
 | AAAA | (tom / @) | 2606:50c0:8000::153, 2606:50c0:8001::153, 2606:50c0:8002::153, 2606:50c0:8003::153 |
 | CNAME | www | magicdocjr.github.io |
 
+**Bytt versjonsnummer når CSS eller JS endres.** Lenkene til `style.css`, `main.js`, `meadow.js` og `assets/svar.js` har `?v=ÅÅÅÅMMDD` (i `index.html`, `svar/index.html` og `main.js`). Ellers kan gjester som har vært inne før, få den gamle filen fra mobilens mellomlager. Det skjedde med svarskjemaet 2026-11-05: noen så fortsatt det gamle allergifeltet uten ja/nei. Bytt alle til dagens dato, f.eks. `grep -rln 'v=20261105' . | xargs sed -i 's/v=20261105/v=NY_DATO/g'`.
+
 Alle sidene har `noindex` til ekte bilder og detaljer er på plass. Når paret har valgt versjon, flytt den til roten (eller la `index.html` videresende dit).
